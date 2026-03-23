@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #FAFAF8;
+  overflow-x: hidden;
+  font-family: 'Work Sans', sans-serif;
+}
+
+::selection {
+  background: #E8F1F4;
+  color: #1A4B5C;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAFAF8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B8D3DC;
+  border-radius: 3px;
+}
+
+a {
+  cursor: pointer;
+}
