@@ -1,35 +1,74 @@
 import { tokens as T } from "../styles/tokens";
-import { SKILLS } from "../data/content";
 import { Reveal, SectionLabel, SectionTitle } from "./UI";
 import MotifSVG from "./MotifSVG";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import { useLanguage } from "../context/LanguageContext";
+import { UI } from "../data/translations";
+
+const GALLERY_PLACEHOLDERS = [
+  180, 260, 210, 320, 190,
+  240, 170, 280, 200, 300,
+  220, 310, 180, 250, 210,
+  290, 190, 340, 230, 270,
+  200, 260, 185, 300, 220,
+];
 
 export default function About() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const { lang } = useLanguage();
+  const t = UI[lang].about;
+
   return (
     <section
       id="about"
-      style={{ padding: "120px 40px", maxWidth: 1200, margin: "0 auto" }}
+      style={{
+        padding: isMobile ? "100px 20px 80px" : isTablet ? "120px 32px 80px" : "140px 40px 100px",
+        maxWidth: 1200,
+        margin: "0 auto",
+        minHeight: "100vh",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
+      <MotifSVG
+        size={460}
+        color="#D9D4CC"
+        opacity={0.22}
+        outerOpacity={0.12}
+        style={{
+          position: "absolute",
+          top: "14%",
+          right: -72,
+          pointerEvents: "none",
+          filter:
+            "drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) drop-shadow(-1px -1px 0 rgba(176,168,156,0.16))",
+          mixBlendMode: "multiply",
+        }}
+      />
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "0.8fr 1.2fr",
-          gap: 80,
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: 56,
           alignItems: "center",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        {/* Motif comme pièce d'identité visuelle */}
         <Reveal>
           <div
             style={{
               width: "100%",
               aspectRatio: "1",
-              borderRadius: 20,
-              background: T.accentLight,
+              borderRadius: 28,
+              background: `linear-gradient(135deg, ${T.accentLight}, #F5F8F7)`,
               position: "relative",
               overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              minHeight: 320,
             }}
           >
             <MotifSVG
@@ -48,17 +87,16 @@ export default function About() {
           </div>
         </Reveal>
 
-        {/* Texte */}
         <div>
           <Reveal delay={0.1}>
-            <SectionLabel>À propos</SectionLabel>
+            <SectionLabel>{t.label}</SectionLabel>
           </Reveal>
 
           <Reveal delay={0.2}>
             <SectionTitle>
-              Product Designer avec une appétence pour le{" "}
-              <span style={{ color: T.accent }}>design d'interface</span> & les
-              design systems.
+              {t.titleParts[0]}{" "}
+              <span style={{ color: T.accent }}>{t.titleParts[1]}</span>{" "}
+              {t.titleParts[2]}
             </SectionTitle>
           </Reveal>
 
@@ -72,10 +110,7 @@ export default function About() {
                 margin: "20px 0 0",
               }}
             >
-              J'ai eu l'occasion de travailler sur de multiples projets à
-              destination de consommateurs, entreprises et collaborateurs
-              internes. Je crée UI kits, variables, composants et templates
-              avec la méthodologie de l'Atomic Design.
+              {t.p1}
             </p>
           </Reveal>
 
@@ -89,43 +124,11 @@ export default function About() {
                 margin: "12px 0 0",
               }}
             >
-              J'effectue de la recherche utilisateur, de la discovery, du
-              benchmark, des user journeys et bien plus encore.
+              {t.p2}
             </p>
           </Reveal>
 
           <Reveal delay={0.4}>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 8,
-                marginTop: 32,
-              }}
-            >
-              {SKILLS.map((skill, i) => (
-                <span
-                  key={skill}
-                  style={{
-                    padding: "7px 16px",
-                    borderRadius: 20,
-                    background: i % 3 === 0 ? T.accentLight : "transparent",
-                    border: `1px solid ${
-                      i % 3 === 0 ? "transparent" : T.border
-                    }`,
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: i % 3 === 0 ? T.accent : T.textMuted,
-                  }}
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.5}>
             <div
               style={{
                 marginTop: 36,
@@ -137,15 +140,52 @@ export default function About() {
                 fontWeight: 200,
                 color: T.accent,
                 letterSpacing: "0.07em",
+                flexWrap: "wrap",
               }}
             >
-              <span
-                style={{ width: 40, height: 1, background: T.accentMid }}
-              />
-              De l'atome au template.
+              <span style={{ width: 40, height: 1, background: T.accentMid }} />
+              {t.quote}
             </div>
           </Reveal>
         </div>
+      </div>
+
+      <div
+        style={{
+          marginTop: isMobile ? 60 : 120,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <Reveal>
+          <div style={{ marginBottom: 36 }}>
+            <SectionLabel>{t.galleryLabel}</SectionLabel>
+            <SectionTitle>{t.galleryTitle}</SectionTitle>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 16,
+              alignItems: "start",
+            }}
+          >
+            {GALLERY_PLACEHOLDERS.map((height, index) => (
+              <div
+                key={index}
+                style={{
+                  height,
+                  borderRadius: 18,
+                  background: "#E3E0DA",
+                  border: `1px solid ${T.border}`,
+                }}
+              />
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,11 +1,19 @@
 import { tokens as T } from "../styles/tokens";
 import MotifSVG from "./MotifSVG";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import { useLanguage } from "../context/LanguageContext";
+import { UI } from "../data/translations";
 
 export default function Footer() {
+  const { isMobile } = useBreakpoint();
+  const { lang } = useLanguage();
+  const year = new Date().getFullYear();
+  const t = UI[lang].footer;
+
   return (
     <footer
       style={{
-        padding: "36px 40px",
+        padding: isMobile ? "28px 20px" : "36px 40px",
         borderTop: `1px solid ${T.border}`,
         maxWidth: 1200,
         margin: "0 auto",
@@ -14,8 +22,11 @@ export default function Footer() {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          flexDirection: isMobile ? "column" : "row",
+          justifyContent: isMobile ? "center" : "space-between",
           alignItems: "center",
+          gap: isMobile ? 20 : 0,
+          textAlign: isMobile ? "center" : "left",
         }}
       >
         {/* Logo */}
@@ -69,7 +80,7 @@ export default function Footer() {
             color: T.textLight,
           }}
         >
-          © 2025 Anthonin Sautet
+          {t.copyright.replace("2025", String(year))}
         </span>
       </div>
     </footer>

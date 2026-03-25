@@ -6,9 +6,9 @@ export const tokens = {
   accentMid: "#B8D3DC",
   bg: "#FAFAF8",
   surface: "#FFFFFF",
-  border: "#E8E6E1",
-  text: "#1A1A1A",
-  textMuted: "#888888",
-  textLight: "#AAAAAA",
+  border: "#D7D3CC",
+  text: "#333333",
+  textMuted: "#67645F",
+  textLight: "#8C8780",
   radius: 14,
 };
