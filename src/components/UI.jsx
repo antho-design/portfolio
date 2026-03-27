@@ -28,13 +28,44 @@ export function ProgressBar() {
         position: "fixed",
         top: 0,
         left: 0,
-        height: 3,
-        width: `${progress * 100}%`,
-        background: T.accent,
         zIndex: 1000,
-        transition: "width 0.1s linear",
+        width: "100%",
+        height: 3,
+        background: "rgba(255,255,255,0.92)",
+        boxShadow: "inset 0 -1px 0 rgba(51,51,51,0.06)",
       }}
-    />
+    >
+      <div
+        style={{
+          height: "100%",
+          width: `${progress * 100}%`,
+          background: T.accent,
+          transition: "width 0.1s linear",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ─── Icône de téléchargement ─── */
+export function DownloadIcon({ color = "currentColor" }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ display: "block", flexShrink: 0 }}
+    >
+      <path d="M12 3v11" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M5 21h14" />
+    </svg>
   );
 }
 

@@ -1,5 +1,13 @@
 export const PROJECTS = [
   {
+    id: "cetelem",
+    title: "Cetelem",
+    subtitle: "Réponse à appel d'offre",
+    year: "2026",
+    tag: "Concept product design",
+    tasks: ["UI", "Figma", "Prototypage", "Concept"],
+  },
+  {
     id: "apec",
     title: "Apec",
     subtitle: "Progiciel Product Design",
@@ -82,6 +90,84 @@ export const EXPERIENCES = [
 ];
 
 export const PROJECT_DETAILS = {
+  cetelem: {
+    client: "Cetelem",
+    role: "Product Designer",
+    tools: ["Figma", "Prototypage", "UI Design"],
+    context:
+      "Dans le cadre d'une réponse à appel d'offre, Cetelem avait besoin d'une proposition produit capable de projeter une vision claire, crédible et désirable du futur service. L'enjeu était de formuler rapidement un concept d'interface convaincant, suffisamment abouti pour soutenir le discours commercial.",
+    challenges: [
+      "Transformer un cadrage commercial en proposition produit tangible",
+      "Donner de la crédibilité à une vision encore conceptuelle",
+      "Produire rapidement des écrans suffisamment aboutis pour une soutenance",
+      "Trouver le bon équilibre entre faisabilité, impact visuel et clarté d'usage",
+    ],
+    objectives: [
+      "Formaliser un concept produit lisible et désirable",
+      "Concevoir une interface capable de soutenir la réponse à appel d'offre",
+      "Prototyper les parcours clés pour raconter l'expérience",
+      "Créer un support visuel cohérent pour la présentation finale",
+    ],
+    methodology: [
+      {
+        phase: "01",
+        title: "Cadrage du concept",
+        description:
+          "Analyse du besoin, reformulation des attentes métier et définition d'une proposition de valeur claire à porter dans la réponse.",
+      },
+      {
+        phase: "02",
+        title: "Direction UI",
+        description:
+          "Exploration d'une direction d'interface premium, lisible et rassurante, capable de porter le niveau d'ambition du concept.",
+      },
+      {
+        phase: "03",
+        title: "Prototypage",
+        description:
+          "Mise en forme des parcours structurants dans Figma avec un prototype permettant de raconter les scénarios d'usage.",
+      },
+      {
+        phase: "04",
+        title: "Support de soutenance",
+        description:
+          "Assemblage des écrans, vues clés et transitions pour construire un récit fluide lors de la présentation de l'offre.",
+      },
+    ],
+    modules: [
+      {
+        title: "Vision produit",
+        description:
+          "Définition d'un concept directeur mettant en scène la promesse du service et ses bénéfices pour les futurs utilisateurs.",
+        features: ["Proposition de valeur", "Scénario cible", "Vision projetée"],
+      },
+      {
+        title: "Parcours clés",
+        description:
+          "Conception de parcours représentatifs pour illustrer les usages les plus stratégiques de la réponse à appel d'offre.",
+        features: ["Parcours priorisés", "Écrans clés", "Expérience racontée"],
+      },
+      {
+        title: "Prototype de démonstration",
+        description:
+          "Prototype Figma structuré pour soutenir la démonstration et rendre la proposition plus concrète pendant la soutenance.",
+        features: ["Prototype interactif", "Transitions essentielles", "Soutien à la démo"],
+      },
+    ],
+    deliverables: [
+      "Concept UI formalisé dans Figma",
+      "Parcours clés maquettés pour la réponse à appel d'offre",
+      "Prototype de démonstration pour la soutenance",
+      "Socle visuel cohérent pour appuyer le discours commercial",
+    ],
+    impact: [
+      "Proposition produit rendue tangible dès la phase d'avant-vente",
+      "Réponse à appel d'offre renforcée par une démonstration visuelle claire",
+      "Narration plus convaincante grâce au prototype",
+      "Base réutilisable pour de futurs approfondissements produit",
+    ],
+  },
+
   apec: {
     client: "APEC",
     role: "Product Designer",
@@ -105,25 +191,25 @@ export const PROJECT_DETAILS = {
         phase: "01",
         title: "Diagnostic & cadrage",
         description:
-          "Audit des écrans existants, alignement avec les parties prenantes, définition du périmètre d'intervention et priorisation des livrables.",
+          "Audit des écrans, alignement parties prenantes et priorisation des livrables.",
       },
       {
         phase: "02",
         title: "UI Library",
         description:
-          "Création des composants selon les principes de l'Atomic Design — atomes, molécules, organismes — avec variables dynamiques et documentation.",
+          "Composants Atomic Design — atomes, molécules, organismes — avec variables et documentation.",
       },
       {
         phase: "03",
         title: "Design Thinking",
         description:
-          "Observations terrain, ateliers collaboratifs avec les métiers, prototypage et tests utilisateurs itératifs sur les modules prioritaires.",
+          "Observations terrain et ateliers collaboratifs avec les métiers. Prototypage itératif sur les modules prioritaires.",
       },
       {
         phase: "04",
         title: "Culture design",
         description:
-          "Rédaction de la documentation, formation des équipes aux pratiques UX/UI et structuration des rituels de collaboration design/dev.",
+          "Documentation des guidelines et formation des équipes aux pratiques UX/UI.",
       },
     ],
     modules: [
@@ -500,32 +586,40 @@ export const PROJECT_DETAILS = {
 export const SKILLS = [
   "UI",
   "UX",
+  "Concept",
   "Discovery",
   "User Research",
   "Design system",
   "UI Kit",
   "Figma",
   "Prototypage",
-  "Wireframe",
   "Mobile first",
 ];
 
 export const SKILLS_EN = [
   "UI",
   "UX",
+  "Concept",
   "Discovery",
   "User Research",
   "Design system",
   "UI Kit",
   "Figma",
   "Prototyping",
-  "Wireframe",
   "Mobile first",
 ];
 
 /* ─── English versions ───────────────────────────────────────── */
 
 export const PROJECTS_EN = [
+  {
+    id: "cetelem",
+    title: "Cetelem",
+    subtitle: "Tender response concept",
+    year: "2026",
+    tag: "Concept product design",
+    tasks: ["UI", "Figma", "Prototyping", "Concept"],
+  },
   {
     id: "apec",
     title: "Apec",
@@ -609,6 +703,84 @@ export const EXPERIENCES_EN = [
 ];
 
 export const PROJECT_DETAILS_EN = {
+  cetelem: {
+    client: "Cetelem",
+    role: "Product Designer",
+    tools: ["Figma", "Prototyping", "UI Design"],
+    context:
+      "As part of a tender response, Cetelem needed a product proposal able to project a clear, credible and desirable vision of the future service. The challenge was to quickly shape a convincing interface concept, refined enough to support the commercial pitch.",
+    challenges: [
+      "Turn a commercial brief into a tangible product proposal",
+      "Give credibility to a concept that was still exploratory",
+      "Produce screens quickly enough for a high-stakes presentation",
+      "Balance feasibility, visual impact and clarity of use",
+    ],
+    objectives: [
+      "Shape a clear and desirable product concept",
+      "Design an interface strong enough to support the tender response",
+      "Prototype the key flows to tell the experience story",
+      "Create a coherent visual support for the final presentation",
+    ],
+    methodology: [
+      {
+        phase: "01",
+        title: "Concept framing",
+        description:
+          "Analyse of the brief, reframing business expectations and defining a clear value proposition to carry through the response.",
+      },
+      {
+        phase: "02",
+        title: "UI direction",
+        description:
+          "Exploration of a premium, clear and reassuring interface direction aligned with the ambition of the concept.",
+      },
+      {
+        phase: "03",
+        title: "Prototyping",
+        description:
+          "Structuring the core flows in Figma with a prototype able to narrate the main usage scenarios.",
+      },
+      {
+        phase: "04",
+        title: "Pitch support",
+        description:
+          "Assembling key screens and transitions into a smooth narrative for the offer presentation.",
+      },
+    ],
+    modules: [
+      {
+        title: "Product vision",
+        description:
+          "Definition of a guiding concept showcasing the service promise and its benefits for future users.",
+        features: ["Value proposition", "Target scenario", "Projected vision"],
+      },
+      {
+        title: "Key flows",
+        description:
+          "Design of representative flows to illustrate the most strategic usage moments in the tender response.",
+        features: ["Prioritised flows", "Key screens", "Narrated experience"],
+      },
+      {
+        title: "Demo prototype",
+        description:
+          "Structured Figma prototype built to support the demo and make the proposal feel concrete during the pitch.",
+        features: ["Interactive prototype", "Essential transitions", "Demo support"],
+      },
+    ],
+    deliverables: [
+      "UI concept formalised in Figma",
+      "Key flows designed for the tender response",
+      "Demo prototype for the presentation",
+      "Coherent visual foundation supporting the commercial narrative",
+    ],
+    impact: [
+      "Product proposal made tangible at the pre-sales stage",
+      "Tender response strengthened by a clear visual demonstration",
+      "More convincing storytelling thanks to the prototype",
+      "Reusable base for future product deep dives",
+    ],
+  },
+
   apec: {
     client: "APEC",
     role: "Product Designer",
@@ -632,25 +804,25 @@ export const PROJECT_DETAILS_EN = {
         phase: "01",
         title: "Diagnosis & scoping",
         description:
-          "Audit of existing screens, alignment with stakeholders, definition of the intervention scope and prioritisation of deliverables.",
+          "Screen audit, stakeholder alignment and deliverable prioritisation.",
       },
       {
         phase: "02",
         title: "UI Library",
         description:
-          "Component creation following Atomic Design principles — atoms, molecules, organisms — with dynamic variables and documentation.",
+          "Atomic Design components — atoms, molecules, organisms — with variables and documentation.",
       },
       {
         phase: "03",
         title: "Design Thinking",
         description:
-          "Field observations, collaborative workshops with business teams, iterative prototyping and user testing on priority modules.",
+          "Field observations and collaborative workshops with business teams. Iterative prototyping on priority modules.",
       },
       {
         phase: "04",
         title: "Design culture",
         description:
-          "Writing documentation, training teams in UX/UI practices and structuring design/dev collaboration rituals.",
+          "Guidelines documentation and team training in UX/UI practices.",
       },
     ],
     modules: [

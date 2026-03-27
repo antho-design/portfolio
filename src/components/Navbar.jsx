@@ -40,11 +40,26 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
   const { lang, toggle } = useLanguage();
   const t = UI[lang].nav;
   const isAboutPage = currentPath === "/about";
+  const isLegalPage = currentPath === "/legal";
 
   const isOnDarkHero = currentPath.startsWith("/projects/") && !scrolled && !menuOpen;
 
-  const links = isAboutPage
-    ? [{ label: t.home, href: "/", type: "anchor" }]
+  const links = (isAboutPage || isLegalPage)
+    ? [
+        {
+          label: t.projects,
+          href: "#projects",
+          active: false,
+          type: "anchor",
+        },
+        {
+          label: t.experience,
+          href: "#experience",
+          active: false,
+          type: "anchor",
+        },
+        { label: t.about, href: "/about", active: isAboutPage, type: "page" },
+      ]
     : currentPath.startsWith("/projects/")
     ? [{ label: t.backToProjects, href: "/", type: "anchor" }]
     : [
@@ -84,12 +99,18 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
   const switchBg = isOnDarkHero ? "rgba(255,255,255,0.08)" : "#F1EFEB";
   const switchText = isOnDarkHero ? "rgba(255,255,255,0.92)" : T.text;
   const switchMuted = isOnDarkHero ? "rgba(255,255,255,0.5)" : T.textLight;
+  const glassBackground =
+    "linear-gradient(180deg, rgba(250,250,248,0.78) 0%, rgba(250,250,248,0.68) 100%)";
+  const glassShadow = "0 10px 28px rgba(51,51,51,0.06), inset 0 1px 0 rgba(255,255,255,0.32)";
 
   const langSwitchStyle = {
     padding: 4,
     borderRadius: 999,
-    border: `1px solid ${switchBorder}`,
-    background: switchBg,
+    border: "1px solid transparent",
+    background: `
+      linear-gradient(${switchBg}, ${switchBg}) padding-box,
+      linear-gradient(to right, transparent, ${switchBorder} 14%, ${switchBorder} 86%, transparent) border-box
+    `,
     transition: "all .3s ease",
     flexShrink: 0,
     display: "inline-flex",
@@ -134,17 +155,29 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
             : scrolled
             ? `14px ${hPad}`
             : `24px ${hPad}`,
-          background: scrolled || menuOpen ? "rgba(250,250,248,0.96)" : "transparent",
-          backdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
-          borderBottom: scrolled || menuOpen
-            ? `1px solid ${T.border}`
-            : "1px solid transparent",
+          background: scrolled || menuOpen ? glassBackground : "transparent",
+          backdropFilter: scrolled || menuOpen ? "blur(18px) saturate(135%)" : "none",
+          WebkitBackdropFilter: scrolled || menuOpen ? "blur(18px) saturate(135%)" : "none",
+          boxShadow: scrolled || menuOpen ? glassShadow : "none",
           transition: "all .4s ease",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
+        {(scrolled || menuOpen) && (
+          <div
+            style={{
+              position: "absolute",
+              left: hPad,
+              right: hPad,
+              bottom: 0,
+              height: 1,
+              background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+              pointerEvents: "none",
+            }}
+          />
+        )}
         {/* Logo */}
         <a
           href="/"
@@ -189,7 +222,12 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   key={l.label}
                   href={l.href}
                   onClick={(event) => {
-                    if (l.href.startsWith("#")) return;
+                    if (l.href.startsWith("#")) {
+                      if (currentPath === "/") return;
+                      event.preventDefault();
+                      onNavigate(`/${l.href}`);
+                      return;
+                    }
                     event.preventDefault();
                     onNavigate(l.href);
                   }}
@@ -358,9 +396,10 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
             paddingBottom: 24,
             paddingLeft: 20,
             paddingRight: 20,
-            background: "rgba(250,250,248,0.97)",
-            backdropFilter: "blur(20px)",
-            borderBottom: `1px solid ${T.border}`,
+            background: glassBackground,
+            backdropFilter: "blur(18px) saturate(135%)",
+            WebkitBackdropFilter: "blur(18px) saturate(135%)",
+            boxShadow: glassShadow,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -369,13 +408,29 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
             transition: "transform .4s cubic-bezier(.22,1,.36,1)",
           }}
         >
+          <div
+            style={{
+              position: "absolute",
+              left: 20,
+              right: 20,
+              bottom: 0,
+              height: 1,
+              background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+              pointerEvents: "none",
+            }}
+          />
           {links.map((l) => (
             <a
               key={l.label}
               href={l.href}
               onClick={(event) => {
                 setMenuOpen(false);
-                if (l.href.startsWith("#")) return;
+                if (l.href.startsWith("#")) {
+                  if (currentPath === "/") return;
+                  event.preventDefault();
+                  onNavigate(`/${l.href}`);
+                  return;
+                }
                 event.preventDefault();
                 onNavigate(l.href);
               }}

@@ -16,6 +16,7 @@ export const UI = {
       cta1: "Voir les projets",
       cta2: "Mon parcours",
       cta3: "À propos",
+      cta4: "CV",
       scroll: "Scroll",
     },
     projects: {
@@ -68,6 +69,11 @@ export const UI = {
     },
     footer: {
       copyright: "© 2025 Anthonin Sautet",
+      cv: "CV",
+      legal: "Mentions légales",
+    },
+    common: {
+      backToTop: "Retour en haut",
     },
   },
 
@@ -88,6 +94,7 @@ export const UI = {
       cta1: "View projects",
       cta2: "My journey",
       cta3: "About",
+      cta4: "Resume",
       scroll: "Scroll",
     },
     projects: {
@@ -140,6 +147,11 @@ export const UI = {
     },
     footer: {
       copyright: "© 2025 Anthonin Sautet",
+      cv: "Resume",
+      legal: "Legal notice",
+    },
+    common: {
+      backToTop: "Back to top",
     },
   },
 };

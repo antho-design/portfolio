@@ -3,8 +3,18 @@ import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
+import { DownloadIcon } from "./UI";
+import { CV_URL } from "../data/constants";
 
-export default function Footer() {
+const SOCIAL_LINKS = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/anthonin-sautet",
+    external: true,
+  },
+];
+
+export default function Footer({ onNavigate }) {
   const { isMobile } = useBreakpoint();
   const { lang } = useLanguage();
   const year = new Date().getFullYear();
@@ -14,11 +24,21 @@ export default function Footer() {
     <footer
       style={{
         padding: isMobile ? "28px 20px" : "36px 40px",
-        borderTop: `1px solid ${T.border}`,
         maxWidth: 1200,
         margin: "0 auto",
+        position: "relative",
       }}
     >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: isMobile ? 20 : 40,
+          right: isMobile ? 20 : 40,
+          height: 1,
+          background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+        }}
+      />
       <div
         style={{
           display: "flex",
@@ -52,11 +72,21 @@ export default function Footer() {
         </div>
 
         {/* Liens */}
-        <div style={{ display: "flex", gap: 24 }}>
-          {["LinkedIn", "Email"].map((link) => (
+        <div
+          style={{
+            display: "flex",
+            gap: isMobile ? 14 : 24,
+            alignItems: "center",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {SOCIAL_LINKS.map((link) => (
             <a
-              key={link}
-              href="#"
+              key={link.label}
+              href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noreferrer" : undefined}
               style={{
                 fontFamily: "'Work Sans', sans-serif",
                 fontSize: 13,
@@ -67,9 +97,60 @@ export default function Footer() {
               onMouseEnter={(e) => (e.target.style.color = T.accent)}
               onMouseLeave={(e) => (e.target.style.color = T.textMuted)}
             >
-              {link}
+              {link.label}
             </a>
           ))}
+          <a
+            href="/legal"
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate?.("/legal");
+            }}
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 13,
+              color: T.textMuted,
+              textDecoration: "none",
+              transition: "color .3s",
+            }}
+            onMouseEnter={(e) => (e.target.style.color = T.accent)}
+            onMouseLeave={(e) => (e.target.style.color = T.textMuted)}
+          >
+            {t.legal}
+          </a>
+          <a
+            href={CV_URL}
+            download
+            style={{
+              padding: "8px 14px",
+              border: "1px solid transparent",
+              color: T.text,
+              borderRadius: 999,
+              textDecoration: "none",
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 12,
+              fontWeight: 600,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: `
+                linear-gradient(#F1EFEB, #F1EFEB) padding-box,
+                linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
+              `,
+              transition: "filter .3s, color .3s",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.filter = "brightness(0.985)";
+              e.target.style.color = T.accent;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.filter = "none";
+              e.target.style.color = T.text;
+            }}
+          >
+            {t.cv}
+            <DownloadIcon />
+          </a>
         </div>
 
         {/* Copyright */}

@@ -4,6 +4,8 @@ import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
+import { DownloadIcon } from "./UI";
+import { CV_URL } from "../data/constants";
 
 export default function Hero() {
   const [loaded, setLoaded] = useState(false);
@@ -31,6 +33,10 @@ export default function Hero() {
     : isTablet
     ? "clamp(34px, 6vw, 52px)"
     : "clamp(40px, 7vw, 72px)";
+  const secondaryButtonBackground = `
+    linear-gradient(${T.surface}, ${T.surface}) padding-box,
+    linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
+  `;
 
   return (
     <section
@@ -134,23 +140,26 @@ export default function Hero() {
             href="#projects"
             style={{
               padding: isMobile ? "9px 22px" : isTablet ? "11px 26px" : "13px 32px",
-              background: T.accent,
-              color: "#fff",
+              border: "1.5px solid transparent",
+              background: secondaryButtonBackground,
+              color: T.text,
               borderRadius: 28,
               textDecoration: "none",
               fontFamily: "'Work Sans', sans-serif",
               fontSize: isMobile ? 13 : isTablet ? 13 : 14,
-              fontWeight: 600,
-              letterSpacing: "0.02em",
-              transition: "transform .25s, box-shadow .25s",
+              fontWeight: 500,
+              transition: "transform .25s, filter .25s, box-shadow .25s",
+              boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 8px 24px rgba(26,75,92,0.25)";
+              e.target.style.filter = "brightness(0.985)";
+              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
             }}
             onMouseLeave={(e) => {
               e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "none";
+              e.target.style.filter = "none";
+              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
             }}
           >
             {t.cta1}
@@ -159,17 +168,27 @@ export default function Hero() {
             href="#experience"
             style={{
               padding: isMobile ? "9px 22px" : isTablet ? "11px 26px" : "13px 32px",
-              border: `1.5px solid ${T.border}`,
+              border: "1.5px solid transparent",
+              background: secondaryButtonBackground,
               color: T.text,
               borderRadius: 28,
               textDecoration: "none",
               fontFamily: "'Work Sans', sans-serif",
               fontSize: isMobile ? 13 : isTablet ? 13 : 14,
               fontWeight: 500,
-              transition: "border-color .3s",
+              transition: "transform .25s, filter .25s, box-shadow .25s",
+              boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
-            onMouseEnter={(e) => (e.target.style.borderColor = T.textMuted)}
-            onMouseLeave={(e) => (e.target.style.borderColor = T.border)}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.filter = "brightness(0.985)";
+              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.filter = "none";
+              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+            }}
           >
             {t.cta2}
           </a>
@@ -177,19 +196,69 @@ export default function Hero() {
             href="/about"
             style={{
               padding: isMobile ? "9px 22px" : isTablet ? "11px 26px" : "13px 32px",
-              border: `1.5px solid ${T.border}`,
+              border: "1.5px solid transparent",
+              background: secondaryButtonBackground,
               color: T.text,
               borderRadius: 28,
               textDecoration: "none",
               fontFamily: "'Work Sans', sans-serif",
               fontSize: isMobile ? 13 : isTablet ? 13 : 14,
               fontWeight: 500,
-              transition: "border-color .3s",
+              transition: "transform .25s, filter .25s, box-shadow .25s",
+              boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
-            onMouseEnter={(e) => (e.target.style.borderColor = T.textMuted)}
-            onMouseLeave={(e) => (e.target.style.borderColor = T.border)}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.filter = "brightness(0.985)";
+              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.filter = "none";
+              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+            }}
           >
             {t.cta3}
+          </a>
+          <a
+            href={CV_URL}
+            download
+            style={{
+              padding: isMobile ? "9px 22px" : isTablet ? "11px 26px" : "13px 32px",
+              background: "linear-gradient(180deg, rgba(26,75,92,0.94) 0%, rgba(26,75,92,0.84) 100%)",
+              color: "#fff",
+              borderRadius: 28,
+              border: "1px solid rgba(255,255,255,0.14)",
+              textDecoration: "none",
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: isMobile ? 13 : isTablet ? 13 : 14,
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              transition: "transform .25s, box-shadow .25s",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              lineHeight: 1,
+              boxShadow:
+                "0 6px 16px rgba(26,75,92,0.14), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(255,255,255,0.08)",
+              backdropFilter: "blur(12px) saturate(135%)",
+              WebkitBackdropFilter: "blur(12px) saturate(135%)",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.boxShadow =
+                "0 10px 20px rgba(26,75,92,0.18), inset 0 1px 0 rgba(255,255,255,0.24), inset 0 -1px 0 rgba(255,255,255,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow =
+                "0 6px 16px rgba(26,75,92,0.14), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(255,255,255,0.08)";
+            }}
+          >
+            <span style={{ display: "inline-flex", alignItems: "center" }}>{t.cta4}</span>
+            <span style={{ display: "inline-flex", alignItems: "center", transform: "translateY(0.5px)" }}>
+              <DownloadIcon />
+            </span>
           </a>
         </div>
       </div>

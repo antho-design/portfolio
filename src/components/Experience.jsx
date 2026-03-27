@@ -5,12 +5,22 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
+import { BLUEPRINT_AURA_BG } from "../data/constants";
 
 export default function Experience() {
   const { isMobile } = useBreakpoint();
   const { lang } = useLanguage();
   const { experiences } = useContent();
   const t = UI[lang].experience;
+  const blueprintAura = {
+    position: "absolute",
+    inset: "-14% -16% -12% -8%",
+    backgroundImage: BLUEPRINT_AURA_BG,
+    opacity: 0.26,
+    maskImage: "radial-gradient(circle at 86% 14%, black 0%, black 26%, transparent 66%)",
+    WebkitMaskImage: "radial-gradient(circle at 86% 14%, black 0%, black 26%, transparent 66%)",
+    pointerEvents: "none",
+  };
 
   const timelineLeft = isMobile ? 16 : 95;
   const itemPaddingLeft = isMobile ? 44 : 130;
@@ -24,18 +34,20 @@ export default function Experience() {
         maxWidth: 900,
         margin: "0 auto",
         position: "relative",
+        overflow: "visible",
       }}
     >
+      <div style={blueprintAura} />
       {/* Motif décoratif */}
       <MotifSVG
-        size={460}
+        size={432}
         color="#D9D4CC"
         opacity={0.22}
         outerOpacity={0.12}
         style={{
           position: "absolute",
-          top: 28,
-          right: 28,
+          top: 16,
+          right: -84,
           pointerEvents: "none",
           filter:
             "drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) drop-shadow(-1px -1px 0 rgba(176,168,156,0.16))",

@@ -1,34 +1,25 @@
 import { useState } from "react";
 import { tokens as T } from "../styles/tokens";
 import { Reveal } from "./UI";
-import { useLanguage } from "../context/LanguageContext";
-import { UI } from "../data/translations";
-
-const PROJECT_COLORS = {
-  apec:          { from: "#1A4B5C", to: "#2D7D9A" },
-  autossimo:     { from: "#7A3B1E", to: "#C4714A" },
-  npc:           { from: "#1E5C3B", to: "#4A9B6F" },
-  cerfal:        { from: "#3D2B6B", to: "#7B5EA7" },
-  globedreamers: { from: "#6B2B2B", to: "#C4655A" },
-};
+import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
 
 export default function ProjectCard({ project, index, onNavigate }) {
   const [hovered, setHovered] = useState(false);
-  const { lang } = useLanguage();
-  const t = UI[lang].projects;
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
 
   const pill = {
-    padding: "5px 12px",
+    padding: "6px 12px",
     borderRadius: 999,
-    background: "rgba(255,255,255,0.14)",
-    border: "1px solid rgba(255,255,255,0.28)",
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.26)",
     fontFamily: "'Work Sans', sans-serif",
     fontSize: 12,
-    fontWeight: 500,
+    fontWeight: 600,
     color: "rgba(255,255,255,0.92)",
-    letterSpacing: "0.02em",
-    backdropFilter: "blur(6px)",
+    letterSpacing: "0.05em",
+    backdropFilter: "blur(8px) saturate(120%)",
+    WebkitBackdropFilter: "blur(8px) saturate(120%)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
   };
 
   const titleStyle = {
@@ -43,19 +34,23 @@ export default function ProjectCard({ project, index, onNavigate }) {
   const blueprintGrid = {
     position: "absolute",
     inset: 0,
-    backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
-      linear-gradient(rgba(255,255,255,0.085) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.085) 1px, transparent 1px),
-      linear-gradient(115deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.006) 46%, transparent 47%, transparent 53%, rgba(255,255,255,0.006) 54%, rgba(255,255,255,0.03) 100%),
-      linear-gradient(12deg, rgba(255,255,255,0.025) 0%, transparent 38%, rgba(255,255,255,0.018) 50%, transparent 62%, rgba(255,255,255,0.025) 100%)
-    `,
-    backgroundSize: "18px 18px, 18px 18px, 72px 72px, 72px 72px, 100% 100%, 100% 100%",
-    backgroundPosition: "0 0, 0 0, -1px -1px, -1px -1px, 0 0, 0 0",
+    backgroundImage: BLUEPRINT_GRID_BG,
+    backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
+    backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
     opacity: hovered ? 0.78 : 0.42,
     mixBlendMode: "screen",
     transition: "opacity .5s ease",
+    maskImage: "radial-gradient(circle at center, black 62%, transparent 100%)",
+    WebkitMaskImage: "radial-gradient(circle at center, black 62%, transparent 100%)",
+  };
+
+  const cardBorder = {
+    position: "absolute",
+    inset: 0,
+    borderRadius: T.radius,
+    pointerEvents: "none",
+    background: CARD_BORDER_BG,
+    zIndex: 3,
   };
 
   return (
@@ -65,10 +60,10 @@ export default function ProjectCard({ project, index, onNavigate }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
+          position: "relative",
           borderRadius: T.radius,
           overflow: "hidden",
           background: T.surface,
-          border: `1px solid ${T.border}`,
           cursor: "pointer",
           transition: "box-shadow .4s ease, transform .45s cubic-bezier(.22,1,.36,1)",
           transform: hovered ? "translateY(-6px)" : "translateY(0)",
@@ -169,34 +164,6 @@ export default function ProjectCard({ project, index, onNavigate }) {
               ))}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 7,
-                color: "#fff",
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 13,
-                fontWeight: 600,
-                transform: hovered ? "translateY(0)" : "translateY(10px)",
-                opacity: hovered ? 1 : 0,
-                transition: "transform .38s cubic-bezier(.22,1,.36,1) .22s, opacity .3s ease .22s",
-              }}
-            >
-              {t.viewProject}
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </div>
           </div>
         </div>
 
@@ -300,6 +267,7 @@ export default function ProjectCard({ project, index, onNavigate }) {
             {project.subtitle}
           </p>
         </div>
+        <div style={cardBorder} />
       </div>
     </Reveal>
   );

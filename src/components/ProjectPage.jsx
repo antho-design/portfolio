@@ -5,14 +5,7 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
-
-const PROJECT_COLORS = {
-  apec:          { from: "#1A4B5C", to: "#2D7D9A" },
-  autossimo:     { from: "#7A3B1E", to: "#C4714A" },
-  npc:           { from: "#1E5C3B", to: "#4A9B6F" },
-  cerfal:        { from: "#3D2B6B", to: "#7B5EA7" },
-  globedreamers: { from: "#6B2B2B", to: "#C4655A" },
-};
+import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
 
 /* ─── Placeholder image ─────────────────────────────────────── */
 function ImageSlot({ label, ratio = "16/9", caption = "" }) {
@@ -90,22 +83,25 @@ export default function ProjectPage({ projectId, onNavigate }) {
   const hPad = isMobile ? "20px" : isTablet ? "32px" : "40px";
   const maxW = 860;
   const sectionGap = isMobile ? "64px" : "96px";
+  const cardBorder = {
+    position: "absolute",
+    inset: 0,
+    borderRadius: T.radius,
+    pointerEvents: "none",
+    background: CARD_BORDER_BG,
+    zIndex: 1,
+  };
   const blueprintGrid = {
     position: "absolute",
     inset: 0,
-    backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
-      linear-gradient(rgba(255,255,255,0.085) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.085) 1px, transparent 1px),
-      linear-gradient(115deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.006) 46%, transparent 47%, transparent 53%, rgba(255,255,255,0.006) 54%, rgba(255,255,255,0.03) 100%),
-      linear-gradient(12deg, rgba(255,255,255,0.025) 0%, transparent 38%, rgba(255,255,255,0.018) 50%, transparent 62%, rgba(255,255,255,0.025) 100%)
-    `,
-    backgroundSize: "18px 18px, 18px 18px, 72px 72px, 72px 72px, 100% 100%, 100% 100%",
-    backgroundPosition: "0 0, 0 0, -1px -1px, -1px -1px, 0 0, 0 0",
+    backgroundImage: BLUEPRINT_GRID_BG,
+    backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
+    backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
     opacity: 0.55,
     mixBlendMode: "screen",
     pointerEvents: "none",
+    maskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
+    WebkitMaskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
   };
 
   return (
@@ -168,9 +164,19 @@ export default function ProjectPage({ projectId, onNavigate }) {
               gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
               gap: isMobile ? "20px 16px" : "0 32px",
               paddingTop: 32,
-              borderTop: "1px solid rgba(255,255,255,0.15)",
+              position: "relative",
             }}
           >
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 1,
+                background: "linear-gradient(to right, transparent, rgba(255,255,255,0.15) 15%, rgba(255,255,255,0.15) 85%, transparent)",
+              }}
+            />
             {[
               { label: t.client, value: details.client },
               { label: t.role, value: details.role },
@@ -286,105 +292,135 @@ export default function ProjectPage({ projectId, onNavigate }) {
             </div>
           </section>
 
-          {/* Objectifs */}
+          {/* Objectifs + Démarche côte à côte */}
           <section style={{ marginTop: sectionGap }}>
-            <Reveal>
-              <SectionLabel>{t.objectives}</SectionLabel>
-              <SectionTitle>{t.objectivesTitle}</SectionTitle>
-            </Reveal>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-                gap: 14,
-                marginTop: 28,
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1px 1fr",
+                gap: isMobile ? sectionGap : "0 48px",
+                alignItems: "start",
               }}
             >
-              {details.objectives.map((obj, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 16,
-                      padding: "18px 22px",
-                      background: T.surface,
-                      border: `1px solid ${T.border}`,
-                      borderRadius: T.radius,
-                      height: "100%",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Work Sans', sans-serif",
-                        fontSize: 24,
-                        fontWeight: 200,
-                        color: T.accentMid,
-                        lineHeight: 1,
-                        flexShrink: 0,
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 14, color: T.text, lineHeight: 1.6, margin: 0, paddingTop: 2 }}>
-                      {obj}
-                    </p>
-                  </div>
+              {/* ── Colonne Objectifs ── */}
+              <div>
+                <Reveal>
+                  <SectionLabel>{t.objectives}</SectionLabel>
+                  <SectionTitle style={{ fontSize: "clamp(18px, 2.2vw, 24px)" }}>
+                    {t.objectivesTitle}
+                  </SectionTitle>
                 </Reveal>
-              ))}
-            </div>
-          </section>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                    marginTop: 24,
+                  }}
+                >
+                  {details.objectives.map((obj, i) => (
+                    <Reveal key={i} delay={i * 0.07}>
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "flex",
+                          gap: 14,
+                          padding: "16px 18px",
+                          background: T.surface,
+                          borderRadius: T.radius,
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Work Sans', sans-serif",
+                            fontSize: 20,
+                            fontWeight: 200,
+                            color: T.accentMid,
+                            lineHeight: 1,
+                            flexShrink: 0,
+                            letterSpacing: "-0.02em",
+                            paddingTop: 1,
+                          }}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, color: T.text, lineHeight: 1.6, margin: 0 }}>
+                          {obj}
+                        </p>
+                        <div style={cardBorder} />
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
 
-          {/* Démarche */}
-          <section style={{ marginTop: sectionGap }}>
-            <Reveal>
-              <SectionLabel>{t.methodology}</SectionLabel>
-              <SectionTitle>{t.methodologyTitle}</SectionTitle>
-            </Reveal>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-                gap: 12,
-                marginTop: 28,
-              }}
-            >
-              {details.methodology.map((m, i) => (
-                <Reveal key={i} delay={i * 0.1}>
-                  <div
-                    style={{
-                      padding: "22px 18px",
-                      background: T.surface,
-                      border: `1px solid ${T.border}`,
-                      borderRadius: T.radius,
-                      height: "100%",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "'Work Sans', sans-serif",
-                        fontSize: 28,
-                        fontWeight: 200,
-                        color: T.accentMid,
-                        lineHeight: 1,
-                        marginBottom: 14,
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {m.phase}
-                    </div>
-                    <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 14, fontWeight: 600, color: T.text, marginBottom: 8 }}>
-                      {m.title}
-                    </div>
-                    <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, color: T.textMuted, lineHeight: 1.6, margin: 0 }}>
-                      {m.description}
-                    </p>
-                  </div>
+              {/* ── Séparateur vertical (desktop seulement) ── */}
+              {!isMobile && (
+                <div
+                  style={{
+                    width: 1,
+                    alignSelf: "stretch",
+                    background: `linear-gradient(to bottom, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+                  }}
+                />
+              )}
+
+              {/* ── Colonne Démarche ── */}
+              <div>
+                <Reveal delay={0.1}>
+                  <SectionLabel>{t.methodology}</SectionLabel>
+                  <SectionTitle style={{ fontSize: "clamp(18px, 2.2vw, 24px)" }}>
+                    {t.methodologyTitle}
+                  </SectionTitle>
                 </Reveal>
-              ))}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                    marginTop: 24,
+                  }}
+                >
+                  {details.methodology.map((m, i) => (
+                    <Reveal key={i} delay={0.1 + i * 0.08}>
+                      <div
+                        style={{
+                          position: "relative",
+                          padding: "14px 16px",
+                          background: T.surface,
+                          borderRadius: T.radius,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
+                          <span
+                            style={{
+                              fontFamily: "'Work Sans', sans-serif",
+                              fontSize: 18,
+                              fontWeight: 200,
+                              color: T.accentMid,
+                              lineHeight: 1,
+                              flexShrink: 0,
+                              letterSpacing: "-0.02em",
+                            }}
+                          >
+                            {m.phase}
+                          </span>
+                          <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, fontWeight: 600, color: T.text }}>
+                            {m.title}
+                          </span>
+                        </div>
+                        <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 12, color: T.textMuted, lineHeight: 1.6, margin: 0 }}>
+                          {m.description}
+                        </p>
+                        <div style={cardBorder} />
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div style={{ marginTop: 40 }}>
+            <div style={{ marginTop: 48 }}>
               <ImageSlot label={t.imgMethod} caption={t.imgMethodCaption} />
             </div>
           </section>
@@ -407,10 +443,20 @@ export default function ProjectPage({ projectId, onNavigate }) {
                         gridTemplateColumns: isMobile ? "1fr" : "200px 1fr",
                         gap: isMobile ? 10 : 32,
                         paddingBottom: 20,
-                        borderBottom: `1px solid ${T.border}`,
+                        position: "relative",
                         marginBottom: 20,
                       }}
                     >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          height: 1,
+                          background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+                        }}
+                      />
                       <div>
                         <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 16, fontWeight: 700, color: T.text, letterSpacing: "-0.01em" }}>
                           {mod.title}
@@ -532,10 +578,20 @@ export default function ProjectPage({ projectId, onNavigate }) {
       <div
         style={{
           background: T.surface,
-          borderTop: `1px solid ${T.border}`,
           padding: isMobile ? "48px 20px 64px" : "64px 40px 80px",
+          position: "relative",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: isMobile ? 20 : 40,
+            right: isMobile ? 20 : 40,
+            height: 1,
+            background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+          }}
+        />
         <div style={{ maxWidth: maxW, margin: "0 auto" }}>
           <div
             style={{
@@ -571,6 +627,14 @@ export default function ProjectPage({ projectId, onNavigate }) {
 function ProjectNavCard({ project, onNavigate }) {
   const [hovered, setHovered] = useState(false);
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
+  const navCardBorder = {
+    position: "absolute",
+    inset: 0,
+    borderRadius: T.radius,
+    pointerEvents: "none",
+    background: CARD_BORDER_BG,
+    zIndex: 3,
+  };
 
   return (
     <div
@@ -578,9 +642,9 @@ function ProjectNavCard({ project, onNavigate }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        position: "relative",
         borderRadius: T.radius,
         overflow: "hidden",
-        border: `1px solid ${T.border}`,
         cursor: "pointer",
         transition: "box-shadow .35s ease, transform .4s cubic-bezier(.22,1,.36,1)",
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
@@ -637,6 +701,7 @@ function ProjectNavCard({ project, onNavigate }) {
           {project.subtitle}
         </div>
       </div>
+      <div style={navCardBorder} />
     </div>
   );
 }

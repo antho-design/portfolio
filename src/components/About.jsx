@@ -4,6 +4,7 @@ import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
+import { BLUEPRINT_AURA_BG } from "../data/constants";
 
 const GALLERY_PLACEHOLDERS = [
   180, 260, 210, 320, 190,
@@ -17,6 +18,15 @@ export default function About() {
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
   const t = UI[lang].about;
+  const blueprintAura = {
+    position: "absolute",
+    inset: "-12% -14% -10% -10%",
+    backgroundImage: BLUEPRINT_AURA_BG,
+    opacity: 0.26,
+    maskImage: "radial-gradient(circle at 82% 18%, black 0%, black 26%, transparent 66%)",
+    WebkitMaskImage: "radial-gradient(circle at 82% 18%, black 0%, black 26%, transparent 66%)",
+    pointerEvents: "none",
+  };
 
   return (
     <section
@@ -27,18 +37,19 @@ export default function About() {
         margin: "0 auto",
         minHeight: "100vh",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
+      <div style={blueprintAura} />
       <MotifSVG
-        size={460}
+        size={432}
         color="#D9D4CC"
         opacity={0.22}
         outerOpacity={0.12}
         style={{
           position: "absolute",
-          top: "14%",
-          right: -72,
+          top: "12%",
+          right: -116,
           pointerEvents: "none",
           filter:
             "drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) drop-shadow(-1px -1px 0 rgba(176,168,156,0.16))",
