@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.3a-portfolio.com)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
