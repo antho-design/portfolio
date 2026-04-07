@@ -7,7 +7,7 @@ import { UI } from "../data/translations";
 import { DownloadIcon } from "./UI";
 import { CV_URL } from "../data/constants";
 
-export default function Hero() {
+export default function Hero({ onNavigate }) {
   const [loaded, setLoaded] = useState(false);
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
@@ -80,33 +80,35 @@ export default function Hero() {
         </div>
 
         <div style={{ ...anim(0.4), marginTop: isMobile ? 10 : isTablet ? 14 : 20 }}>
-          <h1
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              fontWeight: 200,
-              fontSize: titleSize,
-              textTransform: "uppercase",
-              letterSpacing: "0.07em",
-              color: T.text,
-              lineHeight: 1.08,
-              margin: 0,
-            }}
-          >
-            ANTHONIN
-          </h1>
-          <h1
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: titleSize,
-              textTransform: "uppercase",
-              letterSpacing: "0.07em",
-              color: T.accent,
-              lineHeight: 1.08,
-              margin: 0,
-            }}
-          >
-            SAUTET
+          <h1 style={{ margin: 0 }}>
+            <span
+              style={{
+                display: "block",
+                fontFamily: "'Work Sans', sans-serif",
+                fontWeight: 200,
+                fontSize: titleSize,
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+                color: T.text,
+                lineHeight: 1.08,
+              }}
+            >
+              ANTHONIN
+            </span>
+            <span
+              style={{
+                display: "block",
+                fontFamily: "'Work Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: titleSize,
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+                color: T.accent,
+                lineHeight: 1.08,
+              }}
+            >
+              SAUTET
+            </span>
           </h1>
         </div>
 
@@ -152,14 +154,14 @@ export default function Hero() {
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.filter = "brightness(0.985)";
-              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.filter = "brightness(0.985)";
+              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.filter = "none";
-              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.filter = "none";
+              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
             }}
           >
             {t.cta1}
@@ -180,20 +182,36 @@ export default function Hero() {
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.filter = "brightness(0.985)";
-              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.filter = "brightness(0.985)";
+              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.filter = "none";
-              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.filter = "none";
+              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
             }}
           >
             {t.cta2}
           </a>
           <a
             href="/about"
+            onClick={(event) => {
+              event.preventDefault();
+              const rect = event.currentTarget.getBoundingClientRect();
+              onNavigate?.("/about", {
+                transition: {
+                  type: "about",
+                  label: t.cta3,
+                  rect: {
+                    left: rect.left,
+                    top: rect.top,
+                    width: rect.width,
+                    height: rect.height,
+                  },
+                },
+              });
+            }}
             style={{
               padding: isMobile ? "9px 22px" : isTablet ? "11px 26px" : "13px 32px",
               border: "1.5px solid transparent",
@@ -208,14 +226,14 @@ export default function Hero() {
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.filter = "brightness(0.985)";
-              e.target.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.filter = "brightness(0.985)";
+              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.filter = "none";
-              e.target.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.filter = "none";
+              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
             }}
           >
             {t.cta3}
@@ -245,13 +263,13 @@ export default function Hero() {
               WebkitBackdropFilter: "blur(12px) saturate(135%)",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow =
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow =
                 "0 10px 20px rgba(26,75,92,0.18), inset 0 1px 0 rgba(255,255,255,0.24), inset 0 -1px 0 rgba(255,255,255,0.1)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow =
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
                 "0 6px 16px rgba(26,75,92,0.14), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(255,255,255,0.08)";
             }}
           >

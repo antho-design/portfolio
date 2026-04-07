@@ -56,7 +56,31 @@ export default function ProjectCard({ project, index, onNavigate }) {
   return (
     <Reveal delay={index * 0.07} y={40}>
       <div
-        onClick={() => onNavigate?.(`/projects/${project.id}`)}
+        role="button"
+        tabIndex={0}
+        onClick={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          onNavigate?.(`/projects/${project.id}`, {
+            transition: {
+              type: "project",
+              projectId: project.id,
+              title: project.title,
+              tasks: project.tasks,
+              rect: {
+                left: rect.left,
+                top: rect.top,
+                width: rect.width,
+                height: rect.height,
+              },
+            },
+          });
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onNavigate?.(`/projects/${project.id}`);
+          }
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{

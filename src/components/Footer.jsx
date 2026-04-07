@@ -94,8 +94,8 @@ export default function Footer({ onNavigate }) {
                 textDecoration: "none",
                 transition: "color .3s",
               }}
-              onMouseEnter={(e) => (e.target.style.color = T.accent)}
-              onMouseLeave={(e) => (e.target.style.color = T.textMuted)}
+              onMouseEnter={(e) => (e.currentTarget.style.color = T.accent)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = T.textMuted)}
             >
               {link.label}
             </a>
@@ -113,8 +113,8 @@ export default function Footer({ onNavigate }) {
               textDecoration: "none",
               transition: "color .3s",
             }}
-            onMouseEnter={(e) => (e.target.style.color = T.accent)}
-            onMouseLeave={(e) => (e.target.style.color = T.textMuted)}
+            onMouseEnter={(e) => (e.currentTarget.style.color = T.accent)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = T.textMuted)}
           >
             {t.legal}
           </a>
@@ -140,12 +140,12 @@ export default function Footer({ onNavigate }) {
               transition: "filter .3s, color .3s",
             }}
             onMouseEnter={(e) => {
-              e.target.style.filter = "brightness(0.985)";
-              e.target.style.color = T.accent;
+              e.currentTarget.style.filter = "brightness(0.985)";
+              e.currentTarget.style.color = T.accent;
             }}
             onMouseLeave={(e) => {
-              e.target.style.filter = "none";
-              e.target.style.color = T.text;
+              e.currentTarget.style.filter = "none";
+              e.currentTarget.style.color = T.text;
             }}
           >
             {t.cv}

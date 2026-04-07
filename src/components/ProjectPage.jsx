@@ -638,7 +638,15 @@ function ProjectNavCard({ project, onNavigate }) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => onNavigate(`/projects/${project.id}`)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onNavigate(`/projects/${project.id}`);
+        }
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

@@ -5,28 +5,27 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
 
-function FlagIcon({ lang, color, mutedColor }) {
+function FlagIcon({ lang, mutedColor }) {
   if (lang === "fr") {
     return (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden="true">
         <rect x="1.25" y="2" width="11.5" height="10" rx="2.5" stroke={mutedColor} />
-        <path d="M2.5 2.5h2.333v9H2.5z" fill={color} fillOpacity="0.38" />
-        <path d="M4.833 2.5h4.334v9H4.833z" fill={color} fillOpacity="0.18" />
-        <path d="M9.167 2.5H11.5v9H9.167z" fill={color} />
+        <path d="M2.5 2.5h2.333v9H2.5z" fill="#244B9A" />
+        <path d="M4.833 2.5h4.334v9H4.833z" fill="#F7F6F2" />
+        <path d="M9.167 2.5H11.5v9H9.167z" fill="#D14A44" />
       </svg>
     );
   }
 
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <rect x="1.25" y="2" width="11.5" height="10" rx="2.5" stroke={mutedColor} />
-      <path d="M2.5 2.5h9v9h-9z" fill={color} fillOpacity="0.14" />
-      <path d="M6.125 2.5h1.75v9h-1.75z" fill={color} />
-      <path d="M2.5 6.125h9v1.75h-9z" fill={color} />
+      <path d="M2.5 2.5h9v9h-9z" fill="#244B9A" />
+      <path d="M6.125 2.5h1.75v9h-1.75z" fill="#F7F6F2" />
+      <path d="M2.5 6.125h9v1.75h-9z" fill="#F7F6F2" />
       <path
         d="M2.5 3.4L5.1 6M4.35 2.5l2.6 2.6M9.65 2.5L7.05 5.1M11.5 3.4L8.9 6M2.5 10.6L5.1 8M4.35 11.5l2.6-2.6M11.5 10.6L8.9 8M9.65 11.5l-2.6-2.6"
-        stroke={color}
-        strokeOpacity="0.35"
+        stroke="#D14A44"
         strokeWidth="0.7"
       />
     </svg>
@@ -136,7 +135,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
       transition: "all .25s ease",
       display: "inline-flex",
       alignItems: "center",
-      gap: 6,
+      gap: 7,
       boxShadow: isActive && !isOnDarkHero ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
     };
   };
@@ -228,6 +227,25 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                       onNavigate(`/${l.href}`);
                       return;
                     }
+
+                    if (l.href === "/about" && currentPath !== "/about" && !isMobile) {
+                      event.preventDefault();
+                      const rect = event.currentTarget.getBoundingClientRect();
+                      onNavigate(l.href, {
+                        transition: {
+                          type: "about",
+                          label: l.label,
+                          rect: {
+                            left: rect.left,
+                            top: rect.top,
+                            width: rect.width,
+                            height: rect.height,
+                          },
+                        },
+                      });
+                      return;
+                    }
+
                     event.preventDefault();
                     onNavigate(l.href);
                   }}
@@ -305,6 +323,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
           {/* Hamburger button mobile (hors pages projet) */}
           {isMobile && !currentPath.startsWith("/projects/") && (
             <button
+              type="button"
               onClick={() => setMenuOpen((o) => !o)}
               style={{
                 background: "none",
@@ -372,7 +391,6 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
               >
                 <FlagIcon
                   lang={optionLang}
-                  color={lang === optionLang ? switchText : switchMuted}
                   mutedColor={switchBorder}
                 />
                 <span>{optionLang.toUpperCase()}</span>
