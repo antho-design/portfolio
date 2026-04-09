@@ -65,6 +65,7 @@ export default function ProjectCard({ project, index, onNavigate }) {
               type: "project",
               projectId: project.id,
               title: project.title,
+              subtitle: project.subtitle,
               tasks: project.tasks,
               rect: {
                 left: rect.left,

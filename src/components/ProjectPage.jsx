@@ -103,6 +103,21 @@ export default function ProjectPage({ projectId, onNavigate }) {
     maskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
     WebkitMaskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
   };
+  const heroTaskPill = {
+    padding: "6px 12px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.22)",
+    color: "rgba(255,255,255,0.9)",
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: 12,
+    fontWeight: 600,
+    letterSpacing: "0.04em",
+    backdropFilter: "blur(8px) saturate(120%)",
+    WebkitBackdropFilter: "blur(8px) saturate(120%)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+    whiteSpace: "nowrap",
+  };
 
   return (
     <article>
@@ -120,16 +135,6 @@ export default function ProjectPage({ projectId, onNavigate }) {
         <div style={blueprintGrid} />
 
         <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
-
-          {/* Tag + année */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
-            <span style={tagStyle}>
-              {project.tag}
-            </span>
-            <span style={{ ...tagStyle, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.65)", fontWeight: 400, letterSpacing: "0.04em", textTransform: "none" }}>
-              {project.year}
-            </span>
-          </div>
 
           {/* Titre */}
           <h1
@@ -151,11 +156,18 @@ export default function ProjectPage({ projectId, onNavigate }) {
               fontSize: isMobile ? 16 : 20,
               fontWeight: 300,
               color: "rgba(255,255,255,0.65)",
-              margin: "0 0 40px",
+              margin: "0 0 18px",
             }}
           >
             {project.subtitle}
           </p>
+
+          {/* Gélules tâches */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 36 }}>
+            {project.tasks.map((task) => (
+              <span key={task} style={heroTaskPill}>{task}</span>
+            ))}
+          </div>
 
           {/* Méta — client, rôle, année, outils */}
           <div
@@ -713,17 +725,3 @@ function ProjectNavCard({ project, onNavigate }) {
     </div>
   );
 }
-
-/* Styles partagés */
-const tagStyle = {
-  padding: "5px 14px",
-  borderRadius: 999,
-  background: "rgba(255,255,255,0.14)",
-  border: "1px solid rgba(255,255,255,0.28)",
-  fontFamily: "'Work Sans', sans-serif",
-  fontSize: 11,
-  fontWeight: 600,
-  color: "rgba(255,255,255,0.9)",
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-};

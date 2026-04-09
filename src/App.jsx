@@ -179,7 +179,7 @@ function RouteTransition({ transition }) {
     const { phase, rect, label } = transition;
     const expanded = phase !== "idle";
     const faded = phase === "fade";
-    const motionCurve = "cubic-bezier(.65,0,.35,1)";
+    const curve = "cubic-bezier(.52,0,.24,1)";
 
     return (
       <div
@@ -198,8 +198,15 @@ function RouteTransition({ transition }) {
           overflow: "hidden",
           opacity: faded ? 0 : 1,
           transform: faded ? "scale(1.008)" : "scale(1)",
-          transition:
-            `left .78s ${motionCurve}, top .78s ${motionCurve}, width .78s ${motionCurve}, height .78s ${motionCurve}, border-radius .78s ${motionCurve}, opacity .42s ease-in-out, transform .42s ease-in-out`,
+          transition: [
+            `left .72s ${curve}`,
+            `top .72s ${curve}`,
+            `width .72s ${curve}`,
+            `height .72s ${curve}`,
+            `border-radius .72s ${curve}`,
+            "opacity .5s ease-out",
+            "transform .5s ease-out",
+          ].join(", "),
           boxShadow: expanded
             ? "0 26px 80px rgba(51,51,51,0.1)"
             : "0 12px 36px rgba(51,51,51,0.08)",
@@ -213,7 +220,7 @@ function RouteTransition({ transition }) {
             opacity: expanded ? 0.34 : 0.18,
             maskImage: "radial-gradient(circle at 78% 18%, black 0%, black 28%, transparent 68%)",
             WebkitMaskImage: "radial-gradient(circle at 78% 18%, black 0%, black 28%, transparent 68%)",
-            transition: `opacity .45s ${motionCurve}`,
+            transition: `opacity .6s ${curve}`,
           }}
         />
         <MotifSVG
@@ -228,7 +235,7 @@ function RouteTransition({ transition }) {
             filter:
               "drop-shadow(1px 1px 0 rgba(255,255,255,0.82)) drop-shadow(-1px -1px 0 rgba(176,168,156,0.16))",
             mixBlendMode: "multiply",
-            transition: `opacity .45s ${motionCurve}`,
+            transition: `opacity .6s ${curve}`,
           }}
         />
         <div
@@ -247,14 +254,12 @@ function RouteTransition({ transition }) {
             transform: "translate(-50%, -50%)",
             color: T.text,
             fontFamily: "'Work Sans', sans-serif",
-            fontSize: expanded ? "clamp(28px, 5vw, 54px)" : 14,
+            fontSize: "clamp(28px, 5vw, 54px)",
             fontWeight: 600,
             letterSpacing: "-0.02em",
-            textTransform: "none",
-            transition:
-              `left .78s ${motionCurve}, top .78s ${motionCurve}, transform .78s ${motionCurve}, font-size .78s ${motionCurve}, opacity .42s ease-in-out`,
-            opacity: faded ? 0 : 1,
             whiteSpace: "nowrap",
+            opacity: faded ? 0 : expanded ? 1 : 0,
+            transition: `opacity .4s ease-in-out ${expanded && !faded ? "0.2s" : "0s"}`,
           }}
         >
           {label}
@@ -263,11 +268,15 @@ function RouteTransition({ transition }) {
     );
   }
 
-  const { phase, rect, colors, title, target, tasks = [] } = transition;
+  const { phase, rect, colors, title, subtitle, tasks = [] } = transition;
   const expanded = phase !== "idle";
-  const settled = phase === "settle" || phase === "fade";
   const faded = phase === "fade";
-  const motionCurve = "cubic-bezier(.65,0,.35,1)";
+  const curve = "cubic-bezier(.52,0,.24,1)";
+
+  const contentOpacity = (delay) => ({
+    opacity: faded ? 0 : expanded ? 1 : 0,
+    transition: `opacity .38s ease-in-out ${faded ? "0s" : `${delay}s`}`,
+  });
 
   return (
     <div
@@ -284,29 +293,34 @@ function RouteTransition({ transition }) {
         pointerEvents: "none",
         overflow: "hidden",
         opacity: faded ? 0 : 1,
-        transform: faded ? "scale(1.01)" : "scale(1)",
-        transition:
-          `left .78s ${motionCurve}, top .78s ${motionCurve}, width .78s ${motionCurve}, height .78s ${motionCurve}, border-radius .78s ${motionCurve}, opacity .42s ease-in-out, transform .42s ease-in-out`,
+        transform: faded ? "scale(1.008)" : "scale(1)",
+        transition: [
+          `left .90s ${curve}`,
+          `top .90s ${curve}`,
+          `width .90s ${curve}`,
+          `height .90s ${curve}`,
+          `border-radius .90s ${curve}`,
+          "opacity .52s ease-out",
+          "transform .52s ease-out",
+        ].join(", "),
         boxShadow: expanded
-          ? "0 26px 80px rgba(26,75,92,0.18)"
+          ? "0 32px 80px rgba(0,0,0,0.18)"
           : "0 20px 50px rgba(26,75,92,0.16)",
       }}
     >
+      {/* Grille décorative */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage: BLUEPRINT_GRID_BG,
           backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
-          opacity: expanded ? 0.58 : 0.4,
+          backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+          opacity: expanded ? 0.58 : 0.32,
           mixBlendMode: "screen",
-          maskImage: expanded
-            ? "radial-gradient(circle at center, black 74%, transparent 100%)"
-            : "radial-gradient(circle at center, black 62%, transparent 100%)",
-          WebkitMaskImage: expanded
-            ? "radial-gradient(circle at center, black 74%, transparent 100%)"
-            : "radial-gradient(circle at center, black 62%, transparent 100%)",
-          transition: `opacity .45s ${motionCurve}`,
+          maskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
+          transition: `opacity .6s ${curve}`,
         }}
       />
       <div
@@ -317,72 +331,90 @@ function RouteTransition({ transition }) {
             "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 28%, rgba(10,20,24,0.1) 100%)",
         }}
       />
+
+      {/* Contenu centré — positionné uniquement par transform, pas de left/top animés */}
       <div
         style={{
           position: "absolute",
-          left: settled ? target.left : expanded ? "50%" : 24,
-          bottom: expanded ? "auto" : 24,
-          top: settled ? target.top : expanded ? "50%" : "auto",
-          transform: settled ? "translate(0, 0)" : expanded ? "translate(-50%, -50%)" : "translate(0, 0)",
-          color: "rgba(255,255,255,0.78)",
-          fontFamily: "'Work Sans', sans-serif",
-          fontSize: settled ? target.fontSize : expanded ? "clamp(30px, 6vw, 72px)" : 18,
-          fontWeight: expanded ? 700 : 600,
-          letterSpacing: settled ? "-0.02em" : expanded ? "-0.03em" : "-0.01em",
-          textTransform: settled ? "none" : expanded ? "none" : "uppercase",
-          transition:
-            `left .78s ${motionCurve}, top .78s ${motionCurve}, bottom .78s ${motionCurve}, transform .78s ${motionCurve}, font-size .78s ${motionCurve}, opacity .42s ease-in-out`,
-          opacity: faded ? 0 : 1,
-          whiteSpace: "nowrap",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 12,
+          textAlign: "center",
         }}
       >
-        {expanded ? title : title.substring(0, 2).toUpperCase()}
-      </div>
-      {tasks.length > 0 && (
+        {/* Titre */}
         <div
           style={{
-            position: "absolute",
-            left: settled ? target.left : "50%",
-            top: settled ? "calc(50% + 72px)" : expanded ? "calc(50% + 72px)" : "calc(100% - 54px)",
-            transform: settled ? "translate(0, 0)" : expanded ? "translate(-50%, 0)" : "translate(-50%, 0)",
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: settled ? "flex-start" : "center",
-            gap: 8,
-            maxWidth: settled ? 460 : "min(72vw, 680px)",
-            opacity: faded ? 0 : expanded ? 1 : 0,
-            transition:
-              `left .78s ${motionCurve}, top .78s ${motionCurve}, transform .78s ${motionCurve}, opacity .32s ease-in-out`,
+            color: "rgba(255,255,255,0.88)",
+            fontFamily: "'Work Sans', sans-serif",
+            fontSize: "clamp(32px, 6vw, 72px)",
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            whiteSpace: "nowrap",
+            ...contentOpacity(0.22),
           }}
         >
-          {tasks.map((task, index) => (
-            <span
-              key={`${title}-${task}`}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 999,
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.22)",
-                color: "rgba(255,255,255,0.9)",
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.04em",
-                backdropFilter: "blur(8px) saturate(120%)",
-                WebkitBackdropFilter: "blur(8px) saturate(120%)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
-                transform: faded ? "translateY(-6px)" : expanded ? "translateY(0)" : "translateY(16px)",
-                opacity: faded ? 0 : expanded ? 1 : 0,
-                transition:
-                  `transform .55s ${motionCurve} ${0.1 + index * 0.04}s, opacity .32s ease-in-out ${0.1 + index * 0.04}s`,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {task}
-            </span>
-          ))}
+          {title}
         </div>
-      )}
+
+        {/* Sous-titre */}
+        {subtitle && (
+          <div
+            style={{
+              color: "rgba(255,255,255,0.55)",
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(14px, 1.8vw, 20px)",
+              fontWeight: 300,
+              letterSpacing: "0.01em",
+              whiteSpace: "nowrap",
+              ...contentOpacity(0.34),
+            }}
+          >
+            {subtitle}
+          </div>
+        )}
+
+        {/* Gélules */}
+        {tasks.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "nowrap",
+              justifyContent: "center",
+              gap: 7,
+              marginTop: 4,
+            }}
+          >
+            {tasks.map((task, i) => (
+              <span
+                key={task}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 999,
+                  background: "rgba(255,255,255,0.11)",
+                  border: "1px solid rgba(255,255,255,0.22)",
+                  color: "rgba(255,255,255,0.88)",
+                  fontFamily: "'Work Sans', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.04em",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  ...contentOpacity(0.44 + i * 0.06),
+                }}
+              >
+                {task}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -589,43 +621,38 @@ export default function App() {
         label: transition.label,
       });
 
+      // expand
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition((current) => (current ? { ...current, phase: "expand" } : current));
         }, 20)
       );
 
+      // navigate pendant l'expansion
       transitionTimers.current.push(
         window.setTimeout(() => {
           applyNavigation(path);
-        }, 420)
+        }, 380)
       );
 
+      // fade 80ms après la fin de l'expansion
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition((current) => (current ? { ...current, phase: "fade" } : current));
-        }, 1280)
+        }, 820)
       );
 
+      // cleanup après le fade (.5s)
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition(null);
-        }, 1600)
+        }, 1340)
       );
 
       return;
     }
 
     const colors = PROJECT_COLORS[transition.projectId] || { from: T.accent, to: T.accentMid };
-    const maxW = 860;
-    const horizontalPad = 40;
-    const targetWidth = Math.min(maxW, Math.max(window.innerWidth - horizontalPad * 2, 0));
-    const targetLeft = Math.max((window.innerWidth - targetWidth) / 2, horizontalPad);
-    const titleTarget = {
-      left: targetLeft,
-      top: 124,
-      fontSize: "clamp(48px, 6vw, 72px)",
-    };
 
     transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
     transitionTimers.current = [];
@@ -635,39 +662,37 @@ export default function App() {
       phase: "idle",
       rect: transition.rect,
       title: transition.title,
+      subtitle: transition.subtitle,
       tasks: transition.tasks,
       colors,
-      target: titleTarget,
     });
 
+    // expand: overlay commence à s'étendre (~900ms)
     transitionTimers.current.push(
       window.setTimeout(() => {
         setRouteTransition((current) => (current ? { ...current, phase: "expand" } : current));
       }, 20)
     );
 
+    // navigate: l'overlay couvre ~65% de l'écran à ce stade
     transitionTimers.current.push(
       window.setTimeout(() => {
         applyNavigation(path);
-      }, 520)
+      }, 560)
     );
 
-    transitionTimers.current.push(
-      window.setTimeout(() => {
-        setRouteTransition((current) => (current ? { ...current, phase: "settle" } : current));
-      }, 1540)
-    );
-
+    // fade: 120ms après la fin de l'expansion (t=20+900=920ms)
     transitionTimers.current.push(
       window.setTimeout(() => {
         setRouteTransition((current) => (current ? { ...current, phase: "fade" } : current));
-      }, 2140)
+      }, 1040)
     );
 
+    // cleanup: après le fade (.52s)
     transitionTimers.current.push(
       window.setTimeout(() => {
         setRouteTransition(null);
-      }, 2460)
+      }, 1600)
     );
   };
 
