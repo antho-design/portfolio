@@ -256,6 +256,27 @@ export const PROJECT_DETAILS = {
       "Délais de livraison accélérés et production débloquée",
       "Fondations solides pour une culture design long terme",
     ],
+    images: {
+      cover: null,
+      context: [
+        "/apec/ui-atoms-molecules.png",
+        "/apec/ui-input-states.png",
+        "/apec/ui-variables.png",
+      ],
+      methodology: [
+        "/apec/ux-cas-nominal.png",
+        "/apec/ux-cas-marginaux.png",
+        "/apec/ux-prototype-flow.png",
+      ],
+      modules: [
+        ["/apec/agenda-5days-dark.png", "/apec/agenda-desktop-overview.png", "/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
+        ["/apec/demandes-list.png", "/apec/demandes-detail.png"],
+        ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"],
+        ["/apec/pa-list.png", "/apec/pa-creation.png"],
+        ["/apec/edc-search.png", "/apec/edc-results.png"],
+      ],
+      moduleLayouts: [null, "grid", "grid", "grid", "grid"],
+    },
   },
 
   autossimo: {
@@ -340,6 +361,27 @@ export const PROJECT_DETAILS = {
       "Fondations d'un design system unifié posées",
       "Dynamique UX centrée sur les usages réels des professionnels de l'automobile",
     ],
+    images: {
+      cover: "/autossimo/cover.png",
+      context: ["/autossimo/context-devices.png"],
+      methodology: [
+        "/autossimo/method-benchmark.png",
+        "/autossimo/method-persona.png",
+      ],
+      modules: [
+        ["/autossimo/vehicle-selection-desk.png", "/autossimo/vehicle-selection-connected.png"],
+        ["/autossimo/catalogue-list.png", "/autossimo/catalogue-responsive.png"],
+        ["/autossimo/product-desk.png", "/autossimo/product-responsive.png"],
+        ["/autossimo/exploded-view.png", "/autossimo/exploded-mobile.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid", "grid"],
+      phases: [
+        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
+        ["/autossimo/phase-audit-1.png", "/autossimo/phase-audit-2.png"],
+        ["/autossimo/phase-shadowing-journey.png", "/autossimo/phase-shadowing-persona.png"],
+        [],
+      ],
+    },
   },
 
   npc: {
@@ -418,6 +460,17 @@ export const PROJECT_DETAILS = {
       "Gestion du contenu facilitée grâce à un CMS structuré et accessible",
       "Base solide pour une communication digitale cohérente et durable",
     ],
+    images: {
+      cover: "/npc/cover.png",
+      context: ["/npc/context-logo-countries.png"],
+      methodology: ["/npc/visual-guide.png", "/npc/brand-logo.png", "/npc/brand-colors.png"],
+      modules: [
+        ["/npc/homepage.png"],
+        ["/npc/projects-pages.png"],
+        ["/npc/multilingual-es-desktop.png", "/npc/multilingual-es-mobile.png"],
+      ],
+      moduleLayouts: [null, null, "grid"],
+    },
   },
 
   cerfal: {
@@ -496,6 +549,17 @@ export const PROJECT_DETAILS = {
       "Base solide posée pour le développement du futur site institutionnel",
       "Expérience utilisateur optimisée pour faciliter les prises de contact",
     ],
+    images: {
+      cover: "/cerfal/cover.png",
+      context: ["/cerfal/context-homepage.png"],
+      methodology: ["/cerfal/method-desktop.png", "/cerfal/method-mobile.png"],
+      modules: [
+        ["/cerfal/etudiant-guide.png", "/cerfal/etudiant-recherche.png"],
+        ["/cerfal/parent-fiche-formation.png", "/cerfal/parent-fiche-site.png"],
+        ["/cerfal/entreprise-guide.png", "/cerfal/entreprise-sites-map.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid"],
+    },
   },
 
   globedreamers: {
@@ -580,6 +644,18 @@ export const PROJECT_DETAILS = {
       "Design system et identité visuelle posant les bases d'une évolution produit cohérente",
       "Communication digitale unifiée sur tous les supports numériques",
     ],
+    images: {
+      cover: "/globedreamers/cover.png",
+      context: ["/globedreamers/context.png"],
+      methodology: ["/globedreamers/method-brand-1.png", "/globedreamers/method-brand-2.png"],
+      modules: [
+        ["/globedreamers/accueil-multidevice.png", "/globedreamers/accueil-screens.png"],
+        ["/globedreamers/dons-payment.png", "/globedreamers/dons-flows.png"],
+        ["/globedreamers/entreprises-screens.png"],
+        ["/globedreamers/communaute-mobile.png"],
+      ],
+      moduleLayouts: ["grid", "grid", null, null],
+    },
   },
 };
 
@@ -869,6 +945,27 @@ export const PROJECT_DETAILS_EN = {
       "Accelerated delivery timelines and unblocked production",
       "Solid foundations for a long-term design culture",
     ],
+    images: {
+      cover: null,
+      context: [
+        "/apec/ui-atoms-molecules.png",
+        "/apec/ui-input-states.png",
+        "/apec/ui-variables.png",
+      ],
+      methodology: [
+        "/apec/ux-cas-nominal.png",
+        "/apec/ux-cas-marginaux.png",
+        "/apec/ux-prototype-flow.png",
+      ],
+      modules: [
+        ["/apec/agenda-5days-dark.png", "/apec/agenda-desktop-overview.png", "/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
+        ["/apec/demandes-list.png", "/apec/demandes-detail.png"],
+        ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"],
+        ["/apec/pa-list.png", "/apec/pa-creation.png"],
+        ["/apec/edc-search.png", "/apec/edc-results.png"],
+      ],
+      moduleLayouts: [null, "grid", "grid", "grid", "grid"],
+    },
   },
 
   autossimo: {
@@ -953,6 +1050,27 @@ export const PROJECT_DETAILS_EN = {
       "Foundations of a unified design system established",
       "UX momentum centred on real-world automotive professionals' usage",
     ],
+    images: {
+      cover: "/autossimo/cover.png",
+      context: ["/autossimo/context-devices.png"],
+      methodology: [
+        "/autossimo/method-benchmark.png",
+        "/autossimo/method-persona.png",
+      ],
+      modules: [
+        ["/autossimo/vehicle-selection-desk.png", "/autossimo/vehicle-selection-connected.png"],
+        ["/autossimo/catalogue-list.png", "/autossimo/catalogue-responsive.png"],
+        ["/autossimo/product-desk.png", "/autossimo/product-responsive.png"],
+        ["/autossimo/exploded-view.png", "/autossimo/exploded-mobile.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid", "grid"],
+      phases: [
+        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
+        ["/autossimo/phase-audit-1.png", "/autossimo/phase-audit-2.png"],
+        ["/autossimo/phase-shadowing-journey.png", "/autossimo/phase-shadowing-persona.png"],
+        [],
+      ],
+    },
   },
 
   npc: {
@@ -1031,6 +1149,17 @@ export const PROJECT_DETAILS_EN = {
       "Content management made easier with a structured, accessible CMS",
       "Solid foundation for coherent and sustainable digital communication",
     ],
+    images: {
+      cover: "/npc/cover.png",
+      context: ["/npc/context-logo-countries.png"],
+      methodology: ["/npc/visual-guide.png", "/npc/brand-logo.png", "/npc/brand-colors.png"],
+      modules: [
+        ["/npc/homepage.png"],
+        ["/npc/projects-pages.png"],
+        ["/npc/multilingual-es-desktop.png", "/npc/multilingual-es-mobile.png"],
+      ],
+      moduleLayouts: [null, null, "grid"],
+    },
   },
 
   cerfal: {
@@ -1109,6 +1238,17 @@ export const PROJECT_DETAILS_EN = {
       "Solid foundation laid for the future institutional website",
       "Optimised user experience to facilitate contact",
     ],
+    images: {
+      cover: "/cerfal/cover.png",
+      context: ["/cerfal/context-homepage.png"],
+      methodology: ["/cerfal/method-desktop.png", "/cerfal/method-mobile.png"],
+      modules: [
+        ["/cerfal/etudiant-guide.png", "/cerfal/etudiant-recherche.png"],
+        ["/cerfal/parent-fiche-formation.png", "/cerfal/parent-fiche-site.png"],
+        ["/cerfal/entreprise-guide.png", "/cerfal/entreprise-sites-map.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid"],
+    },
   },
 
   globedreamers: {
@@ -1193,5 +1333,17 @@ export const PROJECT_DETAILS_EN = {
       "Design system and visual identity laying the foundations for coherent product evolution",
       "Unified digital communication across all digital channels",
     ],
+    images: {
+      cover: "/globedreamers/cover.png",
+      context: ["/globedreamers/context.png"],
+      methodology: ["/globedreamers/method-brand-1.png", "/globedreamers/method-brand-2.png"],
+      modules: [
+        ["/globedreamers/accueil-multidevice.png", "/globedreamers/accueil-screens.png"],
+        ["/globedreamers/dons-payment.png", "/globedreamers/dons-flows.png"],
+        ["/globedreamers/entreprises-screens.png"],
+        ["/globedreamers/communaute-mobile.png"],
+      ],
+      moduleLayouts: ["grid", "grid", null, null],
+    },
   },
 };

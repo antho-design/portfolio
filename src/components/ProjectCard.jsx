@@ -3,9 +3,20 @@ import { tokens as T } from "../styles/tokens";
 import { Reveal } from "./UI";
 import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
 
+const PROJECT_CARD_IMAGES = {
+  autossimo: { src: "/autossimo-card.png" },
+  npc:       { src: "/npc/card.png" },
+  cerfal:         { src: "/cerfal/card.png", paddingLeft: "16%", width: "88%" },
+  globedreamers:  { src: "/globedreamers/accueil-multidevice.png", paddingLeft: "2%", width: "96%" },
+};
+
 export default function ProjectCard({ project, index, onNavigate }) {
   const [hovered, setHovered] = useState(false);
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
+  const cardConfig = PROJECT_CARD_IMAGES[project.id];
+  const projectImage = cardConfig?.src ?? null;
+  const cardPaddingLeft = cardConfig?.paddingLeft ?? "9%";
+  const cardWidth = cardConfig?.width ?? "74%";
 
   const pill = {
     padding: "6px 12px",
@@ -120,41 +131,67 @@ export default function ProjectCard({ project, index, onNavigate }) {
               position: "absolute",
               inset: 0,
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: projectImage ? "flex-end" : "center",
+              justifyContent: projectImage ? "flex-start" : "center",
+              paddingLeft: projectImage ? cardPaddingLeft : 0,
+              paddingBottom: projectImage ? "-2%" : 0,
+              overflow: "hidden",
             }}
           >
             <div
               style={{
-                width: "52%",
-                aspectRatio: "16/10",
-                background: "rgba(255,255,255,0.11)",
-                backdropFilter: "blur(10px)",
-                borderRadius: 10,
-                border: "1px solid rgba(255,255,255,0.24)",
+                width: projectImage ? cardWidth : "52%",
+                aspectRatio: projectImage ? "1.22 / 1" : "16/10",
+                background: projectImage ? "transparent" : "rgba(255,255,255,0.11)",
+                backdropFilter: projectImage ? "none" : "blur(10px)",
+                borderRadius: projectImage ? 0 : 10,
+                border: projectImage ? "none" : "1px solid rgba(255,255,255,0.24)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transform: hovered
-                  ? "translateY(-10px) scale(1.03)"
-                  : "translateY(0) scale(1)",
+                  ? projectImage
+                    ? "translate(-2%, 8%) scale(1.02)"
+                    : "translateY(-10px) scale(1.03)"
+                  : projectImage
+                    ? "translate(-2%, 12%) scale(1)"
+                    : "translateY(0) scale(1)",
                 transition: "transform .65s cubic-bezier(.22,1,.36,1), box-shadow .65s ease",
                 boxShadow: hovered
-                  ? "0 28px 56px rgba(0,0,0,0.32)"
-                  : "0 8px 24px rgba(0,0,0,0.22)",
+                  ? projectImage
+                    ? "none"
+                    : "0 28px 56px rgba(0,0,0,0.32)"
+                  : projectImage
+                    ? "none"
+                    : "0 8px 24px rgba(0,0,0,0.22)",
               }}
             >
-              <span
-                style={{
-                  fontFamily: "'Work Sans', sans-serif",
-                  fontSize: "clamp(22px, 3.5vw, 36px)",
-                  fontWeight: 200,
-                  color: "rgba(255,255,255,0.65)",
-                  letterSpacing: "0.12em",
-                }}
-              >
-                {project.title.substring(0, 2).toUpperCase()}
-              </span>
+              {projectImage ? (
+                <img
+                  src={projectImage}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    display: "block",
+                    transition: "transform .65s ease",
+                  }}
+                />
+              ) : (
+                <span
+                  style={{
+                    fontFamily: "'Work Sans', sans-serif",
+                    fontSize: "clamp(22px, 3.5vw, 36px)",
+                    fontWeight: 200,
+                    color: "rgba(255,255,255,0.65)",
+                    letterSpacing: "0.12em",
+                  }}
+                >
+                  {project.title.substring(0, 2).toUpperCase()}
+                </span>
+              )}
             </div>
           </div>
 

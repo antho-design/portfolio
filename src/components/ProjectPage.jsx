@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { tokens as T } from "../styles/tokens";
 import { Reveal, SectionLabel, SectionTitle } from "./UI";
 import { useBreakpoint } from "../hooks/useBreakpoint";
@@ -6,6 +7,78 @@ import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
 import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
+
+/* ─── Real image with lightbox + grid support ───────────────── */
+function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
+  const [lightbox, setLightbox] = useState(null);
+  const list = Array.isArray(srcs) ? srcs.filter(Boolean) : srcs ? [srcs] : [];
+
+  if (list.length === 0) return <ImageSlot label={fallbackLabel} ratio={fallbackRatio} />;
+
+  const imgStyle = { width: "auto", maxWidth: "100%", maxHeight: "90vh", display: "block", borderRadius: T.radius, cursor: "zoom-in", margin: "0 auto" };
+  const renderImg = (src, key) => (
+    <img key={key} src={src} alt="" style={imgStyle} onClick={() => setLightbox(src)} />
+  );
+  const renderGridImg = (src, key) => (
+    <img
+      key={key}
+      src={src}
+      alt=""
+      onClick={() => setLightbox(src)}
+      style={{ width: "auto", maxWidth: "100%", maxHeight: "50vh", display: "block", borderRadius: T.radius, cursor: "zoom-in", margin: "0 auto" }}
+    />
+  );
+
+  let content;
+  if (list.length === 1) {
+    content = renderImg(list[0], 0);
+  } else if (grid) {
+    content = (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+        {list.map(renderGridImg)}
+      </div>
+    );
+  } else {
+    const rest = list.slice(1);
+    const pairs = [];
+    for (let i = 0; i < rest.length; i += 2) pairs.push(rest.slice(i, i + 2));
+    content = (
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {renderImg(list[0], 0)}
+        {pairs.map((pair, pi) => (
+          <div key={pi} style={{ display: "grid", gridTemplateColumns: `repeat(${pair.length}, 1fr)`, gap: 12 }}>
+            {pair.map((src, i) => renderGridImg(src, `${pi}-${i}`))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {content}
+      {lightbox && createPortal(
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.55)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 24, cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={lightbox}
+            alt=""
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: T.radius, objectFit: "contain" }}
+          />
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
 
 /* ─── Placeholder image ─────────────────────────────────────── */
 function ImageSlot({ label, ratio = "16/9", caption = "" }) {
@@ -235,7 +308,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
         }}
       >
         <div style={{ transform: "translateY(-32px)" }}>
-          <ImageSlot label={t.imgCover} ratio="16/7" caption={t.imgCoverCaption} />
+          <Images srcs={details.images?.cover} fallbackLabel={t.imgCover} fallbackRatio="16/7" />
         </div>
       </div>
 
@@ -300,7 +373,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
             </Reveal>
 
             <div style={{ marginTop: 40 }}>
-              <ImageSlot label={t.imgContext} caption={t.imgContextCaption} />
+              <Images srcs={details.images?.context} fallbackLabel={t.imgContext} />
             </div>
           </section>
 
@@ -432,9 +505,54 @@ export default function ProjectPage({ projectId, onNavigate }) {
               </div>
             </div>
 
-            <div style={{ marginTop: 48 }}>
-              <ImageSlot label={t.imgMethod} caption={t.imgMethodCaption} />
-            </div>
+            {details.images?.phases ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 56, marginTop: 56 }}>
+                {details.methodology.map((m, i) => {
+                  const phaseImgs = details.images.phases[i];
+                  if (!phaseImgs?.length) return null;
+                  return (
+                    <Reveal key={i} delay={i * 0.05}>
+                      <div style={{ paddingTop: 32, position: "relative" }}>
+                        <div
+                          style={{
+                            position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                            background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+                          }}
+                        />
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 16 }}>
+                          <span
+                            style={{
+                              fontFamily: "'Work Sans', sans-serif",
+                              fontSize: 28, fontWeight: 200, color: T.accentMid,
+                              letterSpacing: "-0.02em", lineHeight: 1, flexShrink: 0,
+                            }}
+                          >
+                            {m.phase}
+                          </span>
+                          <div>
+                            <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 16, fontWeight: 700, color: T.text, letterSpacing: "-0.01em" }}>
+                              {m.title}
+                            </div>
+                            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, color: T.textMuted, lineHeight: 1.7, margin: "6px 0 0", maxWidth: 560 }}>
+                              {m.description}
+                            </p>
+                          </div>
+                        </div>
+                        <Images srcs={phaseImgs} fallbackLabel={m.title} grid={phaseImgs.length === 2} />
+                      </div>
+                    </Reveal>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ marginTop: 48 }}>
+                <Images
+                  srcs={details.images?.methodology}
+                  fallbackLabel={t.imgMethod}
+                  grid={Array.isArray(details.images?.methodology) && details.images.methodology.length >= 2}
+                />
+              </div>
+            )}
           </section>
 
           {/* Modules */}
@@ -499,9 +617,10 @@ export default function ProjectPage({ projectId, onNavigate }) {
                     </div>
 
                     {/* Image du module */}
-                    <ImageSlot
-                      label={t.imgModule(mod.title)}
-                      caption={t.imgModuleCaption(mod.title)}
+                    <Images
+                      srcs={details.images?.modules?.[i]}
+                      fallbackLabel={t.imgModule(mod.title)}
+                      grid={details.images?.moduleLayouts?.[i] === "grid"}
                     />
                   </div>
                 </Reveal>
