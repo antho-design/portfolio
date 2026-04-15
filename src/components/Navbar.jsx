@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { tokens as T } from "../styles/tokens";
 import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
+import { useTheme } from "../context/ThemeContext";
 import { UI } from "../data/translations";
 
 function FlagIcon({ lang }) {
@@ -24,8 +24,9 @@ function FlagIcon({ lang }) {
 export default function Navbar({ activeSection, currentPath, onNavigate }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isMobile } = useBreakpoint();
-  const { lang, toggle } = useLanguage();
+  const { isMobile, isTablet, isWideDesktop } = useBreakpoint();
+  const { lang, toggle: toggleLang } = useLanguage();
+  const { tokens: T, theme, toggle: toggleTheme } = useTheme();
   const t = UI[lang].nav;
   const isAboutPage = currentPath === "/about";
   const isLegalPage = currentPath === "/legal";
@@ -76,20 +77,24 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
     if (!isMobile) setMenuOpen(false);
   }, [isMobile]);
 
-  const hPad = isMobile ? "20px" : "40px";
+  const hPad = isMobile ? "20px" : isTablet ? "24px" : "40px";
 
-  const logoColor = isOnDarkHero ? "rgba(255,255,255,0.9)" : T.accent;
-  const logoTextColor = isOnDarkHero ? "rgba(255,255,255,0.7)" : T.text;
-  const logoAccentColor = isOnDarkHero ? "#fff" : T.accent;
-  const linkColor = isOnDarkHero ? "rgba(255,255,255,0.75)" : T.textMuted;
-  const hamburgerColor = isOnDarkHero ? "#fff" : T.text;
-  const switchBorder = isOnDarkHero ? "rgba(255,255,255,0.3)" : T.border;
-  const switchBg = isOnDarkHero ? "rgba(255,255,255,0.08)" : "#F1EFEB";
-  const switchText = isOnDarkHero ? "rgba(255,255,255,0.92)" : T.text;
-  const switchMuted = isOnDarkHero ? "rgba(255,255,255,0.5)" : T.textLight;
-  const glassBackground =
-    "linear-gradient(180deg, rgba(250,250,248,0.78) 0%, rgba(250,250,248,0.68) 100%)";
-  const glassShadow = "0 10px 28px rgba(51,51,51,0.06), inset 0 1px 0 rgba(255,255,255,0.32)";
+  const isDark = isOnDarkHero || theme === "dark";
+  const logoColor = isDark ? "rgba(255,255,255,0.9)" : T.accent;
+  const logoTextColor = isDark ? "rgba(255,255,255,0.7)" : T.text;
+  const logoAccentColor = isDark ? "#fff" : T.accent;
+  const linkColor = isDark ? "rgba(255,255,255,0.75)" : T.textMuted;
+  const hamburgerColor = isDark ? "#fff" : T.text;
+  const switchBorder = isDark ? "rgba(255,255,255,0.18)" : T.border;
+  const switchBg = isDark ? "rgba(255,255,255,0.07)" : T.surfaceAlt;
+  const switchText = isDark ? "rgba(255,255,255,0.92)" : T.text;
+  const switchMuted = isDark ? "rgba(255,255,255,0.38)" : T.textLight;
+  const glassBackground = theme === "dark"
+    ? "linear-gradient(180deg, rgba(17,24,39,0.88) 0%, rgba(17,24,39,0.80) 100%)"
+    : "linear-gradient(180deg, rgba(250,250,248,0.78) 0%, rgba(250,250,248,0.68) 100%)";
+  const glassShadow = theme === "dark"
+    ? "0 10px 28px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.06)"
+    : "0 10px 28px rgba(51,51,51,0.06), inset 0 1px 0 rgba(255,255,255,0.32)";
 
   const langSwitchStyle = {
     padding: 4,
@@ -115,17 +120,17 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
       fontWeight: isActive ? 700 : 600,
       textTransform: "uppercase",
       letterSpacing: "0.06em",
-      padding: isMobile ? "6px 10px" : "7px 12px",
+      padding: isMobile ? "6px 10px" : isTablet ? "4px 6px" : "7px 12px",
       borderRadius: 999,
       border: "none",
-      background: isActive ? (isOnDarkHero ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
+      background: isActive ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
       color: isActive ? switchText : switchMuted,
       cursor: "pointer",
       transition: "all .25s ease",
       display: "inline-flex",
       alignItems: "center",
       gap: 5,
-      boxShadow: isActive && !isOnDarkHero ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+      boxShadow: isActive && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
     };
   };
 
@@ -172,7 +177,11 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
           onClick={(event) => {
             if (currentPath === "/") return;
             event.preventDefault();
-            onNavigate("/");
+            if (currentPath.startsWith("/projects/") && !isMobile) {
+              onNavigate("/", { transition: { type: "back-project" } });
+            } else {
+              onNavigate("/");
+            }
           }}
           style={{
             fontFamily: "'Work Sans', sans-serif",
@@ -183,7 +192,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
           }}
         >
           <MotifSVG size={24} color={logoColor} opacity={1} outerOpacity={0.35} />
-          {!isMobile && (
+          {!isMobile && !isTablet && (
             <span
               style={{
                 fontSize: 14,
@@ -199,12 +208,49 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
           )}
         </a>
 
+        {/* Theme switch — centré (large desktop uniquement) */}
+        {isWideDesktop && (
+          <div
+            role="group"
+            aria-label="Theme switcher"
+            style={{
+              ...langSwitchStyle,
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            {[
+              { value: "light", icon: "☀️", label: "Mode clair" },
+              { value: "dark",  icon: "🌙", label: "Mode sombre" },
+            ].map(({ value, icon, label }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={theme === value}
+                aria-label={label}
+                onClick={() => { if (theme !== value) toggleTheme(); }}
+                style={{
+                  ...langOptionStyle(value === "light" ? "fr" : "en"),
+                  padding: isMobile ? "6px 9px" : "7px 10px",
+                  background: theme === value
+                    ? (isDark ? "rgba(255,255,255,0.12)" : T.surface)
+                    : "transparent",
+                  boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+                }}
+              >
+                <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Right side */}
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : isTablet ? 10 : 20 }}>
 
           {/* Links desktop/tablet */}
           {!isMobile && (
-            <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: isTablet ? 12 : 32, alignItems: "center" }}>
               {links.map((l) => (
                 <a
                   key={l.label}
@@ -214,6 +260,12 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                       if (currentPath === "/") return;
                       event.preventDefault();
                       onNavigate(`/${l.href}`);
+                      return;
+                    }
+
+                    if (l.href === "/" && currentPath.startsWith("/projects/") && !isMobile) {
+                      event.preventDefault();
+                      onNavigate("/", { transition: { type: "back-project" } });
                       return;
                     }
 
@@ -240,22 +292,22 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   }}
                   style={{
                     fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 13,
+                    fontSize: isTablet ? 10 : 13,
                     fontWeight: l.active ? 600 : l.type === "page" ? 600 : 500,
-                    color: l.active ? (isOnDarkHero ? "#fff" : T.accent) : linkColor,
+                    color: l.active ? (isDark ? "#fff" : T.accent) : linkColor,
                     textDecoration: "none",
                     letterSpacing: "0.04em",
                     textTransform: "uppercase",
                     transition: "color .3s, border-color .3s, background-color .3s",
                     position: "relative",
-                    padding: l.type === "page" ? "10px 16px" : 0,
+                    padding: l.type === "page" ? (isTablet ? "5px 8px" : "10px 16px") : 0,
                     borderRadius: l.type === "page" ? 999 : 0,
                     border:
                       l.type === "page"
-                        ? `1px solid ${isOnDarkHero ? "rgba(255,255,255,0.3)" : (l.active ? T.accent : T.border)}`
+                        ? `1px solid ${isDark ? "rgba(255,255,255,0.22)" : (l.active ? T.accent : T.border)}`
                         : "none",
                     background:
-                      l.type === "page" && l.active && !isOnDarkHero ? T.accentLight : "transparent",
+                      l.type === "page" && l.active && !isDark ? T.accentLight : "transparent",
                     display: "inline-flex",
                     alignItems: "center",
                   }}
@@ -278,7 +330,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                     >
                       <MotifSVG
                         size={12}
-                        color={isOnDarkHero ? "#fff" : T.accent}
+                        color={isDark ? "#fff" : T.accent}
                         opacity={0.9}
                         outerOpacity={0.3}
                       />
@@ -366,25 +418,51 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
             </button>
           )}
 
-          {/* Bouton langue */}
-          <div role="group" aria-label="Language switcher" style={langSwitchStyle}>
-            {["fr", "en"].map((optionLang) => (
-              <button
-                key={optionLang}
-                type="button"
-                onClick={() => {
-                  if (lang !== optionLang) toggle();
-                }}
-                aria-pressed={lang === optionLang}
-                style={langOptionStyle(optionLang)}
-              >
-                <FlagIcon
-                  lang={optionLang}
-                />
-                <span>{optionLang.toUpperCase()}</span>
-              </button>
-            ))}
-          </div>
+          {/* Theme switch — dans le bloc de droite sous 1280px */}
+          {!isMobile && !isWideDesktop && (
+            <div role="group" aria-label="Theme switcher" style={langSwitchStyle}>
+              {[
+                { value: "light", icon: "☀️", label: "Mode clair" },
+                { value: "dark",  icon: "🌙", label: "Mode sombre" },
+              ].map(({ value, icon, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={theme === value}
+                  aria-label={label}
+                  onClick={() => { if (theme !== value) toggleTheme(); }}
+                  style={{
+                    ...langOptionStyle(value === "light" ? "fr" : "en"),
+                    padding: "4px 6px",
+                    background: theme === value ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
+                    boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+                  }}
+                >
+                  <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Bouton langue — masqué sur mobile (intégré dans le burger) */}
+          {!isMobile && (
+            <div role="group" aria-label="Language switcher" style={langSwitchStyle}>
+              {["fr", "en"].map((optionLang) => (
+                <button
+                  key={optionLang}
+                  type="button"
+                  onClick={() => {
+                    if (lang !== optionLang) toggleLang();
+                  }}
+                  aria-pressed={lang === optionLang}
+                  style={langOptionStyle(optionLang)}
+                >
+                  <FlagIcon lang={optionLang} />
+                  <span>{optionLang.toUpperCase()}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -454,6 +532,50 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
               {l.label}
             </a>
           ))}
+
+          {/* Séparateur */}
+          <div style={{ width: "100%", height: 1, background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`, margin: "10px 0 14px" }} />
+
+          {/* Switches langue + thème */}
+          <div style={{ display: "flex", gap: 12, alignItems: "center", justifyContent: "center" }}>
+            <div role="group" aria-label="Language switcher" style={langSwitchStyle}>
+              {["fr", "en"].map((optionLang) => (
+                <button
+                  key={optionLang}
+                  type="button"
+                  onClick={() => { if (lang !== optionLang) toggleLang(); }}
+                  aria-pressed={lang === optionLang}
+                  style={langOptionStyle(optionLang)}
+                >
+                  <FlagIcon lang={optionLang} />
+                  <span>{optionLang.toUpperCase()}</span>
+                </button>
+              ))}
+            </div>
+
+            <div role="group" aria-label="Theme switcher" style={langSwitchStyle}>
+              {[
+                { value: "light", icon: "☀️", label: "Mode clair" },
+                { value: "dark",  icon: "🌙", label: "Mode sombre" },
+              ].map(({ value, icon, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={theme === value}
+                  aria-label={label}
+                  onClick={() => { if (theme !== value) toggleTheme(); }}
+                  style={{
+                    ...langOptionStyle(value === "light" ? "fr" : "en"),
+                    padding: "6px 9px",
+                    background: theme === value ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
+                    boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+                  }}
+                >
+                  <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </>

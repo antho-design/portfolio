@@ -1,4 +1,4 @@
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
@@ -17,6 +17,7 @@ const SOCIAL_LINKS = [
 export default function Footer({ onNavigate }) {
   const { isMobile } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const year = new Date().getFullYear();
   const t = UI[lang].footer;
 
@@ -134,7 +135,7 @@ export default function Footer({ onNavigate }) {
               alignItems: "center",
               gap: 8,
               background: `
-                linear-gradient(#F1EFEB, #F1EFEB) padding-box,
+                linear-gradient(${T.surface}, ${T.surface}) padding-box,
                 linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
               `,
               transition: "filter .3s, color .3s",

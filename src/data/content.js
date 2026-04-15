@@ -166,6 +166,16 @@ export const PROJECT_DETAILS = {
       "Narration plus convaincante grâce au prototype",
       "Base réutilisable pour de futurs approfondissements produit",
     ],
+    images: {
+      cover: null,
+      context: ["/cetelem/accueil.png"],
+      modules: [
+        ["/cetelem/accueil.png", "/cetelem/accueil-1.png", "/cetelem/accueil-2.png"],
+        ["/cetelem/projet-alpine.png", "/cetelem/projet-japon.png", "/cetelem/projet-ordinateur.png", "/cetelem/projet-iphone.png", "/cetelem/projet-travaux.png"],
+        ["/cetelem/conv-ia.png", "/cetelem/conv-ia-1.png", "/cetelem/conv-ia-5.png", "/cetelem/conv-ia-10.png", "/cetelem/conv-ia-15.png", "/cetelem/conv-ia-20.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid"],
+    },
   },
 
   apec: {
@@ -855,6 +865,16 @@ export const PROJECT_DETAILS_EN = {
       "More convincing storytelling thanks to the prototype",
       "Reusable base for future product deep dives",
     ],
+    images: {
+      cover: null,
+      context: ["/cetelem/accueil.png"],
+      modules: [
+        ["/cetelem/accueil.png", "/cetelem/accueil-1.png", "/cetelem/accueil-2.png"],
+        ["/cetelem/projet-alpine.png", "/cetelem/projet-japon.png", "/cetelem/projet-ordinateur.png", "/cetelem/projet-iphone.png", "/cetelem/projet-travaux.png"],
+        ["/cetelem/conv-ia.png", "/cetelem/conv-ia-1.png", "/cetelem/conv-ia-5.png", "/cetelem/conv-ia-10.png", "/cetelem/conv-ia-15.png", "/cetelem/conv-ia-20.png"],
+      ],
+      moduleLayouts: ["grid", "grid", "grid"],
+    },
   },
 
   apec: {

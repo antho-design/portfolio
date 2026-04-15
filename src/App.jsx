@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { tokens as T } from "./styles/tokens";
+import { useTheme } from "./context/ThemeContext";
 import { UI } from "./data/translations";
 import { useBreakpoint } from "./hooks/useBreakpoint";
 import { useContent } from "./hooks/useContent";
@@ -54,6 +54,7 @@ function HomePage({ onNavigate }) {
   const { isMobile } = useBreakpoint();
   const { projects, skills } = useContent();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const t = UI[lang].projects;
   const [selectedFilter, setSelectedFilter] = useState(t.all);
 
@@ -173,6 +174,7 @@ function HomePage({ onNavigate }) {
 }
 
 function RouteTransition({ transition }) {
+  const { tokens: T } = useTheme();
   if (!transition) return null;
 
   if (transition.type === "about") {
@@ -264,6 +266,60 @@ function RouteTransition({ transition }) {
         >
           {label}
         </div>
+      </div>
+    );
+  }
+
+  if (transition.type === "back-project") {
+    const { phase, rect, colors } = transition;
+    const shrunk = phase === "shrink" || phase === "fade";
+    const faded = phase === "fade";
+    const curve = "cubic-bezier(.52,0,.24,1)";
+
+    return (
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: shrunk ? rect.left : 0,
+          top: shrunk ? rect.top : 0,
+          width: shrunk ? rect.width : window.innerWidth,
+          height: shrunk ? rect.height : window.innerHeight,
+          borderRadius: shrunk ? T.radius : 0,
+          background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
+          zIndex: 300,
+          pointerEvents: "none",
+          overflow: "hidden",
+          opacity: faded ? 0 : 1,
+          transform: faded ? "scale(0.96)" : "scale(1)",
+          transition: [
+            `left .75s ${curve}`,
+            `top .75s ${curve}`,
+            `width .75s ${curve}`,
+            `height .75s ${curve}`,
+            `border-radius .75s ${curve}`,
+            "opacity .4s ease-out",
+            "transform .4s ease-out",
+          ].join(", "),
+          boxShadow: shrunk
+            ? "0 20px 50px rgba(26,75,92,0.16)"
+            : "0 32px 80px rgba(0,0,0,0.18)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: BLUEPRINT_GRID_BG,
+            backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
+            backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+            opacity: shrunk ? 0.32 : 0.58,
+            mixBlendMode: "screen",
+            maskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
+            transition: `opacity .6s ${curve}`,
+          }}
+        />
       </div>
     );
   }
@@ -480,8 +536,10 @@ export default function App() {
   const [routeTransition, setRouteTransition] = useState(null);
   const { isMobile } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const { projects } = useContent();
   const transitionTimers = useRef([]);
+  const lastProjectEntry = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -604,8 +662,13 @@ export default function App() {
       !isMobile &&
       currentPath === "/" &&
       path === "/about";
+    const shouldAnimateBackProject =
+      transition?.type === "back-project" &&
+      !isMobile &&
+      currentPath.startsWith("/projects/") &&
+      path === "/";
 
-    if (!shouldAnimateProjectRoute && !shouldAnimateAboutRoute) {
+    if (!shouldAnimateProjectRoute && !shouldAnimateAboutRoute && !shouldAnimateBackProject) {
       applyNavigation(path);
       return;
     }
@@ -652,7 +715,55 @@ export default function App() {
       return;
     }
 
+    if (shouldAnimateBackProject) {
+      const entry = lastProjectEntry.current;
+      const projectId = currentPath.replace("/projects/", "");
+      const colors = (entry?.colors) || PROJECT_COLORS[projectId] || { from: T.accent, to: T.accentMid };
+      const rect = entry?.rect || {
+        left: window.innerWidth * 0.1,
+        top: window.innerHeight * 0.3,
+        width: window.innerWidth * 0.38,
+        height: window.innerWidth * 0.38 * (9 / 16),
+      };
+
+      transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
+      transitionTimers.current = [];
+
+      setRouteTransition({ type: "back-project", phase: "cover", rect, colors });
+
+      // Naviguer immédiatement (l'overlay couvre déjà tout)
+      transitionTimers.current.push(
+        window.setTimeout(() => {
+          applyNavigation(path);
+        }, 20)
+      );
+
+      // Lancer le rétrécissement (laisse le DOM se monter)
+      transitionTimers.current.push(
+        window.setTimeout(() => {
+          setRouteTransition((curr) => (curr ? { ...curr, phase: "shrink" } : curr));
+        }, 100)
+      );
+
+      // Fade après la fin du rétrécissement (~750ms)
+      transitionTimers.current.push(
+        window.setTimeout(() => {
+          setRouteTransition((curr) => (curr ? { ...curr, phase: "fade" } : curr));
+        }, 900)
+      );
+
+      // Cleanup après le fade (~400ms)
+      transitionTimers.current.push(
+        window.setTimeout(() => {
+          setRouteTransition(null);
+        }, 1340)
+      );
+
+      return;
+    }
+
     const colors = PROJECT_COLORS[transition.projectId] || { from: T.accent, to: T.accentMid };
+    lastProjectEntry.current = { rect: transition.rect, projectId: transition.projectId, colors };
 
     transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
     transitionTimers.current = [];

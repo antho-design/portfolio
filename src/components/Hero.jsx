@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
@@ -11,6 +11,7 @@ export default function Hero({ onNavigate }) {
   const [loaded, setLoaded] = useState(false);
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const t = UI[lang].hero;
 
   useEffect(() => {
@@ -37,6 +38,17 @@ export default function Hero({ onNavigate }) {
     linear-gradient(${T.surface}, ${T.surface}) padding-box,
     linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
   `;
+
+  const btnHoverOn = (e) => {
+    e.currentTarget.style.transform = "translateY(-2px)";
+    e.currentTarget.style.filter = "brightness(0.985)";
+    e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
+  };
+  const btnHoverOff = (e) => {
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.filter = "none";
+    e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
+  };
 
   return (
     <section
@@ -132,10 +144,11 @@ export default function Hero({ onNavigate }) {
           style={{
             ...anim(0.8),
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
+            flexDirection: "row",
+            flexWrap: "wrap",
             gap: isMobile ? 8 : 12,
             marginTop: isMobile ? 16 : isTablet ? 22 : 40,
-            alignItems: isMobile ? "flex-start" : "center",
+            alignItems: "center",
           }}
         >
           <a
@@ -153,16 +166,8 @@ export default function Hero({ onNavigate }) {
               transition: "transform .25s, filter .25s, box-shadow .25s",
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.filter = "brightness(0.985)";
-              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.filter = "none";
-              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
-            }}
+            onMouseEnter={btnHoverOn}
+            onMouseLeave={btnHoverOff}
           >
             {t.cta1}
           </a>
@@ -181,16 +186,8 @@ export default function Hero({ onNavigate }) {
               transition: "transform .25s, filter .25s, box-shadow .25s",
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.filter = "brightness(0.985)";
-              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.filter = "none";
-              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
-            }}
+            onMouseEnter={btnHoverOn}
+            onMouseLeave={btnHoverOff}
           >
             {t.cta2}
           </a>
@@ -225,16 +222,8 @@ export default function Hero({ onNavigate }) {
               transition: "transform .25s, filter .25s, box-shadow .25s",
               boxShadow: "0 2px 6px rgba(51,51,51,0.04)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.filter = "brightness(0.985)";
-              e.currentTarget.style.boxShadow = "0 8px 18px rgba(51,51,51,0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.filter = "none";
-              e.currentTarget.style.boxShadow = "0 2px 6px rgba(51,51,51,0.04)";
-            }}
+            onMouseEnter={btnHoverOn}
+            onMouseLeave={btnHoverOff}
           >
             {t.cta3}
           </a>

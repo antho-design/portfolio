@@ -1,5 +1,5 @@
 import { useInView, useScrollProgress } from "../hooks/useInView";
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 
 /* ─── Reveal — animation d'apparition au scroll ─── */
 export function Reveal({ children, delay = 0, y = 40, style = {} }) {
@@ -22,6 +22,7 @@ export function Reveal({ children, delay = 0, y = 40, style = {} }) {
 /* ─── Barre de progression du scroll ─── */
 export function ProgressBar() {
   const progress = useScrollProgress();
+  const { tokens: T } = useTheme();
   return (
     <div
       style={{
@@ -71,6 +72,7 @@ export function DownloadIcon({ color = "currentColor" }) {
 
 /* ─── Label de section (ex: "— Portfolio") ─── */
 export function SectionLabel({ children }) {
+  const { tokens: T } = useTheme();
   return (
     <span
       style={{
@@ -100,6 +102,7 @@ export function SectionLabel({ children }) {
 
 /* ─── Titre de section (h2) ─── */
 export function SectionTitle({ children, style = {} }) {
+  const { tokens: T } = useTheme();
   return (
     <h2
       style={{

@@ -1,4 +1,4 @@
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import { Reveal, SectionLabel, SectionTitle } from "./UI";
 import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
@@ -17,6 +17,7 @@ const GALLERY_PLACEHOLDERS = [
 export default function About() {
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const t = UI[lang].about;
   const blueprintAura = {
     position: "absolute",
@@ -73,7 +74,7 @@ export default function About() {
               width: "100%",
               aspectRatio: "1",
               borderRadius: 28,
-              background: `linear-gradient(135deg, ${T.accentLight}, #F5F8F7)`,
+              background: `linear-gradient(135deg, ${T.accentLight}, ${T.surface})`,
               position: "relative",
               overflow: "hidden",
               display: "flex",
@@ -190,7 +191,7 @@ export default function About() {
                 style={{
                   height,
                   borderRadius: 18,
-                  background: "#E3E0DA",
+                  background: T.border,
                   border: `1px solid ${T.border}`,
                 }}
               />

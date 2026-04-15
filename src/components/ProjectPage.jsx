@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import { Reveal, SectionLabel, SectionTitle } from "./UI";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
-import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
+import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
 
 /* ─── Real image with lightbox + grid support ───────────────── */
 function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
   const [lightbox, setLightbox] = useState(null);
+  const { tokens: T } = useTheme();
   const list = Array.isArray(srcs) ? srcs.filter(Boolean) : srcs ? [srcs] : [];
 
   if (list.length === 0) return <ImageSlot label={fallbackLabel} ratio={fallbackRatio} />;
@@ -82,6 +83,7 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
 
 /* ─── Placeholder image ─────────────────────────────────────── */
 function ImageSlot({ label, ratio = "16/9", caption = "" }) {
+  const { tokens: T } = useTheme();
   return (
     <div style={{ width: "100%", marginTop: 0 }}>
       <div
@@ -90,7 +92,7 @@ function ImageSlot({ label, ratio = "16/9", caption = "" }) {
           aspectRatio: ratio,
           border: `2px dashed ${T.border}`,
           borderRadius: T.radius,
-          background: "#F5F4F1",
+          background: T.bg,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -137,6 +139,7 @@ function ImageSlot({ label, ratio = "16/9", caption = "" }) {
 export default function ProjectPage({ projectId, onNavigate }) {
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T, theme } = useTheme();
   const { projects, projectDetails } = useContent();
   const t = UI[lang].project;
   const project = projects.find((p) => p.id === projectId);
@@ -161,7 +164,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
     inset: 0,
     borderRadius: T.radius,
     pointerEvents: "none",
-    background: CARD_BORDER_BG,
+    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
     zIndex: 1,
   };
   const blueprintGrid = {
@@ -757,13 +760,14 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
 function ProjectNavCard({ project, onNavigate }) {
   const [hovered, setHovered] = useState(false);
+  const { tokens: T, theme } = useTheme();
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
   const navCardBorder = {
     position: "absolute",
     inset: 0,
     borderRadius: T.radius,
     pointerEvents: "none",
-    background: CARD_BORDER_BG,
+    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
     zIndex: 3,
   };
 
@@ -815,7 +819,7 @@ function ProjectNavCard({ project, onNavigate }) {
       </div>
 
       {/* Texte */}
-      <div style={{ padding: "14px 16px 16px", background: hovered ? colors.from : "#fff", transition: "background .4s ease" }}>
+      <div style={{ padding: "14px 16px 16px", background: hovered ? colors.from : T.surface, transition: "background .4s ease" }}>
         <div
           style={{
             fontFamily: "'Work Sans', sans-serif",

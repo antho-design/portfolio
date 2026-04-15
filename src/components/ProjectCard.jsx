@@ -1,22 +1,26 @@
 import { useState } from "react";
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import { Reveal } from "./UI";
-import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG } from "../data/constants";
+import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
 
 const PROJECT_CARD_IMAGES = {
-  autossimo: { src: "/autossimo-card.png" },
-  npc:       { src: "/npc/card.png" },
+  apec:           { src: "/apec-card.png", width: "90%", paddingLeft: "4%" },
+  cetelem:        { src: "/cetelem/card.png", width: "82%", centered: true },
+  autossimo:      { src: "/autossimo-card.png" },
+  npc:            { src: "/npc/card.png" },
   cerfal:         { src: "/cerfal/card.png", paddingLeft: "16%", width: "88%" },
   globedreamers:  { src: "/globedreamers/accueil-multidevice.png", paddingLeft: "2%", width: "96%" },
 };
 
 export default function ProjectCard({ project, index, onNavigate }) {
   const [hovered, setHovered] = useState(false);
+  const { tokens: T, theme } = useTheme();
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
   const cardConfig = PROJECT_CARD_IMAGES[project.id];
   const projectImage = cardConfig?.src ?? null;
   const cardPaddingLeft = cardConfig?.paddingLeft ?? "9%";
   const cardWidth = cardConfig?.width ?? "74%";
+  const cardCentered = cardConfig?.centered ?? false;
 
   const pill = {
     padding: "6px 12px",
@@ -60,7 +64,7 @@ export default function ProjectCard({ project, index, onNavigate }) {
     inset: 0,
     borderRadius: T.radius,
     pointerEvents: "none",
-    background: CARD_BORDER_BG,
+    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
     zIndex: 3,
   };
 
@@ -132,8 +136,8 @@ export default function ProjectCard({ project, index, onNavigate }) {
               inset: 0,
               display: "flex",
               alignItems: projectImage ? "flex-end" : "center",
-              justifyContent: projectImage ? "flex-start" : "center",
-              paddingLeft: projectImage ? cardPaddingLeft : 0,
+              justifyContent: projectImage ? (cardCentered ? "center" : "flex-start") : "center",
+              paddingLeft: projectImage && !cardCentered ? cardPaddingLeft : 0,
               paddingBottom: projectImage ? "-2%" : 0,
               overflow: "hidden",
             }}

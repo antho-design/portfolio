@@ -1,4 +1,4 @@
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import { SectionLabel, SectionTitle } from "./UI";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -77,6 +77,7 @@ const CONTENT = {
 
 export default function LegalPage() {
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const content = CONTENT[lang];
 
   return (

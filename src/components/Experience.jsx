@@ -1,4 +1,4 @@
-import { tokens as T } from "../styles/tokens";
+import { useTheme } from "../context/ThemeContext";
 import { Reveal, SectionLabel, SectionTitle } from "./UI";
 import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
@@ -10,6 +10,7 @@ import { BLUEPRINT_AURA_BG } from "../data/constants";
 export default function Experience() {
   const { isMobile } = useBreakpoint();
   const { lang } = useLanguage();
+  const { tokens: T } = useTheme();
   const { experiences } = useContent();
   const t = UI[lang].experience;
   const blueprintAura = {
