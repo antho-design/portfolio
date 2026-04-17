@@ -272,9 +272,10 @@ function RouteTransition({ transition }) {
 
   if (transition.type === "back-project") {
     const { phase, rect, colors } = transition;
+    const isCover = phase === "cover";
     const shrunk = phase === "shrink" || phase === "fade";
     const faded = phase === "fade";
-    const curve = "cubic-bezier(.52,0,.24,1)";
+    const curve = "cubic-bezier(.36,0,.2,1)";
 
     return (
       <div
@@ -291,19 +292,19 @@ function RouteTransition({ transition }) {
           pointerEvents: "none",
           overflow: "hidden",
           opacity: faded ? 0 : 1,
-          transform: faded ? "scale(0.96)" : "scale(1)",
+          transform: isCover ? "scale(1.02)" : faded ? "scale(0.95)" : "scale(1)",
           transition: [
-            `left .75s ${curve}`,
-            `top .75s ${curve}`,
-            `width .75s ${curve}`,
-            `height .75s ${curve}`,
-            `border-radius .75s ${curve}`,
-            "opacity .4s ease-out",
-            "transform .4s ease-out",
+            `left .80s ${curve}`,
+            `top .80s ${curve}`,
+            `width .80s ${curve}`,
+            `height .80s ${curve}`,
+            `border-radius .80s ${curve}`,
+            "opacity .42s ease-out",
+            `transform .80s ${curve}`,
           ].join(", "),
           boxShadow: shrunk
-            ? "0 20px 50px rgba(26,75,92,0.16)"
-            : "0 32px 80px rgba(0,0,0,0.18)",
+            ? "0 16px 40px rgba(26,75,92,0.18), 0 4px 12px rgba(0,0,0,0.10)"
+            : "0 40px 100px rgba(0,0,0,0.22), 0 8px 32px rgba(0,0,0,0.12)",
         }}
       >
         <div
@@ -738,25 +739,25 @@ export default function App() {
         }, 20)
       );
 
-      // Lancer le rétrécissement (laisse le DOM se monter)
+      // Lancer le rétrécissement (laisse le DOM se monter + scale-up settle)
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition((curr) => (curr ? { ...curr, phase: "shrink" } : curr));
-        }, 100)
+        }, 150)
       );
 
-      // Fade après la fin du rétrécissement (~750ms)
+      // Fade après la fin du rétrécissement (~800ms)
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition((curr) => (curr ? { ...curr, phase: "fade" } : curr));
-        }, 900)
+        }, 980)
       );
 
-      // Cleanup après le fade (~400ms)
+      // Cleanup après le fade (~420ms)
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition(null);
-        }, 1340)
+        }, 1420)
       );
 
       return;

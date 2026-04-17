@@ -100,21 +100,20 @@ function ImageSlot({ label, ratio = "16/9", caption = "" }) {
           gap: 10,
         }}
       >
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={T.textLight} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <circle cx="8.5" cy="8.5" r="1.5" />
-          <path d="M21 15l-5-5L5 21" />
-        </svg>
         <span
           style={{
             fontFamily: "'Work Sans', sans-serif",
-            fontSize: 13,
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
             color: T.textLight,
-            fontWeight: 500,
-            letterSpacing: "0.04em",
+            padding: "5px 12px",
+            borderRadius: 999,
+            border: `1px solid ${T.border}`,
           }}
         >
-          {label}
+          Work in progress
         </span>
       </div>
       {caption && (
