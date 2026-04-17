@@ -5,21 +5,6 @@ import { useLanguage } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
 import { UI } from "../data/translations";
 
-function FlagIcon({ lang }) {
-  return (
-    <span
-      aria-hidden="true"
-      style={{
-        fontSize: 13,
-        lineHeight: 1,
-        display: "inline-flex",
-        alignItems: "center",
-      }}
-    >
-      {lang === "fr" ? "🇫🇷" : "🇬🇧"}
-    </span>
-  );
-}
 
 export default function Navbar({ activeSection, currentPath, onNavigate }) {
   const [scrolled, setScrolled] = useState(false);
@@ -457,7 +442,6 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   aria-pressed={lang === optionLang}
                   style={langOptionStyle(optionLang)}
                 >
-                  <FlagIcon lang={optionLang} />
                   <span>{optionLang.toUpperCase()}</span>
                 </button>
               ))}
@@ -547,7 +531,6 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   aria-pressed={lang === optionLang}
                   style={langOptionStyle(optionLang)}
                 >
-                  <FlagIcon lang={optionLang} />
                   <span>{optionLang.toUpperCase()}</span>
                 </button>
               ))}
