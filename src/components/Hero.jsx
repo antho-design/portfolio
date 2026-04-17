@@ -22,7 +22,7 @@ export default function Hero({ onNavigate }) {
   const anim = (delay) => ({
     opacity: loaded ? 1 : 0,
     transform: loaded ? "translateY(0)" : "translateY(40px)",
-    transition: `all 0.9s cubic-bezier(.22,1,.36,1) ${delay}s`,
+    transition: `opacity 0.9s cubic-bezier(.22,1,.36,1) ${delay}s, transform 0.9s cubic-bezier(.22,1,.36,1) ${delay}s`,
   });
 
   const hPad = isMobile ? "20px" : "40px";
@@ -305,7 +305,7 @@ export default function Hero({ onNavigate }) {
           gap: 8,
           opacity: loaded ? 1 : 0,
           transform: loaded ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(40px)",
-          transition: `all 0.9s cubic-bezier(.22,1,.36,1) 1.2s`,
+          transition: `opacity 0.9s cubic-bezier(.22,1,.36,1) 1.2s, transform 0.9s cubic-bezier(.22,1,.36,1) 1.2s`,
         }}
       >
         <span

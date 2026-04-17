@@ -110,6 +110,8 @@ export default function ProjectCard({ project, index, onNavigate }) {
           boxShadow: hovered
             ? "0 24px 64px rgba(26,75,92,0.14)"
             : "0 2px 8px rgba(0,0,0,0.04)",
+          willChange: "transform",
+          contain: "layout style paint",
         }}
       >
         {/* ── Zone visuelle ── */}
