@@ -267,7 +267,7 @@ export const PROJECT_DETAILS = {
       "Fondations solides pour une culture design long terme",
     ],
     images: {
-      cover: null,
+      cover: "/apec/apec-cover.png",
       context: [
         "/apec/ui-atoms-molecules.png",
         "/apec/ui-input-states.png",
@@ -966,7 +966,7 @@ export const PROJECT_DETAILS_EN = {
       "Solid foundations for a long-term design culture",
     ],
     images: {
-      cover: null,
+      cover: "/apec/apec-cover.png",
       context: [
         "/apec/ui-atoms-molecules.png",
         "/apec/ui-input-states.png",

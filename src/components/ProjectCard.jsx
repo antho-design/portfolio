@@ -155,10 +155,10 @@ export default function ProjectCard({ project, index, onNavigate }) {
                 justifyContent: "center",
                 transform: hovered
                   ? projectImage
-                    ? "translate(-2%, 8%) scale(1.02)"
+                    ? "translate(-2%, 14%) scale(1.02)"
                     : "translateY(-10px) scale(1.03)"
                   : projectImage
-                    ? "translate(-2%, 12%) scale(1)"
+                    ? "translate(-2%, 20%) scale(1)"
                     : "translateY(0) scale(1)",
                 transition: "transform .65s cubic-bezier(.22,1,.36,1), box-shadow .65s ease",
                 boxShadow: hovered

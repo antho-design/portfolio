@@ -271,10 +271,8 @@ function RouteTransition({ transition }) {
   }
 
   if (transition.type === "back-project") {
-    const { phase, rect, colors } = transition;
-    const isCover = phase === "cover";
-    const shrunk = phase === "shrink" || phase === "fade";
-    const faded = phase === "fade";
+    const { phase, colors } = transition;
+    const closing = phase === "shrink";
     const curve = "cubic-bezier(.36,0,.2,1)";
 
     return (
@@ -282,29 +280,17 @@ function RouteTransition({ transition }) {
         aria-hidden="true"
         style={{
           position: "fixed",
-          left: shrunk ? rect.left : 0,
-          top: shrunk ? rect.top : 0,
-          width: shrunk ? rect.width : window.innerWidth,
-          height: shrunk ? rect.height : window.innerHeight,
-          borderRadius: shrunk ? T.radius : 0,
+          inset: 0,
           background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
           zIndex: 300,
           pointerEvents: "none",
           overflow: "hidden",
-          opacity: faded ? 0 : 1,
-          transform: isCover ? "scale(1.02)" : faded ? "scale(0.95)" : "scale(1)",
+          opacity: closing ? 0 : 1,
+          transform: closing ? "scale(0.88)" : "scale(1)",
           transition: [
-            `left .80s ${curve}`,
-            `top .80s ${curve}`,
-            `width .80s ${curve}`,
-            `height .80s ${curve}`,
-            `border-radius .80s ${curve}`,
-            "opacity .42s ease-out",
-            `transform .80s ${curve}`,
+            `opacity .55s ease-out`,
+            `transform .65s ${curve}`,
           ].join(", "),
-          boxShadow: shrunk
-            ? "0 16px 40px rgba(26,75,92,0.18), 0 4px 12px rgba(0,0,0,0.10)"
-            : "0 40px 100px rgba(0,0,0,0.22), 0 8px 32px rgba(0,0,0,0.12)",
         }}
       >
         <div
@@ -314,11 +300,11 @@ function RouteTransition({ transition }) {
             backgroundImage: BLUEPRINT_GRID_BG,
             backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
             backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
-            opacity: shrunk ? 0.32 : 0.58,
+            opacity: closing ? 0.2 : 0.58,
             mixBlendMode: "screen",
             maskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
             WebkitMaskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
-            transition: `opacity .6s ${curve}`,
+            transition: `opacity .55s ease-out`,
           }}
         />
       </div>
@@ -719,45 +705,28 @@ export default function App() {
     if (shouldAnimateBackProject) {
       const entry = lastProjectEntry.current;
       const projectId = currentPath.replace("/projects/", "");
-      const colors = (entry?.colors) || PROJECT_COLORS[projectId] || { from: T.accent, to: T.accentMid };
-      const rect = entry?.rect || {
-        left: window.innerWidth * 0.1,
-        top: window.innerHeight * 0.3,
-        width: window.innerWidth * 0.38,
-        height: window.innerWidth * 0.38 * (9 / 16),
-      };
+      const colors = entry?.colors || PROJECT_COLORS[projectId] || { from: T.accent, to: T.accentMid };
 
       transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
       transitionTimers.current = [];
 
-      setRouteTransition({ type: "back-project", phase: "cover", rect, colors });
+      setRouteTransition({ type: "back-project", phase: "cover", colors });
 
-      // Naviguer immédiatement (l'overlay couvre déjà tout)
+      // Naviguer immédiatement (l'overlay couvre tout)
       transitionTimers.current.push(
-        window.setTimeout(() => {
-          applyNavigation(path);
-        }, 20)
+        window.setTimeout(() => applyNavigation(path), 20)
       );
 
-      // Lancer le rétrécissement (laisse le DOM se monter + scale-up settle)
+      // Déclencher le scale-down + fade
       transitionTimers.current.push(
         window.setTimeout(() => {
           setRouteTransition((curr) => (curr ? { ...curr, phase: "shrink" } : curr));
-        }, 150)
+        }, 120)
       );
 
-      // Fade après la fin du rétrécissement (~800ms)
+      // Cleanup après la fin de l'animation (~650ms)
       transitionTimers.current.push(
-        window.setTimeout(() => {
-          setRouteTransition((curr) => (curr ? { ...curr, phase: "fade" } : curr));
-        }, 980)
-      );
-
-      // Cleanup après le fade (~420ms)
-      transitionTimers.current.push(
-        window.setTimeout(() => {
-          setRouteTransition(null);
-        }, 1420)
+        window.setTimeout(() => setRouteTransition(null), 800)
       );
 
       return;
