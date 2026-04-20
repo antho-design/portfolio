@@ -56,6 +56,7 @@ function HomePage({ onNavigate }) {
   const { lang } = useLanguage();
   const { tokens: T } = useTheme();
   const t = UI[lang].projects;
+  const tm = UI[lang].manifesto;
   const [selectedFilter, setSelectedFilter] = useState(t.all);
 
   // Reset filter when language changes
@@ -92,6 +93,83 @@ function HomePage({ onNavigate }) {
   return (
     <>
       <Hero onNavigate={onNavigate} />
+
+      {/* Section manifeste */}
+      <section
+        style={{
+          padding: isMobile ? "0 20px 72px" : "0 40px 100px",
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      >
+        <Reveal>
+          <div
+            style={{
+              maxWidth: 760,
+              margin: "0 auto",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: isMobile ? "clamp(20px, 5.5vw, 28px)" : "clamp(24px, 2.6vw, 36px)",
+                fontWeight: 200,
+                color: T.text,
+                lineHeight: 1.35,
+                letterSpacing: "-0.01em",
+                margin: 0,
+              }}
+            >
+              {tm.line1Parts[0]}{" "}
+              <span style={{ color: T.accent, fontWeight: 500 }}>{tm.line1Parts[1]}</span>
+            </p>
+
+            <p
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: isMobile ? 14 : 16,
+                color: T.textMuted,
+                lineHeight: 1.75,
+                marginTop: isMobile ? 16 : 20,
+                maxWidth: 620,
+                margin: isMobile ? "16px auto 0" : "20px auto 0",
+              }}
+            >
+              {tm.line2}
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: 8,
+                marginTop: isMobile ? 20 : 28,
+              }}
+            >
+              {tm.tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: 999,
+                    border: `1px solid ${T.border}`,
+                    fontFamily: "'Work Sans', sans-serif",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: T.textMuted,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       <section
         id="projects"

@@ -168,13 +168,14 @@ export const PROJECT_DETAILS = {
     ],
     images: {
       cover: null,
-      context: ["/cetelem/accueil.png"],
+      context: ["/cetelem/parcours-compresse.png"],
+      methodology: ["/cetelem/ecrans-test.png"],
       modules: [
-        ["/cetelem/accueil.png", "/cetelem/accueil-1.png", "/cetelem/accueil-2.png"],
-        ["/cetelem/projet-alpine.png", "/cetelem/projet-japon.png", "/cetelem/projet-ordinateur.png", "/cetelem/projet-iphone.png", "/cetelem/projet-travaux.png"],
-        ["/cetelem/conv-ia.png", "/cetelem/conv-ia-1.png", "/cetelem/conv-ia-5.png", "/cetelem/conv-ia-10.png", "/cetelem/conv-ia-15.png", "/cetelem/conv-ia-20.png"],
+        ["/cetelem/parcours-compresse.png"],
+        ["/cetelem/parcours-assiste.png", "/cetelem/ecrans-projet.png"],
+        ["/cetelem/prototype.png", "/cetelem/conv-ia-screens.png"],
       ],
-      moduleLayouts: ["grid", "grid", "grid"],
+      moduleLayouts: ["single", "grid", "grid"],
     },
   },
 
@@ -867,13 +868,14 @@ export const PROJECT_DETAILS_EN = {
     ],
     images: {
       cover: null,
-      context: ["/cetelem/accueil.png"],
+      context: ["/cetelem/parcours-compresse.png"],
+      methodology: ["/cetelem/ecrans-test.png"],
       modules: [
-        ["/cetelem/accueil.png", "/cetelem/accueil-1.png", "/cetelem/accueil-2.png"],
-        ["/cetelem/projet-alpine.png", "/cetelem/projet-japon.png", "/cetelem/projet-ordinateur.png", "/cetelem/projet-iphone.png", "/cetelem/projet-travaux.png"],
-        ["/cetelem/conv-ia.png", "/cetelem/conv-ia-1.png", "/cetelem/conv-ia-5.png", "/cetelem/conv-ia-10.png", "/cetelem/conv-ia-15.png", "/cetelem/conv-ia-20.png"],
+        ["/cetelem/parcours-compresse.png"],
+        ["/cetelem/parcours-assiste.png", "/cetelem/ecrans-projet.png"],
+        ["/cetelem/prototype.png", "/cetelem/conv-ia-screens.png"],
       ],
-      moduleLayouts: ["grid", "grid", "grid"],
+      moduleLayouts: ["single", "grid", "grid"],
     },
   },
 

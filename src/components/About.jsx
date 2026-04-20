@@ -6,13 +6,6 @@ import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
 import { BLUEPRINT_AURA_BG } from "../data/constants";
 
-const GALLERY_PLACEHOLDERS = [
-  180, 260, 210, 320, 190,
-  240, 170, 280, 200, 300,
-  220, 310, 180, 250, 210,
-  290, 190, 340, 230, 270,
-  200, 260, 185, 300, 220,
-];
 
 export default function About() {
   const { isMobile, isTablet } = useBreakpoint();
@@ -83,18 +76,15 @@ export default function About() {
               minHeight: 320,
             }}
           >
-            <MotifSVG
-              size={240}
-              color={T.accent}
-              opacity={0.9}
-              outerOpacity={0.45}
-            />
-            <MotifSVG
-              size={340}
-              color={T.accent}
-              opacity={0.06}
-              outerOpacity={0.3}
-              style={{ position: "absolute" }}
+            <img
+              src="/mask-group.png"
+              alt="Anthonin Sautet"
+              style={{
+                width: "82%",
+                height: "82%",
+                objectFit: "contain",
+                display: "block",
+              }}
             />
           </div>
         </Reveal>
@@ -173,29 +163,57 @@ export default function About() {
           <div style={{ marginBottom: 36 }}>
             <SectionLabel>{t.galleryLabel}</SectionLabel>
             <SectionTitle>{t.galleryTitle}</SectionTitle>
+            <p
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: 15,
+                color: T.textMuted,
+                lineHeight: 1.7,
+                margin: "12px 0 0",
+                maxWidth: 480,
+              }}
+            >
+              {t.galleryIntro}
+            </p>
           </div>
         </Reveal>
 
         <Reveal delay={0.1}>
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 16,
-              alignItems: "start",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
+              padding: isMobile ? "48px 20px" : "64px 40px",
+              borderRadius: 20,
+              border: `1px dashed ${T.border}`,
+              textAlign: "center",
             }}
           >
-            {GALLERY_PLACEHOLDERS.map((height, index) => (
-              <div
-                key={index}
-                style={{
-                  height,
-                  borderRadius: 18,
-                  background: T.border,
-                  border: `1px solid ${T.border}`,
-                }}
-              />
-            ))}
+            <span
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: isMobile ? 15 : 17,
+                fontWeight: 600,
+                color: T.textMuted,
+                letterSpacing: "0.01em",
+              }}
+            >
+              {t.galleryWip}
+            </span>
+            <span
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: 13,
+                color: T.textLight,
+                lineHeight: 1.6,
+                maxWidth: 360,
+              }}
+            >
+              {t.galleryWipSub}
+            </span>
           </div>
         </Reveal>
       </div>
