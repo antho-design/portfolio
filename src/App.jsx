@@ -15,6 +15,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ProjectCard from "./components/ProjectCard";
 import About from "./components/About";
+import Skills from "./components/Skills";
 import Experience from "./components/Experience";
 import Footer from "./components/Footer";
 import ProjectPage from "./components/ProjectPage";
@@ -246,6 +247,7 @@ function HomePage({ onNavigate }) {
         </div>
       </section>
 
+      <Skills />
       <Experience />
     </>
   );

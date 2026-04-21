@@ -267,7 +267,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
             {[
               { label: t.client, value: details.client },
               { label: t.role, value: details.role },
-              { label: t.year, value: project.year },
+              { label: t.duration, value: details.duration },
               { label: t.tools, value: details.tools.join(", ") },
             ].map((item) => (
               <div key={item.label}>
@@ -330,7 +330,6 @@ export default function ProjectPage({ projectId, onNavigate }) {
                   color: T.textMuted,
                   lineHeight: 1.8,
                   marginTop: 20,
-                  maxWidth: 640,
                 }}
               >
                 {details.context}

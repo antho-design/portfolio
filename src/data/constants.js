@@ -37,6 +37,15 @@ export const CARD_BORDER_BG_DARK = `
   linear-gradient(to bottom, transparent, rgba(255,255,255,0.10) 14%, rgba(255,255,255,0.10) 86%, transparent) right / 1px 100% no-repeat
 `;
 
+export const TOOLS = [
+  { name: "Figma",        slug: "figma" },
+  { name: "Illustrator",  slug: "adobeillustrator" },
+  { name: "Photoshop",    slug: "adobephotoshop" },
+  { name: "ChatGPT",      slug: "openai" },
+  { name: "Claude",       slug: "anthropic" },
+  { name: "ProtoPie",     slug: "protopie" },
+];
+
 /* Aura de grille sur fond clair (About + Experience) */
 export const BLUEPRINT_AURA_BG = `
   repeating-linear-gradient(to right, rgba(176,168,156,0.08) 0 1px, transparent 1px 18px),

@@ -93,78 +93,79 @@ export const PROJECT_DETAILS = {
   cetelem: {
     client: "Cetelem",
     role: "Product Designer",
+    duration: "2 semaines",
     tools: ["Figma", "Prototypage", "UI Design"],
     context:
-      "Dans le cadre d'une réponse à appel d'offre, Cetelem avait besoin d'une proposition produit capable de projeter une vision claire, crédible et désirable du futur service. L'enjeu était de formuler rapidement un concept d'interface convaincant, suffisamment abouti pour soutenir le discours commercial.",
+      "Dans le cadre d'une réponse à appel d'offre, l'enjeu était de projeter une vision produit à l'horizon 2030 — repenser Cetelem non plus comme un simple outil de crédit, mais comme un assistant du quotidien capable d'accompagner l'utilisateur dans tous ses projets de vie. Budgétiser rapidement une idée, suivre l'avancement de ses projets, être guidé dans ses choix financiers : autant d'usages à rendre désirables dans un concept à la fois légèrement premium et accessible au plus grand nombre, avec des éléments de gamification pour rendre l'expérience plus engageante. L'ensemble du concept a été conçu et prototypé en 2 semaines.",
     challenges: [
-      "Transformer un cadrage commercial en proposition produit tangible",
-      "Donner de la crédibilité à une vision encore conceptuelle",
-      "Produire rapidement des écrans suffisamment aboutis pour une soutenance",
-      "Trouver le bon équilibre entre faisabilité, impact visuel et clarté d'usage",
+      "Projeter une vision produit crédible à l'horizon 2030 dans un temps contraint",
+      "Repositionner la marque : premium sans exclure, accessible sans être générique",
+      "Intégrer des éléments de gamification dans un contexte financier sérieux",
+      "Faire coexister assistant IA, budgétisation rapide et suivi de projets dans une interface cohérente",
     ],
     objectives: [
-      "Formaliser un concept produit lisible et désirable",
-      "Concevoir une interface capable de soutenir la réponse à appel d'offre",
-      "Prototyper les parcours clés pour raconter l'expérience",
-      "Créer un support visuel cohérent pour la présentation finale",
+      "Positionner Cetelem comme l'assistant de tous les projets de vie à l'horizon 2030",
+      "Concevoir une expérience premium et accessible, loin des codes austères du secteur bancaire",
+      "Intégrer des mécaniques ludiques pour engager l'utilisateur dans la gestion de ses projets",
+      "Raconter la vision à travers un prototype suffisamment abouti pour convaincre en soutenance",
     ],
     methodology: [
       {
         phase: "01",
         title: "Cadrage du concept",
         description:
-          "Analyse du besoin, reformulation des attentes métier et définition d'une proposition de valeur claire à porter dans la réponse.",
+          "Reformulation de la vision à l'horizon 2030, définition du positionnement 'assistant de vie' et identification des parcours structurants.",
       },
       {
         phase: "02",
         title: "Direction UI",
         description:
-          "Exploration d'une direction d'interface premium, lisible et rassurante, capable de porter le niveau d'ambition du concept.",
+          "Exploration d'une direction premium accessible — ni luxe élitiste, ni interface bancaire classique. Travail sur les codes visuels, la gamification et le ton général.",
       },
       {
         phase: "03",
         title: "Prototypage",
         description:
-          "Mise en forme des parcours structurants dans Figma avec un prototype permettant de raconter les scénarios d'usage.",
+          "Mise en forme des parcours clés dans Figma : création d'un projet, budgétisation assistée par IA, suivi et consultation des projets en cours.",
       },
       {
         phase: "04",
         title: "Support de soutenance",
         description:
-          "Assemblage des écrans, vues clés et transitions pour construire un récit fluide lors de la présentation de l'offre.",
+          "Assemblage des écrans et transitions pour construire un récit fluide autour de la vision 2030 lors de la présentation de l'offre.",
       },
     ],
     modules: [
       {
-        title: "Vision produit",
+        title: "Vision produit 2030",
         description:
-          "Définition d'un concept directeur mettant en scène la promesse du service et ses bénéfices pour les futurs utilisateurs.",
-        features: ["Proposition de valeur", "Scénario cible", "Vision projetée"],
+          "Un repositionnement fort : Cetelem devient l'assistant de tous vos projets de vie. Chaque idée peut être budgétisée, suivie et concrétisée depuis une seule interface.",
+        features: ["Assistant de vie", "Horizon 2030", "Vision de service"],
       },
       {
         title: "Parcours clés",
         description:
-          "Conception de parcours représentatifs pour illustrer les usages les plus stratégiques de la réponse à appel d'offre.",
-        features: ["Parcours priorisés", "Écrans clés", "Expérience racontée"],
+          "Les parcours structurants du concept — création et budgétisation d'un projet, assistance IA pour affiner les estimations, suivi de l'avancement avec des éléments de gamification.",
+        features: ["Création de projet", "Budgétisation assistée", "Suivi & gamification"],
       },
       {
         title: "Prototype de démonstration",
         description:
-          "Prototype Figma structuré pour soutenir la démonstration et rendre la proposition plus concrète pendant la soutenance.",
-        features: ["Prototype interactif", "Transitions essentielles", "Soutien à la démo"],
+          "Prototype Figma interactif construit pour rendre la vision tangible en soutenance — de l'écran d'accueil au parcours IA en passant par le flow de création de projet.",
+        features: ["Prototype interactif", "Flow complet", "Soutien à la démo"],
       },
     ],
     deliverables: [
-      "Concept UI formalisé dans Figma",
-      "Parcours clés maquettés pour la réponse à appel d'offre",
-      "Prototype de démonstration pour la soutenance",
-      "Socle visuel cohérent pour appuyer le discours commercial",
+      "Concept UI formalisé dans Figma — vision produit à l'horizon 2030",
+      "Direction visuelle premium et accessible avec éléments de gamification",
+      "Parcours clés maquettés : création de projet, budgétisation IA, suivi",
+      "Prototype de démonstration pour la soutenance de l'appel d'offre",
     ],
     impact: [
-      "Proposition produit rendue tangible dès la phase d'avant-vente",
-      "Réponse à appel d'offre renforcée par une démonstration visuelle claire",
-      "Narration plus convaincante grâce au prototype",
-      "Base réutilisable pour de futurs approfondissements produit",
+      "Vision 2030 rendue tangible et convaincante dès la phase d'avant-vente",
+      "Repositionnement de Cetelem comme assistant du quotidien, au-delà du crédit",
+      "Différenciation par la gamification et un ton premium accessible",
+      "Base réutilisable pour approfondir le concept en phase projet",
     ],
     images: {
       cover: null,
@@ -182,11 +183,12 @@ export const PROJECT_DETAILS = {
   apec: {
     client: "APEC",
     role: "Product Designer",
+    duration: "2 ans",
     tools: ["Figma", "Design Tokens", "Atomic Design", "Variables"],
     context:
-      "L'APEC avait besoin d'un écosystème produit complet au sein d'un progiciel interne « Production de Service » (PDS) pour remplacer un CRM Salesforce en fin de vie. À mon arrivée, le projet accusait trois mois de retard et aucun environnement de design n'était en place.",
+      "L'APEC avait besoin d'un écosystème produit complet au sein d'un progiciel interne « Production de Service » (PDS) pour remplacer un CRM Salesforce en fin de vie. À mon arrivée, j'ai repris et assimilé rapidement le travail de discovery et d'empathie initié par un autre UX designer, avant de prendre en charge la conception des interfaces et d'accompagner leur livraison jusqu'en phase de développement.",
     challenges: [
-      "Projet en retard de 3 mois sur le planning initial",
+      "Reprise rapide d'une phase de discovery engagée par un autre designer",
       "Espace Figma vide — aucune UI library ni guidelines",
       "Absence de pratiques UX structurées dans l'équipe",
       "Besoin de livraisons rapides tout en posant des bases durables",
@@ -202,7 +204,7 @@ export const PROJECT_DETAILS = {
         phase: "01",
         title: "Diagnostic & cadrage",
         description:
-          "Audit des écrans, alignement parties prenantes et priorisation des livrables.",
+          "Reprise et assimilation de la phase de discovery existante, audit des écrans, alignement parties prenantes et priorisation des livrables.",
       },
       {
         phase: "02",
@@ -212,22 +214,22 @@ export const PROJECT_DETAILS = {
       },
       {
         phase: "03",
-        title: "Design Thinking",
+        title: "Co-conception",
         description:
-          "Observations terrain et ateliers collaboratifs avec les métiers. Prototypage itératif sur les modules prioritaires.",
+          "Ateliers de co-conception avec les Chefs de Projet Métier et les collaborateurs APEC. Les choix d'interface et d'expérience ont été guidés par les règles métier et les usages réels des équipes. Prototypage itératif sur les modules prioritaires.",
       },
       {
         phase: "04",
-        title: "Culture design",
+        title: "Livraison & recette",
         description:
-          "Documentation des guidelines et formation des équipes aux pratiques UX/UI.",
+          "Suivi actif de la livraison pendant la phase de développement, avec recette graphique et UX complète sur chaque module. Documentation des guidelines et culture design.",
       },
     ],
     modules: [
       {
         title: "Agenda",
         description:
-          "Gestion de rendez-vous multi-contextes avec support des fuseaux horaires, planification collaborative et intégration d'ateliers.",
+          "Module le plus complexe du progiciel, directement conditionné par de lourdes règles métier : types de rendez-vous multiples, contraintes de planification, gestion des fuseaux horaires et logiques de partage spécifiques aux usages APEC. Chaque choix d'expérience a été arbitré en atelier avec les métiers pour coller aux réalités opérationnelles des conseillers.",
         features: ["Création & partage de RDV", "Association de documents", "Gestion des fuseaux horaires"],
       },
       {
@@ -264,7 +266,7 @@ export const PROJECT_DETAILS = {
     impact: [
       "Écosystème design structuré pour l'ensemble de la plateforme PDS",
       "Cohérence visuelle et fonctionnelle améliorée sur tous les modules",
-      "Délais de livraison accélérés et production débloquée",
+      "Recette graphique et UX menée sur l'ensemble des modules livrés",
       "Fondations solides pour une culture design long terme",
     ],
     images: {
@@ -293,6 +295,7 @@ export const PROJECT_DETAILS = {
   autossimo: {
     client: "Autossimo",
     role: "Product Designer",
+    duration: "6 mois",
     tools: ["Figma", "Atomic Design", "User Research", "Design System"],
     context:
       "Autossimo est l'un des leaders français de la vente de pièces automobiles à destination des professionnels. Leur plateforme, en ligne depuis plus de 20 ans, a vu s'accumuler de nombreuses fonctionnalités au fil du temps, rendant la navigation complexe et peu intuitive.",
@@ -325,21 +328,21 @@ export const PROJECT_DETAILS = {
         phase: "03",
         title: "Shadowing & Interviews",
         description:
-          "Sessions de shadowing et d'entretiens auprès de garages de différentes tailles. Création de User Journeys et Personae représentatifs des usages réels.",
+          "Sessions de shadowing et d'entretiens auprès de garages de différentes tailles. Les observations ont mis en évidence une prédominance des usages sur mobiles et tablettes — les techniciens se déplaçant constamment entre les véhicules et les postes de travail. Ces insights ont orienté directement les choix de conception. Création de User Journeys et Personae représentatifs des usages réels.",
       },
       {
         phase: "04",
         title: "Refonte & Design System",
         description:
-          "Conception des nouveaux parcours avec pré-sélection du véhicule, vue catalogue enrichie et fiche produit clarifiée. Initiation d'un design system modulable selon l'Atomic Design.",
+          "Conception des nouveaux parcours en privilégiant les formats mobiles et tablettes. Introduction d'un bandeau d'identification du véhicule persistant, pensé pour répondre aux changements fréquents de véhicules dans les garages. Initiation d'un design system modulable selon l'Atomic Design.",
       },
     ],
     modules: [
       {
         title: "Sélection véhicule",
         description:
-          "Pré-sélection du véhicule dès l'entrée dans le tunnel, avec un bandeau fixe affichant les caractéristiques du véhicule sélectionné pour contextualiser chaque action.",
-        features: ["Bandeau véhicule persistant", "Pré-sélection rapide", "Caractéristiques visibles"],
+          "Pré-sélection du véhicule dès l'entrée dans le tunnel, avec un bandeau d'identification persistant affichant les caractéristiques du véhicule en cours. Ce choix découle directement des observations terrain : dans les garages, les véhicules changent constamment — le technicien doit toujours savoir sur quel véhicule il travaille, même en navigant dans le catalogue.",
+        features: ["Bandeau véhicule persistant", "Pré-sélection rapide", "Adapté aux changements fréquents"],
       },
       {
         title: "Vue catalogue",
@@ -398,6 +401,7 @@ export const PROJECT_DETAILS = {
   npc: {
     client: "Neotropical Primate Conservation",
     role: "UX/UI Designer & Développeur CMS",
+    duration: "8 mois",
     tools: ["Figma", "WordPress", "UI Kit", "Adobe XD"],
     context:
       "Neotropical Primate Conservation (NPC) est une ONG à but non lucratif œuvrant pour la préservation des forêts tropicales d'Amérique du Sud. Son site web obsolète ne reflétait plus l'envergure de ses missions ni sa présence internationale.",
@@ -487,6 +491,7 @@ export const PROJECT_DETAILS = {
   cerfal: {
     client: "CFA Cerfal",
     role: "UX/UI Designer",
+    duration: "6 mois",
     tools: ["Adobe XD", "UI Kit", "Prototypage", "Wireframes"],
     context:
       "Le CFA CERFAL est un réseau de centres de formation par apprentissage en Île-de-France et dans toute la France. Son site historique, devenu obsolète, ne reflétait plus l'image moderne attendue d'une organisation de cette envergure et ne facilitait pas les prises de contact avec ses différents publics.",
@@ -576,6 +581,7 @@ export const PROJECT_DETAILS = {
   globedreamers: {
     client: "Globedreamers",
     role: "UX/UI Designer",
+    duration: "2 ans",
     tools: ["Adobe XD", "Design System", "Prototypage", "UI Kit"],
     context:
       "Globedreamers est une plateforme de financement participatif dédiée aux projets de voyages responsables et porteurs de sens. Sa mission est de créer une communauté engagée autour de valeurs communes et de fédérer des entreprises partenaires souhaitant soutenir des initiatives à impact positif.",
@@ -793,78 +799,79 @@ export const PROJECT_DETAILS_EN = {
   cetelem: {
     client: "Cetelem",
     role: "Product Designer",
+    duration: "2 weeks",
     tools: ["Figma", "Prototyping", "UI Design"],
     context:
-      "As part of a tender response, Cetelem needed a product proposal able to project a clear, credible and desirable vision of the future service. The challenge was to quickly shape a convincing interface concept, refined enough to support the commercial pitch.",
+      "As part of a tender response, the challenge was to project a product vision for the 2030 horizon — reimagining Cetelem not as a simple credit tool, but as an everyday assistant supporting users across all their life projects. Quickly budgeting an idea, tracking project progress, being guided through financial choices: all use cases to be made desirable within a concept that is both slightly premium and accessible to the widest possible audience, with gamification elements to make the experience more engaging. The entire concept was designed and prototyped in 2 weeks.",
     challenges: [
-      "Turn a commercial brief into a tangible product proposal",
-      "Give credibility to a concept that was still exploratory",
-      "Produce screens quickly enough for a high-stakes presentation",
-      "Balance feasibility, visual impact and clarity of use",
+      "Project a credible product vision for the 2030 horizon within tight timeframes",
+      "Reposition the brand: premium without excluding, accessible without being generic",
+      "Integrate gamification elements into a serious financial context",
+      "Make AI assistance, quick budgeting and project tracking coexist in a coherent interface",
     ],
     objectives: [
-      "Shape a clear and desirable product concept",
-      "Design an interface strong enough to support the tender response",
-      "Prototype the key flows to tell the experience story",
-      "Create a coherent visual support for the final presentation",
+      "Position Cetelem as the assistant for all life projects at the 2030 horizon",
+      "Design a premium yet accessible experience, far from the austere codes of banking",
+      "Integrate playful mechanics to engage users in managing their projects",
+      "Tell the vision through a prototype refined enough to convince at pitch stage",
     ],
     methodology: [
       {
         phase: "01",
         title: "Concept framing",
         description:
-          "Analyse of the brief, reframing business expectations and defining a clear value proposition to carry through the response.",
+          "Reframing the vision for the 2030 horizon, defining the 'life assistant' positioning and identifying the core flows.",
       },
       {
         phase: "02",
         title: "UI direction",
         description:
-          "Exploration of a premium, clear and reassuring interface direction aligned with the ambition of the concept.",
+          "Exploring an accessible premium direction — neither elitist luxury nor classic banking interface. Working on visual codes, gamification and overall tone.",
       },
       {
         phase: "03",
         title: "Prototyping",
         description:
-          "Structuring the core flows in Figma with a prototype able to narrate the main usage scenarios.",
+          "Structuring the key flows in Figma: project creation, AI-assisted budgeting, project tracking and follow-up.",
       },
       {
         phase: "04",
         title: "Pitch support",
         description:
-          "Assembling key screens and transitions into a smooth narrative for the offer presentation.",
+          "Assembling screens and transitions into a smooth narrative around the 2030 vision for the tender presentation.",
       },
     ],
     modules: [
       {
-        title: "Product vision",
+        title: "Product vision 2030",
         description:
-          "Definition of a guiding concept showcasing the service promise and its benefits for future users.",
-        features: ["Value proposition", "Target scenario", "Projected vision"],
+          "A strong repositioning: Cetelem becomes the assistant for all your life projects. Every idea can be budgeted, tracked and brought to life from a single interface.",
+        features: ["Life assistant", "2030 horizon", "Service vision"],
       },
       {
         title: "Key flows",
         description:
-          "Design of representative flows to illustrate the most strategic usage moments in the tender response.",
-        features: ["Prioritised flows", "Key screens", "Narrated experience"],
+          "The core flows of the concept — project creation and budgeting, AI assistance to refine estimates, progress tracking with gamification elements.",
+        features: ["Project creation", "Assisted budgeting", "Tracking & gamification"],
       },
       {
         title: "Demo prototype",
         description:
-          "Structured Figma prototype built to support the demo and make the proposal feel concrete during the pitch.",
-        features: ["Interactive prototype", "Essential transitions", "Demo support"],
+          "Interactive Figma prototype built to make the vision tangible at pitch — from the home screen to the AI flow and the project creation journey.",
+        features: ["Interactive prototype", "Full flow", "Demo support"],
       },
     ],
     deliverables: [
-      "UI concept formalised in Figma",
-      "Key flows designed for the tender response",
-      "Demo prototype for the presentation",
-      "Coherent visual foundation supporting the commercial narrative",
+      "UI concept formalised in Figma — product vision for the 2030 horizon",
+      "Premium and accessible visual direction with gamification elements",
+      "Key flows designed: project creation, AI budgeting, tracking",
+      "Demo prototype for the tender pitch presentation",
     ],
     impact: [
-      "Product proposal made tangible at the pre-sales stage",
-      "Tender response strengthened by a clear visual demonstration",
-      "More convincing storytelling thanks to the prototype",
-      "Reusable base for future product deep dives",
+      "2030 vision made tangible and convincing at the pre-sales stage",
+      "Cetelem repositioned as an everyday assistant, beyond credit",
+      "Differentiation through gamification and a premium accessible tone",
+      "Reusable base for deepening the concept in the project phase",
     ],
     images: {
       cover: null,
@@ -882,11 +889,12 @@ export const PROJECT_DETAILS_EN = {
   apec: {
     client: "APEC",
     role: "Product Designer",
+    duration: "2 years",
     tools: ["Figma", "Design Tokens", "Atomic Design", "Variables"],
     context:
-      "APEC needed a complete product ecosystem within an internal enterprise software called 'Production de Service' (PDS) to replace an end-of-life Salesforce CRM. When I joined, the project was three months behind schedule and no design environment was in place.",
+      "APEC needed a complete product ecosystem within an internal enterprise software called 'Production de Service' (PDS) to replace an end-of-life Salesforce CRM. When I joined, I picked up and quickly assimilated the discovery and empathy work initiated by a previous UX designer, before taking ownership of the interface design and supporting its delivery through the development phase.",
     challenges: [
-      "Project 3 months behind the initial schedule",
+      "Quickly taking over a discovery phase already initiated by another designer",
       "Empty Figma space — no UI library or guidelines",
       "Lack of structured UX practices within the team",
       "Need for fast delivery while laying durable foundations",
@@ -902,7 +910,7 @@ export const PROJECT_DETAILS_EN = {
         phase: "01",
         title: "Diagnosis & scoping",
         description:
-          "Screen audit, stakeholder alignment and deliverable prioritisation.",
+          "Takeover and assimilation of the existing discovery phase, screen audit, stakeholder alignment and deliverable prioritisation.",
       },
       {
         phase: "02",
@@ -912,22 +920,22 @@ export const PROJECT_DETAILS_EN = {
       },
       {
         phase: "03",
-        title: "Design Thinking",
+        title: "Co-design",
         description:
-          "Field observations and collaborative workshops with business teams. Iterative prototyping on priority modules.",
+          "Co-design workshops with Business Project Managers and APEC collaborators. Interface and experience choices were driven by business rules and the actual working practices of the teams. Iterative prototyping on priority modules.",
       },
       {
         phase: "04",
-        title: "Design culture",
+        title: "Delivery & QA",
         description:
-          "Guidelines documentation and team training in UX/UI practices.",
+          "Active monitoring of delivery during the development phase, with full graphical and UX sign-off on each module. Guidelines documentation and design culture.",
       },
     ],
     modules: [
       {
         title: "Agenda",
         description:
-          "Multi-context appointment management with timezone support, collaborative scheduling and workshop integration.",
+          "The most complex module in the software, directly shaped by heavy business rules: multiple appointment types, scheduling constraints, timezone management and sharing logic specific to APEC's operational workflows. Every experience decision was arbitrated in co-design workshops with business teams to align with the day-to-day reality of advisors.",
         features: ["Create & share appointments", "Document association", "Timezone management"],
       },
       {
@@ -964,7 +972,7 @@ export const PROJECT_DETAILS_EN = {
     impact: [
       "Structured design ecosystem for the entire PDS platform",
       "Improved visual and functional consistency across all modules",
-      "Accelerated delivery timelines and unblocked production",
+      "Full graphical and UX sign-off conducted across all delivered modules",
       "Solid foundations for a long-term design culture",
     ],
     images: {
@@ -993,6 +1001,7 @@ export const PROJECT_DETAILS_EN = {
   autossimo: {
     client: "Autossimo",
     role: "Product Designer",
+    duration: "6 months",
     tools: ["Figma", "Atomic Design", "User Research", "Design System"],
     context:
       "Autossimo is one of France's leading automotive parts retailers for professionals. Their platform, online for over 20 years, had accumulated many features over time, making navigation complex and unintuitive.",
@@ -1025,21 +1034,21 @@ export const PROJECT_DETAILS_EN = {
         phase: "03",
         title: "Shadowing & Interviews",
         description:
-          "Shadowing sessions and interviews with garages of various sizes. Creation of User Journeys and Personas representative of real usage patterns.",
+          "Shadowing sessions and interviews with garages of various sizes. Observations revealed a strong predominance of mobile and tablet usage — technicians constantly moving between vehicles and workstations. These insights directly shaped the design decisions. Creation of User Journeys and Personas representative of real usage patterns.",
       },
       {
         phase: "04",
         title: "Redesign & Design System",
         description:
-          "Design of new flows with upfront vehicle selection, enriched catalogue view and clarified product page. Initiation of a modular design system following Atomic Design.",
+          "Design of new flows with a mobile and tablet-first approach. Introduction of a persistent vehicle identification banner, designed to accommodate the frequent vehicle changes typical of automotive garages. Initiation of a modular design system following Atomic Design.",
       },
     ],
     modules: [
       {
         title: "Vehicle selection",
         description:
-          "Upfront vehicle selection at the start of the purchase funnel, with a persistent banner displaying the selected vehicle's characteristics to contextualise each action.",
-        features: ["Persistent vehicle banner", "Quick selection", "Visible specifications"],
+          "Upfront vehicle selection at the start of the purchase funnel, with a persistent identification banner displaying the active vehicle's characteristics. This choice stems directly from field observations: in garages, vehicles change constantly — the technician must always know which vehicle they're working on, even while browsing the catalogue.",
+        features: ["Persistent vehicle banner", "Quick selection", "Built for frequent vehicle changes"],
       },
       {
         title: "Catalogue view",
@@ -1098,6 +1107,7 @@ export const PROJECT_DETAILS_EN = {
   npc: {
     client: "Neotropical Primate Conservation",
     role: "UX/UI Designer & CMS Developer",
+    duration: "8 months",
     tools: ["Figma", "WordPress", "UI Kit", "Adobe XD"],
     context:
       "Neotropical Primate Conservation (NPC) is a non-profit NGO working to preserve South American tropical forests. Their outdated website no longer reflected the scale of their missions or their international presence.",
@@ -1187,6 +1197,7 @@ export const PROJECT_DETAILS_EN = {
   cerfal: {
     client: "CFA Cerfal",
     role: "UX/UI Designer",
+    duration: "6 months",
     tools: ["Adobe XD", "UI Kit", "Prototyping", "Wireframes"],
     context:
       "CFA CERFAL is a network of apprenticeship training centres in Île-de-France and across France. Their outdated website no longer reflected the modern image expected of an organisation of this scale and failed to facilitate contact with its various audiences.",
@@ -1276,6 +1287,7 @@ export const PROJECT_DETAILS_EN = {
   globedreamers: {
     client: "Globedreamers",
     role: "UX/UI Designer",
+    duration: "2 years",
     tools: ["Adobe XD", "Design System", "Prototyping", "UI Kit"],
     context:
       "Globedreamers is a crowdfunding platform dedicated to responsible and meaningful travel projects. Its mission is to build an engaged community around shared values and bring together partner companies wishing to support positive-impact initiatives.",
