@@ -168,7 +168,8 @@ export const PROJECT_DETAILS = {
       "Base réutilisable pour approfondir le concept en phase projet",
     ],
     images: {
-      cover: null,
+      cover: "/cetelem/card.png",
+      coverWidth: "46%",
       context: ["/cetelem/parcours-compresse.png"],
       methodology: ["/cetelem/ecrans-test.png"],
       modules: [
@@ -874,7 +875,8 @@ export const PROJECT_DETAILS_EN = {
       "Reusable base for deepening the concept in the project phase",
     ],
     images: {
-      cover: null,
+      cover: "/cetelem/card.png",
+      coverWidth: "46%",
       context: ["/cetelem/parcours-compresse.png"],
       methodology: ["/cetelem/ecrans-test.png"],
       modules: [

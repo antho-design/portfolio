@@ -309,7 +309,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
           margin: "0 auto",
         }}
       >
-        <div style={{ transform: "translateY(-32px)", maxWidth: "72%", margin: "0 auto" }}>
+        <div style={{ transform: "translateY(-32px)", maxWidth: details.images?.coverWidth ?? "72%", margin: "0 auto" }}>
           <Images srcs={details.images?.cover} fallbackLabel={t.imgCover} fallbackRatio="16/7" />
         </div>
       </div>

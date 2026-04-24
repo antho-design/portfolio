@@ -254,7 +254,7 @@ function HomePage({ onNavigate }) {
 }
 
 function RouteTransition({ transition }) {
-  const { tokens: T } = useTheme();
+  const { tokens: T, theme } = useTheme();
   if (!transition) return null;
 
   if (transition.type === "about") {
@@ -273,8 +273,9 @@ function RouteTransition({ transition }) {
           width: expanded ? "100vw" : rect.width,
           height: expanded ? "100vh" : rect.height,
           borderRadius: expanded ? 0 : 999,
-          background:
-            "linear-gradient(180deg, rgba(250,250,248,0.96) 0%, rgba(245,243,239,0.98) 100%)",
+          background: theme === "dark"
+            ? "linear-gradient(180deg, rgba(17,24,39,0.97) 0%, rgba(10,15,28,0.98) 100%)"
+            : "linear-gradient(180deg, rgba(250,250,248,0.96) 0%, rgba(245,243,239,0.98) 100%)",
           zIndex: 300,
           pointerEvents: "none",
           overflow: "hidden",
