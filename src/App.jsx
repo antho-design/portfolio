@@ -4,16 +4,17 @@ import { UI } from "./data/translations";
 import { useBreakpoint } from "./hooks/useBreakpoint";
 import { useContent } from "./hooks/useContent";
 import { useLanguage } from "./context/LanguageContext";
-import { BLUEPRINT_AURA_BG, BLUEPRINT_GRID_BG, PROJECT_COLORS } from "./data/constants";
+import { BLUEPRINT_AURA_BG, BLUEPRINT_GRID_BG, PROJECT_COLORS, CV_URL, LINKEDIN_URL } from "./data/constants";
 import {
   ProgressBar,
   Reveal,
-  SectionLabel,
-  SectionTitle,
+  DownloadIcon,
 } from "./components/UI";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ProjectCard from "./components/ProjectCard";
+import HexPattern from "./components/HexPattern";
+import HoneycombGrid from "./components/HoneycombGrid";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Experience from "./components/Experience";
@@ -51,205 +52,574 @@ function projectMatchesFilter(project, filter, allLabel) {
   });
 }
 
-function HomePage({ onNavigate }) {
-  const { isMobile } = useBreakpoint();
-  const { projects, skills } = useContent();
-  const { lang } = useLanguage();
-  const { tokens: T } = useTheme();
-  const t = UI[lang].projects;
-  const tm = UI[lang].manifesto;
-  const [selectedFilter, setSelectedFilter] = useState(t.all);
-
-  // Reset filter when language changes
-  useEffect(() => {
-    setSelectedFilter(UI[lang].projects.all);
-  }, [lang]);
-
-  const availableFilters = skills.filter((skill) =>
-    projects.some((project) => projectMatchesFilter(project, skill, t.all))
-  );
-  const visibleProjects = isMobile
-    ? projects
-    : projects.filter((project) => projectMatchesFilter(project, selectedFilter, t.all));
-
-  const pillStyle = {
-    padding: "9px 16px",
-    borderRadius: 999,
-    background: `
-      linear-gradient(${T.surface}, ${T.surface}) padding-box,
-      linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
-    `,
-    border: "1px solid transparent",
-    fontFamily: "'Work Sans', sans-serif",
-    fontSize: 12,
-    fontWeight: 600,
-    letterSpacing: "0.05em",
-    color: T.textMuted,
-    transition: "all .25s ease",
-    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-    backdropFilter: "blur(8px) saturate(115%)",
-    WebkitBackdropFilter: "blur(8px) saturate(115%)",
-  };
+function SwitchGroup({ children, label }) {
+  const { tokens: T, theme } = useTheme();
+  const switchBg = theme === "dark" ? "rgba(255,255,255,0.07)" : T.surfaceAlt;
+  const switchBorder = theme === "dark" ? "rgba(255,255,255,0.18)" : T.border;
 
   return (
-    <>
-      <Hero onNavigate={onNavigate} />
+    <div
+      role="group"
+      aria-label={label}
+      style={{
+        padding: 4,
+        borderRadius: 999,
+        border: "1px solid transparent",
+        background: `
+          linear-gradient(${switchBg}, ${switchBg}) padding-box,
+          linear-gradient(to right, transparent, ${switchBorder} 14%, ${switchBorder} 86%, transparent) border-box
+        `,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 2,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
-      {/* Section manifeste */}
-      <section
-        style={{
-          padding: isMobile ? "0 20px 72px" : "0 40px 100px",
-          maxWidth: 1200,
-          margin: "0 auto",
-        }}
-      >
-        <Reveal>
-          <div
-            style={{
-              maxWidth: 760,
-              margin: "0 auto",
-              textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: isMobile ? "clamp(20px, 5.5vw, 28px)" : "clamp(24px, 2.6vw, 36px)",
-                fontWeight: 200,
-                color: T.text,
-                lineHeight: 1.35,
-                letterSpacing: "-0.01em",
-                margin: 0,
-              }}
-            >
-              {tm.line1Parts[0]}{" "}
-              <span style={{ color: T.accent, fontWeight: 500 }}>{tm.line1Parts[1]}</span>
-            </p>
+function SwitchBtn({ active, onClick, children, ariaLabel }) {
+  const { tokens: T, theme } = useTheme();
+  const isDark = theme === "dark";
+  const switchText = isDark ? "rgba(255,255,255,0.92)" : T.text;
+  const switchMuted = isDark ? "rgba(255,255,255,0.38)" : T.textLight;
 
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: isMobile ? 14 : 16,
-                color: T.textMuted,
-                lineHeight: 1.75,
-                marginTop: isMobile ? 16 : 20,
-                maxWidth: 620,
-                margin: isMobile ? "16px auto 0" : "20px auto 0",
-              }}
-            >
-              {tm.line2}
-            </p>
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      aria-label={ariaLabel}
+      onClick={onClick}
+      style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: 11,
+        fontWeight: active ? 700 : 600,
+        textTransform: "uppercase",
+        letterSpacing: "0.06em",
+        padding: "7px 12px",
+        borderRadius: 999,
+        border: "none",
+        background: active ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
+        color: active ? switchText : switchMuted,
+        cursor: "pointer",
+        transition: "background .25s ease, color .25s ease, box-shadow .25s ease",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        boxShadow: active && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+        lineHeight: 1,
+      }}
+    >
+      {children}
+    </button>
+  );
+}
 
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: 8,
-                marginTop: isMobile ? 20 : 28,
-              }}
-            >
-              {tm.tags.map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    padding: "6px 14px",
-                    borderRadius: 999,
-                    border: `1px solid ${T.border}`,
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: T.textMuted,
-                  }}
-                >
-                  {tag}
-                </span>
+function HomePage({ onNavigate }) {
+  const [loaded, setLoaded] = useState(false);
+  const { isMobile, isTablet } = useBreakpoint();
+  const { projects } = useContent();
+  const { lang, toggle: toggleLang } = useLanguage();
+  const { tokens: T, theme, toggle: toggleTheme } = useTheme();
+  const th = UI[lang].hero;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLoaded(true), 80);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const anim = (delay) => ({
+    opacity: loaded ? 1 : 0,
+    transform: loaded ? "translateY(0)" : "translateY(24px)",
+    transition: `opacity .8s cubic-bezier(.22,1,.36,1) ${delay}s, transform .8s cubic-bezier(.22,1,.36,1) ${delay}s`,
+  });
+
+  const cvBtnBackground = `
+    linear-gradient(${T.surface}, ${T.surface}) padding-box,
+    linear-gradient(to right, transparent, rgba(51,51,51,0.16) 14%, rgba(51,51,51,0.16) 86%, transparent) border-box
+  `;
+
+  if (isMobile) {
+    /* ── Layout mobile : scrollable ── */
+    return (
+      <div style={{ minHeight: "100vh", background: T.bg }}>
+
+        {/* Identité + switchers */}
+        <div style={{ padding: "28px 20px 20px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+          <div>
+            <span style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 10, letterSpacing: "0.38em", textTransform: "uppercase",
+              color: T.accent, fontWeight: 400,
+              display: "flex", alignItems: "center", gap: 8, marginBottom: 8,
+            }}>
+              <span style={{ width: 16, height: 1, background: T.accent, display: "inline-block" }} />
+              {th.role}
+            </span>
+            <h1 style={{ margin: 0, lineHeight: 0.95 }}>
+              <span style={{ display: "block", fontFamily: "'Work Sans', sans-serif", fontWeight: 100, fontSize: "clamp(30px, 9vw, 42px)", textTransform: "uppercase", letterSpacing: "0.09em", color: T.text }}>ANTHONIN</span>
+              <span style={{ display: "block", fontFamily: "'Work Sans', sans-serif", fontWeight: 800, fontSize: "clamp(30px, 9vw, 42px)", textTransform: "uppercase", letterSpacing: "0.02em", color: T.accent }}>SAUTET</span>
+            </h1>
+          </div>
+          {/* Switches compact */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", paddingTop: 4 }}>
+            <SwitchGroup label="Theme switcher">
+              {[{ value: "light", icon: "☀️" }, { value: "dark", icon: "🌙" }].map(({ value, icon }) => (
+                <SwitchBtn key={value} active={theme === value} onClick={() => { if (theme !== value) toggleTheme(); }}>
+                  <span style={{ fontSize: 12, lineHeight: 1 }}>{icon}</span>
+                </SwitchBtn>
               ))}
-            </div>
+            </SwitchGroup>
+            <SwitchGroup label="Language switcher">
+              {["fr", "en"].map((l) => (
+                <SwitchBtn key={l} active={lang === l} onClick={() => { if (lang !== l) toggleLang(); }}>
+                  {l.toUpperCase()}
+                </SwitchBtn>
+              ))}
+            </SwitchGroup>
           </div>
-        </Reveal>
-      </section>
+        </div>
 
-      <section
-        id="projects"
-        style={{
-          padding: isMobile ? "40px 20px 60px" : "40px 40px 60px",
-          maxWidth: 1200,
-          margin: "0 auto",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <Reveal>
-          <div style={{ marginBottom: 36 }}>
-            <SectionLabel>{t.label}</SectionLabel>
-            <SectionTitle>{t.title}</SectionTitle>
-            {!isMobile && (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                  marginTop: 28,
-                }}
-              >
-                {[t.all, ...availableFilters].map((filter) => {
-                  const isActive = selectedFilter === filter;
-
-                  return (
-                    <button
-                      key={filter}
-                      type="button"
-                      onClick={() => setSelectedFilter(filter)}
-                      style={{
-                        ...pillStyle,
-                        background: isActive
-                          ? `
-                              linear-gradient(180deg, rgba(26,75,92,0.9) 0%, rgba(26,75,92,0.8) 100%) padding-box,
-                              linear-gradient(to right, transparent, rgba(255,255,255,0.16) 14%, rgba(255,255,255,0.16) 86%, transparent) border-box
-                            `
-                          : pillStyle.background,
-                        border: "1px solid transparent",
-                        color: isActive ? "#fff" : T.textMuted,
-                        cursor: "pointer",
-                        boxShadow: isActive
-                          ? "0 4px 12px rgba(26,75,92,0.12), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(255,255,255,0.06)"
-                          : pillStyle.boxShadow,
-                        backdropFilter: isActive
-                          ? "blur(10px) saturate(128%)"
-                          : pillStyle.backdropFilter,
-                        WebkitBackdropFilter: isActive
-                          ? "blur(10px) saturate(128%)"
-                          : pillStyle.WebkitBackdropFilter,
-                      }}
-                    >
-                      {filter}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </Reveal>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-            gap: isMobile ? 16 : 20,
-          }}
-        >
-          {visibleProjects.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} onNavigate={onNavigate} />
+        {/* Projets — full-width stacked */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 12px 0" }}>
+          {projects.filter(p => !p.parentId).map((p, i) => (
+            <ProjectCard key={p.id} project={p} index={i} onNavigate={onNavigate} hexWatermark />
           ))}
         </div>
-      </section>
 
-      <Skills />
-      <Experience />
-    </>
+        {/* Bas de page — liens + mentions légales */}
+        <div style={{ padding: "48px 24px 40px", display: "flex", flexDirection: "column", gap: 16 }}>
+          <a
+            href={CV_URL}
+            download
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(22px, 6vw, 32px)",
+              fontWeight: 100, letterSpacing: "0.28em", textTransform: "uppercase",
+              color: T.textMuted, textDecoration: "none",
+              display: "inline-flex", alignItems: "center", gap: 12,
+            }}
+          >
+            {th.cta4} <span style={{ display: "inline-flex" }}><DownloadIcon /></span>
+          </a>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(22px, 6vw, 32px)",
+              fontWeight: 100, letterSpacing: "0.28em", textTransform: "uppercase",
+              color: T.textMuted, textDecoration: "none",
+              display: "inline-flex", alignItems: "center", gap: 12,
+            }}
+          >
+            LinkedIn
+          </a>
+          <a
+            href="/about"
+            onClick={(e) => { e.preventDefault(); onNavigate("/about"); }}
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(24px, 6.5vw, 36px)",
+              fontWeight: 800, letterSpacing: "-0.02em", textTransform: "uppercase",
+              color: T.text, textDecoration: "none",
+              display: "inline-flex", alignItems: "center", gap: 12,
+            }}
+          >
+            {th.parcours}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <div style={{
+            marginTop: 24,
+            paddingTop: 20,
+            borderTop: `1px solid ${T.border}`,
+          }}>
+            <a
+              href="/legal"
+              onClick={(e) => { e.preventDefault(); onNavigate("/legal"); }}
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: 10, letterSpacing: "0.38em", textTransform: "uppercase",
+                color: T.textMuted, fontWeight: 400, textDecoration: "none",
+              }}
+            >
+              {UI[lang].footer.legal}
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isTablet) {
+    /* ── Layout tablette : 3 colonnes, honeycomb élargi ── */
+    return (
+      <div style={{
+        height: "100vh",
+        display: "grid",
+        gridTemplateColumns: "14% 72% 14%",
+        overflow: "hidden",
+      }}>
+        {/* Col gauche : identité compacte */}
+        <div style={{
+          display: "flex", flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "40px 16px 40px 24px",
+        }}>
+          <div style={anim(0.2)}>
+            <span style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(8px, 0.65vw, 10px)",
+              letterSpacing: "0.4em", textTransform: "uppercase",
+              color: T.accent, fontWeight: 400,
+              display: "flex", alignItems: "center", gap: 10,
+            }}>
+              <span style={{ width: 18, height: 1, background: T.accent, display: "inline-block", flexShrink: 0 }} />
+              {th.role}
+            </span>
+            <div style={{ ...anim(0.28), marginTop: 10 }}>
+              <h1 style={{ margin: 0, lineHeight: 0.95 }}>
+                <span style={{ display: "block", fontFamily: "'Work Sans', sans-serif", fontWeight: 100, fontSize: "clamp(22px, 2.4vw, 34px)", textTransform: "uppercase", letterSpacing: "0.11em", color: T.text }}>ANTHONIN</span>
+                <span style={{ display: "block", fontFamily: "'Work Sans', sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2.4vw, 34px)", textTransform: "uppercase", letterSpacing: "0.03em", color: T.accent }}>SAUTET</span>
+              </h1>
+            </div>
+          </div>
+          <div style={anim(0.5)}>
+            <a
+              href="/legal"
+              onClick={(e) => { e.preventDefault(); onNavigate("/legal"); }}
+              style={{
+                fontFamily: "'Work Sans', sans-serif", fontSize: 10,
+                letterSpacing: "0.34em", textTransform: "uppercase",
+                color: T.textMuted, fontWeight: 400, textDecoration: "none",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; }}
+            >
+              {UI[lang].footer.legal}
+            </a>
+          </div>
+        </div>
+
+        {/* Col centrale : honeycomb élargi */}
+        <div style={{ ...anim(0.1), display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <HoneycombGrid projects={projects.filter(p => !p.parentId)} onNavigate={onNavigate} widthVw={68} showLabels={false} />
+        </div>
+
+        {/* Col droite : switches + liens */}
+        <div style={{
+          display: "flex", flexDirection: "column",
+          justifyContent: "space-between", alignItems: "flex-end",
+          padding: "36px 24px 40px 16px",
+        }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-end", ...anim(0.3) }}>
+            <SwitchGroup label="Theme switcher">
+              {[{ value: "light", icon: "☀️" }, { value: "dark", icon: "🌙" }].map(({ value, icon }) => (
+                <SwitchBtn key={value} active={theme === value} onClick={() => { if (theme !== value) toggleTheme(); }}>
+                  <span style={{ fontSize: 12, lineHeight: 1 }}>{icon}</span>
+                </SwitchBtn>
+              ))}
+            </SwitchGroup>
+            <SwitchGroup label="Language switcher">
+              {["fr", "en"].map((l) => (
+                <SwitchBtn key={l} active={lang === l} onClick={() => { if (lang !== l) toggleLang(); }}>
+                  {l.toUpperCase()}
+                </SwitchBtn>
+              ))}
+            </SwitchGroup>
+          </div>
+          <div style={{ ...anim(0.45), display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
+            <a
+              href={CV_URL}
+              download
+              style={{
+                fontFamily: "'Work Sans', sans-serif", fontSize: "clamp(13px, 1.4vw, 18px)",
+                fontWeight: 100, letterSpacing: "0.26em", color: T.textMuted,
+                textDecoration: "none", textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center", gap: 10,
+                transition: "color .25s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; }}
+            >
+              {th.cta4} <span style={{ display: "inline-flex" }}><DownloadIcon /></span>
+            </a>
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'Work Sans', sans-serif", fontSize: "clamp(13px, 1.4vw, 18px)",
+                fontWeight: 100, letterSpacing: "0.26em", color: T.textMuted,
+                textDecoration: "none", textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center", gap: 10,
+                transition: "color .25s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; }}
+            >
+              LinkedIn
+            </a>
+            <a
+              href="/about"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate("/about", { transition: { type: "about", label: th.parcours, rect: e.currentTarget.getBoundingClientRect() } });
+              }}
+              style={{
+                fontFamily: "'Work Sans', sans-serif", fontSize: "clamp(14px, 1.5vw, 20px)",
+                fontWeight: 800, letterSpacing: "-0.02em", color: T.text,
+                textDecoration: "none", textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center", gap: 10,
+                transition: "color .25s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = T.text; }}
+            >
+              {th.parcours}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Layout desktop : 3 colonnes 100vh ── */
+  return (
+    <div
+      style={{
+        height: "100vh",
+        display: "grid",
+        gridTemplateColumns: "24% 52% 24%",
+        overflow: "hidden",
+      }}
+    >
+      {/* ── Colonne gauche : identité ── */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          padding: "48px 32px 48px 48px",
+        }}
+      >
+        {/* "Product Designer" — label premium */}
+        <div style={anim(0.2)}>
+          <span style={{
+            fontFamily: "'Work Sans', sans-serif",
+            fontSize: "clamp(9px, 0.68vw, 11px)",
+            letterSpacing: "0.42em",
+            textTransform: "uppercase",
+            color: T.accent,
+            fontWeight: 400,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+          }}>
+            <span style={{ width: 28, height: 1, background: T.accent, display: "inline-block", flexShrink: 0 }} />
+            {th.role}
+          </span>
+        </div>
+
+        {/* ANTHONIN SAUTET — contraste ultralight / ultrabold */}
+        <div style={{ ...anim(0.32), marginTop: 14 }}>
+          <h1 style={{ margin: 0, lineHeight: 0.95 }}>
+            <span style={{
+              display: "block",
+              fontFamily: "'Work Sans', sans-serif",
+              fontWeight: 100,
+              fontSize: "clamp(38px, 3.6vw, 58px)",
+              textTransform: "uppercase",
+              letterSpacing: "0.11em",
+              color: T.text,
+            }}>
+              ANTHONIN
+            </span>
+            <span style={{
+              display: "block",
+              fontFamily: "'Work Sans', sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(38px, 3.6vw, 58px)",
+              textTransform: "uppercase",
+              letterSpacing: "0.03em",
+              color: T.accent,
+            }}>
+              SAUTET
+            </span>
+          </h1>
+        </div>
+
+        {/* Mentions légales — bas de colonne */}
+        <div style={{ ...anim(0.55), marginTop: "auto" }}>
+          <a
+            href="/legal"
+            onClick={(e) => { e.preventDefault(); onNavigate("/legal"); }}
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 11,
+              letterSpacing: "0.38em",
+              textTransform: "uppercase",
+              color: T.textMuted,
+              fontWeight: 400,
+              textDecoration: "none",
+              transition: "color .25s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; }}
+          >
+            {UI[lang].footer.legal}
+          </a>
+        </div>
+      </div>
+
+      {/* ── Colonne centrale : grille hexagonale 2-3-2 ── */}
+      <div style={{ ...anim(0.1), display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <HoneycombGrid projects={projects.filter(p => !p.parentId)} onNavigate={onNavigate} />
+      </div>
+
+      {/* ── Colonne droite : switches + CV + Mon Parcours ── */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          padding: "40px 48px 48px 32px",
+        }}
+      >
+        {/* Switches en haut, alignés à droite */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-end", ...anim(0.3) }}>
+          <SwitchGroup label="Theme switcher">
+            {[
+              { value: "light", icon: "☀️", label: "Mode clair" },
+              { value: "dark",  icon: "🌙", label: "Mode sombre" },
+            ].map(({ value, icon, label }) => (
+              <SwitchBtn
+                key={value}
+                active={theme === value}
+                onClick={() => { if (theme !== value) toggleTheme(); }}
+                ariaLabel={label}
+              >
+                <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
+              </SwitchBtn>
+            ))}
+          </SwitchGroup>
+
+          <SwitchGroup label="Language switcher">
+            {["fr", "en"].map((optionLang) => (
+              <SwitchBtn
+                key={optionLang}
+                active={lang === optionLang}
+                onClick={() => { if (lang !== optionLang) toggleLang(); }}
+                ariaLabel={optionLang === "fr" ? "Français" : "English"}
+              >
+                {optionLang.toUpperCase()}
+              </SwitchBtn>
+            ))}
+          </SwitchGroup>
+        </div>
+
+        {/* CV + LinkedIn + Mon Parcours en bas, alignés à droite */}
+        <div style={{ ...anim(0.45), display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
+          {/* CV */}
+          <a
+            href={CV_URL}
+            download
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 12,
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 24,
+              fontWeight: 100,
+              letterSpacing: "0.28em",
+              color: T.textMuted,
+              textDecoration: "none",
+              textTransform: "uppercase",
+              transition: "color .25s ease, gap .25s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; e.currentTarget.style.gap = "16px"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; e.currentTarget.style.gap = "12px"; }}
+          >
+            {th.cta4}
+            <span style={{ display: "inline-flex", alignItems: "center" }}><DownloadIcon /></span>
+          </a>
+
+          {/* LinkedIn */}
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 12,
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 24,
+              fontWeight: 100,
+              letterSpacing: "0.28em",
+              color: T.textMuted,
+              textDecoration: "none",
+              textTransform: "uppercase",
+              transition: "color .25s ease, gap .25s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; e.currentTarget.style.gap = "16px"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = T.textMuted; e.currentTarget.style.gap = "12px"; }}
+          >
+            LinkedIn
+            {/* Icône "ouvre dans un nouvel onglet" */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+
+          {/* Mon Parcours — display bold */}
+          <a
+            href="/about"
+            onClick={(e) => {
+              e.preventDefault();
+              const rect = e.currentTarget.getBoundingClientRect();
+              onNavigate("/about", {
+                transition: {
+                  type: "about",
+                  label: th.parcours,
+                  rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+                },
+              });
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 14,
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: "clamp(20px, 2.1vw, 32px)",
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              color: T.text,
+              textDecoration: "none",
+              textTransform: "uppercase",
+              transition: "color .25s ease, gap .25s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; e.currentTarget.style.gap = "20px"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = T.text; e.currentTarget.style.gap = "14px"; }}
+          >
+            {th.parcours}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -602,7 +972,7 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname || "/");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [routeTransition, setRouteTransition] = useState(null);
-  const { isMobile } = useBreakpoint();
+  const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
   const { tokens: T } = useTheme();
   const { projects } = useContent();
@@ -858,16 +1228,24 @@ export default function App() {
     );
   };
 
+  const isDesktopHome = currentPath === "/";
+
   return (
     <>
-      <ProgressBar />
-      <Navbar
-        activeSection={activeSection}
-        currentPath={currentPath}
-        onNavigate={navigate}
-      />
+      {!isDesktopHome && <ProgressBar />}
+      {!isDesktopHome && (
+        <Navbar
+          activeSection={activeSection}
+          currentPath={currentPath}
+          onNavigate={navigate}
+        />
+      )}
       {currentPath === "/about" ? (
-        <About />
+        <>
+          <About />
+          <Skills />
+          <Experience />
+        </>
       ) : currentPath === "/legal" ? (
         <LegalPage />
       ) : currentPath.startsWith("/projects/") ? (
@@ -880,7 +1258,6 @@ export default function App() {
       )}
       <RouteTransition transition={routeTransition} />
       <BackToTopButton visible={showBackToTop} />
-      <Footer onNavigate={navigate} />
     </>
   );
 }

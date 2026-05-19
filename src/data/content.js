@@ -14,6 +14,57 @@ export const PROJECTS = [
     year: "2023 – 2025",
     tag: "Product design SI métier",
     tasks: ["Design system", "User Research", "Prototypage", "UI Kit", "Figma"],
+    isHub: true,
+  },
+  {
+    id: "apec-agenda",
+    title: "Agenda",
+    subtitle: "Gestion des créneaux conseillers",
+    year: "2023 – 2024",
+    tag: "Product design SI métier",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Ateliers co-création", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-demande",
+    title: "Demandes",
+    subtitle: "Gestion des tickets clients",
+    year: "2024",
+    tag: "Product design SI métier",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Workflow", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-relation-client",
+    title: "Relation Client",
+    subtitle: "Suivi des échanges multi-canaux",
+    year: "2024",
+    tag: "Product design SI métier",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Intégration", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-proposition-active",
+    title: "Proposition Active",
+    subtitle: "Matching conseillers / candidats",
+    year: "2024 – 2025",
+    tag: "Product design SI métier",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Matching", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-editeur",
+    title: "Éditeur de Compétences",
+    subtitle: "Analyse des tendances du marché",
+    year: "2025",
+    tag: "Product design SI métier",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Data", "UI Design", "Figma"],
   },
   {
     id: "autossimo",
@@ -95,8 +146,26 @@ export const PROJECT_DETAILS = {
     role: "Product Designer",
     duration: "2 semaines",
     tools: ["Figma", "Prototypage", "UI Design"],
+    intro: "Une banque de crédit peut-elle devenir un compagnon de vie ? C'est le défi posé par cet appel d'offre : imaginer Cetelem en 2030, non plus comme un outil de financement, mais comme l'assistant de tous vos projets. Deux semaines pour rendre cette vision désirable, crédible et prototypable.",
     context:
       "Dans le cadre d'une réponse à appel d'offre, l'enjeu était de projeter une vision produit à l'horizon 2030 — repenser Cetelem non plus comme un simple outil de crédit, mais comme un assistant du quotidien capable d'accompagner l'utilisateur dans tous ses projets de vie. Budgétiser rapidement une idée, suivre l'avancement de ses projets, être guidé dans ses choix financiers : autant d'usages à rendre désirables dans un concept à la fois légèrement premium et accessible au plus grand nombre, avec des éléments de gamification pour rendre l'expérience plus engageante. L'ensemble du concept a été conçu et prototypé en 2 semaines.",
+    decisions: [
+      {
+        number: "01",
+        title: "Des intentions, pas des features",
+        text: "Partir des moments de vie — projeter, budgétiser, suivre — plutôt que de construire autour des produits existants. L'interface se plie aux usages, pas l'inverse.",
+      },
+      {
+        number: "02",
+        title: "Gamification sans infantiliser",
+        text: "Progress bars, milestones, visualisations de progression — mais pas de points ni de badges. L'engagement vient de la progression réelle vers un objectif concret.",
+      },
+      {
+        number: "03",
+        title: "L'IA comme facilitateur discret",
+        text: "L'assistant intervient au bon moment — pour affiner une estimation, suggérer un ajustement — sans s'imposer comme la feature principale de l'expérience.",
+      },
+    ],
     challenges: [
       "Projeter une vision produit crédible à l'horizon 2030 dans un temps contraint",
       "Repositionner la marque : premium sans exclure, accessible sans être générique",
@@ -182,88 +251,24 @@ export const PROJECT_DETAILS = {
   },
 
   apec: {
+    isHub: true,
     client: "APEC",
     role: "Product Designer",
     duration: "2 ans",
     tools: ["Figma", "Design Tokens", "Atomic Design", "Variables"],
+    subProjects: ["apec-agenda", "apec-demande", "apec-relation-client", "apec-proposition-active", "apec-editeur"],
     context:
       "L'APEC avait besoin d'un écosystème produit complet au sein d'un progiciel interne « Production de Service » (PDS) pour remplacer un CRM Salesforce en fin de vie. À mon arrivée, j'ai repris et assimilé rapidement le travail de discovery et d'empathie initié par un autre UX designer, avant de prendre en charge la conception des interfaces et d'accompagner leur livraison jusqu'en phase de développement.",
-    challenges: [
-      "Reprise rapide d'une phase de discovery engagée par un autre designer",
-      "Espace Figma vide — aucune UI library ni guidelines",
-      "Absence de pratiques UX structurées dans l'équipe",
-      "Besoin de livraisons rapides tout en posant des bases durables",
-    ],
-    objectives: [
-      "Livrer des maquettes utilisables rapidement pour débloquer la production",
-      "Créer une UI library scalable basée sur l'Atomic Design",
-      "Mettre en place une démarche de Design Thinking sur les modules clés",
-      "Structurer une culture design pérenne au sein de l'équipe",
-    ],
-    methodology: [
-      {
-        phase: "01",
-        title: "Diagnostic & cadrage",
-        description:
-          "Reprise et assimilation de la phase de discovery existante, audit des écrans, alignement parties prenantes et priorisation des livrables.",
-      },
-      {
-        phase: "02",
-        title: "UI Library",
-        description:
-          "Composants Atomic Design — atomes, molécules, organismes — avec variables et documentation.",
-      },
-      {
-        phase: "03",
-        title: "Co-conception",
-        description:
-          "Ateliers de co-conception avec les Chefs de Projet Métier et les collaborateurs APEC. Les choix d'interface et d'expérience ont été guidés par les règles métier et les usages réels des équipes. Prototypage itératif sur les modules prioritaires.",
-      },
-      {
-        phase: "04",
-        title: "Livraison & recette",
-        description:
-          "Suivi actif de la livraison pendant la phase de développement, avec recette graphique et UX complète sur chaque module. Documentation des guidelines et culture design.",
-      },
-    ],
-    modules: [
-      {
-        title: "Agenda",
-        description:
-          "Module le plus complexe du progiciel, directement conditionné par de lourdes règles métier : types de rendez-vous multiples, contraintes de planification, gestion des fuseaux horaires et logiques de partage spécifiques aux usages APEC. Chaque choix d'expérience a été arbitré en atelier avec les métiers pour coller aux réalités opérationnelles des conseillers.",
-        features: ["Création & partage de RDV", "Association de documents", "Gestion des fuseaux horaires"],
-      },
-      {
-        title: "Demandes",
-        description:
-          "Système de création de tickets pour les demandes clients avec tri, listes et workflow d'affectation aux managers.",
-        features: ["Création de tickets", "Tri et filtres avancés", "Affectation manager"],
-      },
-      {
-        title: "Relation Client",
-        description:
-          "Suivi des échanges clients intégrant nativement les communications Outlook et Teams au sein du progiciel.",
-        features: ["Intégration Outlook", "Intégration Teams", "Historique unifié"],
-      },
-      {
-        title: "Proposition Active",
-        description:
-          "Système de matching conseillers/candidats pour les recommandations offre-candidat avec suivi de statuts.",
-        features: ["Matching candidat-offre", "Suivi de statuts", "Recommandations"],
-      },
-      {
-        title: "Éditeur de Compétences",
-        description:
-          "Outil d'analyse des tendances du marché du travail avec recherche avancée et capacités d'export.",
-        features: ["Analyse des tendances", "Recherche avancée", "Export de données"],
-      },
-    ],
-    deliverables: [
-      "UI Library Atomic Design avec états des composants et documentation complète",
-      "Système de variables dynamiques pour les modes clair et sombre",
-      "Design system garantissant la cohérence inter-modules",
-      "Interfaces desktop & mobile sur 5 modules métier",
-    ],
+    designSystem: {
+      description:
+        "Avant de pouvoir concevoir les modules métier, il a fallu poser les fondations : une UI Library Atomic Design construite from scratch, un système de variables dynamiques couvrant les modes clair et sombre, et une documentation permettant à l'équipe de monter en autonomie.",
+      items: [
+        "UI Library Atomic Design — atomes, molécules, organismes avec états et documentation",
+        "Variables dynamiques pour les modes clair, sombre et thèmes métier",
+        "Design tokens garantissant la cohérence inter-modules",
+        "Guidelines et documentation à destination de l'équipe de développement",
+      ],
+    },
     impact: [
       "Écosystème design structuré pour l'ensemble de la plateforme PDS",
       "Cohérence visuelle et fonctionnelle améliorée sur tous les modules",
@@ -277,20 +282,94 @@ export const PROJECT_DETAILS = {
         "/apec/ui-input-states.png",
         "/apec/ui-variables.png",
       ],
-      methodology: [
-        "/apec/ux-cas-nominal.png",
-        "/apec/ux-cas-marginaux.png",
-        "/apec/ux-prototype-flow.png",
-      ],
-      modules: [
-        ["/apec/agenda-5days-dark.png", "/apec/agenda-desktop-overview.png", "/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
-        ["/apec/demandes-list.png", "/apec/demandes-detail.png"],
-        ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"],
-        ["/apec/pa-list.png", "/apec/pa-creation.png"],
-        ["/apec/edc-search.png", "/apec/edc-results.png"],
-      ],
-      moduleLayouts: [null, "grid", "grid", "grid", "grid"],
     },
+  },
+
+  "apec-agenda": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 ans",
+    tools: ["Figma", "Atomic Design", "Prototypage"],
+    context:
+      "Dans le contexte du décommissionnement de Salesforce, une forte adhérence sur l'organisation et la mise à disposition des plages horaires des conseillers force l'APEC à re-créer un agenda de toutes pièces pour ses collaborateurs.",
+    problematique:
+      "Créer un agenda complet reprenant les codes des outils déjà utilisés — notamment Outlook — tout en se conformant à des règles métier très spécifiques, sans dégrader l'expérience existante. Le tout en pensant les affichages pour plusieurs fuseaux horaires et en permettant aux managers de piloter les RDV de leurs collaborateurs.",
+    methodology: [
+      {
+        phase: "01",
+        title: "Discovery & interviews utilisateurs",
+        description:
+          "Ateliers de co-création et sessions d'interviews utilisateurs organisés en collaboration avec les chefs de projet métier pour cartographier les usages, les contraintes horaires et les règles de partage propres à l'APEC.",
+      },
+      {
+        phase: "02",
+        title: "Conception & prototypage",
+        description:
+          "Traduction des règles métier en patterns d'interface. Chaque choix de conception — vue journée, semaine, navigation multi-utilisateurs — a été arbitré en atelier pour coller aux réalités opérationnelles des conseillers.",
+      },
+    ],
+    resultat:
+      "Re-création complète d'un agenda reprenant les codes d'Outlook tout en se conformant aux règles métier strictes de l'APEC. Les utilisateurs peuvent naviguer sur les agendas d'autres utilisateurs, et les managers peuvent modifier les paramètres des RDV de leurs collaborateurs. La gestion multi-fuseaux horaires est intégrée nativement dans toutes les vues.",
+    impact: [
+      "Adoption enthousiaste du nouvel agenda par les utilisateurs lors du déploiement",
+      "Réduction significative des erreurs liées au mauvais positionnement de créneaux",
+      "Collaboration simplifiée grâce au partage de fichiers associés aux créneaux et aux clients",
+    ],
+    images: {
+      cover: "/apec/agenda-5days-dark.png",
+      context: ["/apec/agenda-desktop-overview.png"],
+      resultat: ["/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
+    },
+  },
+
+  "apec-demande": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 ans",
+    tools: ["Figma", "Atomic Design"],
+    context: "Contenu en cours de rédaction.",
+    impact: ["Contenu en cours de rédaction"],
+    images: { cover: "/apec/demandes-list.png", context: ["/apec/demandes-list.png", "/apec/demandes-detail.png"] },
+  },
+
+  "apec-relation-client": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 ans",
+    tools: ["Figma", "Atomic Design"],
+    context: "Contenu en cours de rédaction.",
+    impact: ["Contenu en cours de rédaction"],
+    images: { cover: "/apec/rc-fiche-cadre.png", context: ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"] },
+  },
+
+  "apec-proposition-active": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 ans",
+    tools: ["Figma", "Atomic Design"],
+    context: "Contenu en cours de rédaction.",
+    impact: ["Contenu en cours de rédaction"],
+    images: { cover: "/apec/pa-list.png", context: ["/apec/pa-list.png", "/apec/pa-creation.png"] },
+  },
+
+  "apec-editeur": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 ans",
+    tools: ["Figma", "Atomic Design"],
+    context: "Contenu en cours de rédaction.",
+    impact: ["Contenu en cours de rédaction"],
+    images: { cover: "/apec/edc-search.png", context: ["/apec/edc-search.png", "/apec/edc-results.png"] },
   },
 
   autossimo: {
@@ -721,6 +800,57 @@ export const PROJECTS_EN = [
     year: "2023 – 2025",
     tag: "Enterprise software product design",
     tasks: ["Design system", "User Research", "Prototyping", "UI Kit", "Figma"],
+    isHub: true,
+  },
+  {
+    id: "apec-agenda",
+    title: "Agenda",
+    subtitle: "Advisor slot management",
+    year: "2023 – 2024",
+    tag: "Enterprise software product design",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Co-design workshops", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-demande",
+    title: "Requests",
+    subtitle: "Client ticket management",
+    year: "2024",
+    tag: "Enterprise software product design",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Workflow", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-relation-client",
+    title: "Client Relations",
+    subtitle: "Multi-channel communication tracking",
+    year: "2024",
+    tag: "Enterprise software product design",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Integration", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-proposition-active",
+    title: "Active Proposal",
+    subtitle: "Advisor / candidate matching",
+    year: "2024 – 2025",
+    tag: "Enterprise software product design",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Matching", "UI Design", "Figma"],
+  },
+  {
+    id: "apec-editeur",
+    title: "Skills Editor",
+    subtitle: "Labour market trend analysis",
+    year: "2025",
+    tag: "Enterprise software product design",
+    parentId: "apec",
+    parentTitle: "Apec",
+    tasks: ["UX Research", "Data", "UI Design", "Figma"],
   },
   {
     id: "autossimo",
@@ -889,88 +1019,24 @@ export const PROJECT_DETAILS_EN = {
   },
 
   apec: {
+    isHub: true,
     client: "APEC",
     role: "Product Designer",
     duration: "2 years",
     tools: ["Figma", "Design Tokens", "Atomic Design", "Variables"],
+    subProjects: ["apec-agenda", "apec-demande", "apec-relation-client", "apec-proposition-active", "apec-editeur"],
     context:
       "APEC needed a complete product ecosystem within an internal enterprise software called 'Production de Service' (PDS) to replace an end-of-life Salesforce CRM. When I joined, I picked up and quickly assimilated the discovery and empathy work initiated by a previous UX designer, before taking ownership of the interface design and supporting its delivery through the development phase.",
-    challenges: [
-      "Quickly taking over a discovery phase already initiated by another designer",
-      "Empty Figma space — no UI library or guidelines",
-      "Lack of structured UX practices within the team",
-      "Need for fast delivery while laying durable foundations",
-    ],
-    objectives: [
-      "Deliver usable mockups quickly to unblock production",
-      "Create a scalable UI library based on Atomic Design",
-      "Implement a Design Thinking approach on key modules",
-      "Build a lasting design culture within the team",
-    ],
-    methodology: [
-      {
-        phase: "01",
-        title: "Diagnosis & scoping",
-        description:
-          "Takeover and assimilation of the existing discovery phase, screen audit, stakeholder alignment and deliverable prioritisation.",
-      },
-      {
-        phase: "02",
-        title: "UI Library",
-        description:
-          "Atomic Design components — atoms, molecules, organisms — with variables and documentation.",
-      },
-      {
-        phase: "03",
-        title: "Co-design",
-        description:
-          "Co-design workshops with Business Project Managers and APEC collaborators. Interface and experience choices were driven by business rules and the actual working practices of the teams. Iterative prototyping on priority modules.",
-      },
-      {
-        phase: "04",
-        title: "Delivery & QA",
-        description:
-          "Active monitoring of delivery during the development phase, with full graphical and UX sign-off on each module. Guidelines documentation and design culture.",
-      },
-    ],
-    modules: [
-      {
-        title: "Agenda",
-        description:
-          "The most complex module in the software, directly shaped by heavy business rules: multiple appointment types, scheduling constraints, timezone management and sharing logic specific to APEC's operational workflows. Every experience decision was arbitrated in co-design workshops with business teams to align with the day-to-day reality of advisors.",
-        features: ["Create & share appointments", "Document association", "Timezone management"],
-      },
-      {
-        title: "Requests",
-        description:
-          "Ticket creation system for client requests with sorting, lists and assignment workflow to managers.",
-        features: ["Ticket creation", "Advanced sorting & filters", "Manager assignment"],
-      },
-      {
-        title: "Client Relations",
-        description:
-          "Client communication tracking natively integrating Outlook and Teams communications within the software.",
-        features: ["Outlook integration", "Teams integration", "Unified history"],
-      },
-      {
-        title: "Active Proposal",
-        description:
-          "Advisor/candidate matching system for offer-candidate recommendations with status tracking.",
-        features: ["Candidate-offer matching", "Status tracking", "Recommendations"],
-      },
-      {
-        title: "Skills Editor",
-        description:
-          "Labour market trend analysis tool with advanced search and export capabilities.",
-        features: ["Trend analysis", "Advanced search", "Data export"],
-      },
-    ],
-    deliverables: [
-      "Atomic Design UI Library with component states and full documentation",
-      "Dynamic variable system for light and dark modes",
-      "Design system ensuring inter-module consistency",
-      "Desktop & mobile interfaces across 5 business modules",
-    ],
+    designSystem: {
+      description:
+        "Before designing the business modules, solid foundations were needed: an Atomic Design UI Library built from scratch, a dynamic variable system covering light and dark modes, and documentation enabling the team to work autonomously.",
+      items: [
+        "Atomic Design UI Library — atoms, molecules, organisms with states and documentation",
+        "Dynamic variables for light, dark and business theme modes",
+        "Design tokens ensuring inter-module consistency",
+        "Guidelines and documentation for the development team",
+      ],
+    },
     impact: [
       "Structured design ecosystem for the entire PDS platform",
       "Improved visual and functional consistency across all modules",
@@ -984,20 +1050,94 @@ export const PROJECT_DETAILS_EN = {
         "/apec/ui-input-states.png",
         "/apec/ui-variables.png",
       ],
-      methodology: [
-        "/apec/ux-cas-nominal.png",
-        "/apec/ux-cas-marginaux.png",
-        "/apec/ux-prototype-flow.png",
-      ],
-      modules: [
-        ["/apec/agenda-5days-dark.png", "/apec/agenda-desktop-overview.png", "/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
-        ["/apec/demandes-list.png", "/apec/demandes-detail.png"],
-        ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"],
-        ["/apec/pa-list.png", "/apec/pa-creation.png"],
-        ["/apec/edc-search.png", "/apec/edc-results.png"],
-      ],
-      moduleLayouts: [null, "grid", "grid", "grid", "grid"],
     },
+  },
+
+  "apec-agenda": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 years",
+    tools: ["Figma", "Atomic Design", "Prototyping"],
+    context:
+      "As part of the Salesforce decommissioning, the APEC's strong dependency on the scheduling and availability of advisor time slots required a full in-house agenda to be built from scratch for its collaborators.",
+    problematique:
+      "Design a complete agenda that mirrors familiar tools — particularly Outlook — while complying with highly specific business rules, without degrading the existing experience. All of this with multi-timezone display support and the ability for managers to oversee their team's appointments.",
+    methodology: [
+      {
+        phase: "01",
+        title: "Discovery & user interviews",
+        description:
+          "Co-design workshops and user interview sessions organised with business project managers to map usage patterns, scheduling constraints and APEC-specific sharing rules.",
+      },
+      {
+        phase: "02",
+        title: "Design & prototyping",
+        description:
+          "Translating business rules into interface patterns. Every design decision — day view, week view, multi-user navigation — was arbitrated in workshops to align with advisors' operational realities.",
+      },
+    ],
+    resultat:
+      "A complete agenda rebuilt to mirror Outlook's familiar codes while adhering to APEC's strict business rules. Users can browse other users' calendars, and managers can edit their team's appointment settings. Multi-timezone management is natively integrated across all views.",
+    impact: [
+      "Enthusiastic adoption of the new agenda by users at rollout",
+      "Significant reduction in errors caused by incorrect slot placement",
+      "Simplified collaboration through file sharing attached to slots and clients",
+    ],
+    images: {
+      cover: "/apec/agenda-5days-dark.png",
+      context: ["/apec/agenda-desktop-overview.png"],
+      resultat: ["/apec/agenda-rdv-popup.png", "/apec/agenda-calendar-views.png", "/apec/agenda-mobile.png"],
+    },
+  },
+
+  "apec-demande": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 years",
+    tools: ["Figma", "Atomic Design"],
+    context: "Content in progress.",
+    impact: ["Content in progress"],
+    images: { cover: "/apec/demandes-list.png", context: ["/apec/demandes-list.png", "/apec/demandes-detail.png"] },
+  },
+
+  "apec-relation-client": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 years",
+    tools: ["Figma", "Atomic Design"],
+    context: "Content in progress.",
+    impact: ["Content in progress"],
+    images: { cover: "/apec/rc-fiche-cadre.png", context: ["/apec/rc-fiche-cadre.png", "/apec/rc-outlook.png"] },
+  },
+
+  "apec-proposition-active": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 years",
+    tools: ["Figma", "Atomic Design"],
+    context: "Content in progress.",
+    impact: ["Content in progress"],
+    images: { cover: "/apec/pa-list.png", context: ["/apec/pa-list.png", "/apec/pa-creation.png"] },
+  },
+
+  "apec-editeur": {
+    parentId: "apec",
+    parentTitle: "Apec",
+    client: "APEC",
+    role: "Product Designer",
+    duration: "2 years",
+    tools: ["Figma", "Atomic Design"],
+    context: "Content in progress.",
+    impact: ["Content in progress"],
+    images: { cover: "/apec/edc-search.png", context: ["/apec/edc-search.png", "/apec/edc-results.png"] },
   },
 
   autossimo: {
