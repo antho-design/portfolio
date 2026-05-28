@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useTheme } from "../context/ThemeContext";
-import { Reveal, SectionLabel, SectionTitle } from "./UI";
+import { Reveal } from "./UI";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
 import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
+import MotifSVG from "./MotifSVG";
 
-/* ─── Real image with lightbox + grid support ───────────────── */
+/* ─── Image with lightbox ────────────────────────────────────── */
 function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
   const [lightbox, setLightbox] = useState(null);
   const { tokens: T } = useTheme();
@@ -16,27 +17,26 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
 
   if (list.length === 0) return <ImageSlot label={fallbackLabel} ratio={fallbackRatio} />;
 
-  const imgStyle = { width: "auto", maxWidth: "100%", maxHeight: "90vh", display: "block", borderRadius: T.radius, cursor: "zoom-in", margin: "0 auto" };
-  const renderImg = (src, key) => (
-    <img key={key} src={src} alt="" style={imgStyle} onClick={() => setLightbox(src)} />
-  );
-  const renderGridImg = (src, key) => (
+  const img = (src, key, full) => (
     <img
-      key={key}
-      src={src}
-      alt=""
+      key={key} src={src} alt=""
       onClick={() => setLightbox(src)}
-      style={{ width: "auto", maxWidth: "100%", maxHeight: "50vh", display: "block", borderRadius: T.radius, cursor: "zoom-in", margin: "0 auto" }}
+      style={{
+        width: "auto", maxWidth: "100%",
+        maxHeight: full ? "90vh" : "50vh",
+        display: "block", borderRadius: T.radius,
+        cursor: "zoom-in", margin: "0 auto",
+      }}
     />
   );
 
   let content;
   if (list.length === 1) {
-    content = renderImg(list[0], 0);
+    content = img(list[0], 0, true);
   } else if (grid) {
     content = (
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
-        {list.map(renderGridImg)}
+        {list.map((s, i) => img(s, i, false))}
       </div>
     );
   } else {
@@ -45,10 +45,10 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
     for (let i = 0; i < rest.length; i += 2) pairs.push(rest.slice(i, i + 2));
     content = (
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {renderImg(list[0], 0)}
+        {img(list[0], 0, true)}
         {pairs.map((pair, pi) => (
           <div key={pi} style={{ display: "grid", gridTemplateColumns: `repeat(${pair.length}, 1fr)`, gap: 12 }}>
-            {pair.map((src, i) => renderGridImg(src, `${pi}-${i}`))}
+            {pair.map((s, i) => img(s, `${pi}-${i}`, false))}
           </div>
         ))}
       </div>
@@ -63,14 +63,13 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
           onClick={() => setLightbox(null)}
           style={{
             position: "fixed", inset: 0, zIndex: 9999,
-            background: "rgba(0,0,0,0.55)",
+            background: "rgba(0,0,0,0.6)",
             display: "flex", alignItems: "center", justifyContent: "center",
             padding: 24, cursor: "zoom-out",
           }}
         >
           <img
-            src={lightbox}
-            alt=""
+            src={lightbox} alt=""
             onClick={(e) => e.stopPropagation()}
             style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: T.radius, objectFit: "contain" }}
           />
@@ -81,56 +80,65 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
   );
 }
 
-/* ─── Placeholder image ─────────────────────────────────────── */
-function ImageSlot({ label, ratio = "16/9", caption = "" }) {
+function ImageSlot({ label, ratio = "16/9" }) {
   const { tokens: T } = useTheme();
   return (
-    <div style={{ width: "100%", marginTop: 0 }}>
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: ratio,
-          border: `2px dashed ${T.border}`,
-          borderRadius: T.radius,
-          background: T.bg,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 10,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'Work Sans', sans-serif",
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: T.textLight,
-            padding: "5px 12px",
-            borderRadius: 999,
-            border: `1px solid ${T.border}`,
-          }}
-        >
-          Work in progress
-        </span>
-      </div>
-      {caption && (
-        <p
-          style={{
-            fontFamily: "'Work Sans', sans-serif",
-            fontSize: 12,
-            color: T.textLight,
-            marginTop: 10,
-            textAlign: "center",
-            letterSpacing: "0.03em",
-          }}
-        >
-          {caption}
-        </p>
-      )}
+    <div
+      style={{
+        width: "100%", aspectRatio: ratio,
+        border: `2px dashed ${T.border}`, borderRadius: T.radius,
+        background: T.bg,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}
+    >
+      <span style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: 11, fontWeight: 600, letterSpacing: "0.12em",
+        textTransform: "uppercase", color: T.textLight,
+        padding: "5px 12px", borderRadius: 999, border: `1px solid ${T.border}`,
+      }}>
+        Work in progress
+      </span>
     </div>
+  );
+}
+
+/* ─── Hex decorations ─────────────────────────────────────── */
+function HexDot({ color = "currentColor", size = 7 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 10 10" aria-hidden="true"
+      style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}>
+      <polygon points="5,0 10,2.5 10,7.5 5,10 0,7.5 0,2.5" fill={color} />
+    </svg>
+  );
+}
+
+function HexHoneycombDecor({ color = "currentColor", size = 160, opacity = 0.05, style = {} }) {
+  const r = size / 2;
+  // Proper honeycomb geometry for pointy-top hexagons
+  const rowH = size * 0.81;                   // vertical spacing — slightly detached
+  const hOff = size * 0.50;                   // horizontal offset between columns
+  const W = hOff + size;
+  const H = 3 * rowH + size;
+
+  const pts = (cx, cy) => {
+    const a = [];
+    for (let i = 0; i < 6; i++) {
+      const rad = (Math.PI / 180) * (60 * i - 30);
+      a.push(`${(cx + r * Math.cos(rad)).toFixed(1)},${(cy + r * Math.sin(rad)).toFixed(1)}`);
+    }
+    return a.join(" ");
+  };
+
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
+      aria-hidden="true" overflow="visible"
+      style={{ position: "absolute", pointerEvents: "none", opacity, ...style }}>
+      <polygon points={pts(hOff + r,  r)}              fill={color} />  {/* col A, row 1 */}
+      <polygon points={pts(r,         rowH + r)}        fill={color} />  {/* col B, row 1 */}
+      <polygon points={pts(hOff + r,  2 * rowH + r)}   fill={color} />  {/* col A, row 2 */}
+      <polygon points={pts(r,         3 * rowH + r)}   fill={color} />  {/* col B, row 2 */}
+    </svg>
   );
 }
 
@@ -143,612 +151,986 @@ export default function ProjectPage({ projectId, onNavigate }) {
   const t = UI[lang].project;
   const project = projects.find((p) => p.id === projectId);
   const details = projectDetails[projectId];
-  const colors = PROJECT_COLORS[projectId] || { from: T.accent, to: T.accentMid };
+  const colors = PROJECT_COLORS[projectId] || PROJECT_COLORS[details?.parentId] || { from: T.accent, to: T.accentMid };
+
+  const [activeTab, setActiveTab] = useState(0);
+  const hubTabs = details?.isHub && details.subProjects
+    ? [
+        { id: "hub", label: "Librairie UI Figma" },
+        ...details.subProjects.map(spId => ({
+          id: spId,
+          label: projects.find(p => p.id === spId)?.title || spId,
+        }))
+      ]
+    : null;
 
   if (!project || !details) {
     return (
       <div style={{ padding: "120px 40px", textAlign: "center" }}>
-        <p style={{ fontFamily: "'Work Sans', sans-serif", color: T.textMuted }}>
-          {t.notFound}
-        </p>
+        <p style={{ fontFamily: "'Work Sans', sans-serif", color: T.textMuted }}>{t.notFound}</p>
       </div>
     );
   }
 
-  const hPad = isMobile ? "20px" : isTablet ? "32px" : "40px";
+  const hPad = isMobile ? "20px" : isTablet ? "40px" : "64px";
   const maxW = 860;
-  const sectionGap = isMobile ? "64px" : "96px";
-  const cardBorder = {
-    position: "absolute",
-    inset: 0,
-    borderRadius: T.radius,
-    pointerEvents: "none",
-    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
-    zIndex: 1,
+  const gap = isMobile ? "56px" : "88px";
+
+  const LB = {
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: "clamp(9px, 0.7vw, 11px)",
+    fontWeight: 300,
+    letterSpacing: "0.28em",
+    textTransform: "uppercase",
+    color: T.accent,
+    display: "block",
+    marginBottom: 12,
   };
+  const LB_WHITE = { ...LB, color: "rgba(255,255,255,0.5)" };
+
+  const H2 = {
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: "clamp(13px, 1.1vw, 17px)",
+    fontWeight: 800,
+    letterSpacing: "-0.01em",
+    textTransform: "uppercase",
+    color: T.text,
+    lineHeight: 1.15,
+    margin: 0,
+  };
+
+  const BODY = {
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: isMobile ? 14 : 15,
+    fontWeight: 300,
+    color: T.textMuted,
+    lineHeight: 1.8,
+    margin: 0,
+  };
+
   const blueprintGrid = {
-    position: "absolute",
-    inset: 0,
+    position: "absolute", inset: 0,
     backgroundImage: BLUEPRINT_GRID_BG,
     backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
     backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
-    opacity: 0.55,
-    mixBlendMode: "screen",
-    pointerEvents: "none",
-    maskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
-    WebkitMaskImage: "radial-gradient(circle at center, black 64%, transparent 100%)",
+    opacity: 0.5, mixBlendMode: "screen", pointerEvents: "none",
+    maskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
+    WebkitMaskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
   };
+
+  // Hex mesh SVG background — replaces blueprint grid on gradient sections
+  const hexMesh = (() => {
+    const R = 22;
+    const W = +(R * Math.sqrt(3)).toFixed(2);
+    const H = 3 * R;
+    const hex = (cx, cy) => {
+      const pts = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
+      }
+      return `M${pts.join("L")}Z`;
+    };
+    const d = [hex(W/2, R), hex(0, 2.5*R), hex(W, 2.5*R)].join(" ");
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${d}' stroke='rgba(255,255,255,0.07)' stroke-width='0.6' fill='none'/></svg>`;
+    return {
+      position: "absolute", inset: 0, pointerEvents: "none",
+      backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
+      backgroundRepeat: "repeat",
+      maskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+      WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+      opacity: 0.9,
+    };
+  })();
+
+  const cardBorder = {
+    position: "absolute", inset: 0, borderRadius: T.radius, pointerEvents: "none",
+    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG, zIndex: 1,
+  };
+
   const heroTaskPill = {
-    padding: "6px 12px",
-    borderRadius: 999,
-    background: "rgba(255,255,255,0.12)",
-    border: "1px solid rgba(255,255,255,0.22)",
-    color: "rgba(255,255,255,0.9)",
-    fontFamily: "'Work Sans', sans-serif",
-    fontSize: 12,
-    fontWeight: 600,
-    letterSpacing: "0.04em",
-    backdropFilter: "blur(8px) saturate(120%)",
-    WebkitBackdropFilter: "blur(8px) saturate(120%)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
-    whiteSpace: "nowrap",
+    padding: "5px 12px", borderRadius: 999,
+    background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+    color: "rgba(255,255,255,0.85)",
+    fontFamily: "'Work Sans', sans-serif", fontSize: 11, fontWeight: 300,
+    letterSpacing: "0.18em", textTransform: "uppercase",
+    backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
   };
 
-  return (
-    <article>
+  /* ─── Ghost number helper ─────────────────────────────────── */
+  const ghostNum = (num) => (
+    <span style={{
+      position: "absolute", top: -20, left: -4,
+      fontFamily: "'Work Sans', sans-serif",
+      fontSize: isMobile ? 72 : 88, fontWeight: 800,
+      letterSpacing: "-0.05em", color: T.text,
+      opacity: theme === "dark" ? 0.09 : 0.05, lineHeight: 1,
+      userSelect: "none", pointerEvents: "none",
+    }}>{num}</span>
+  );
 
-      {/* ── Hero ────────────────────────────────────────────── */}
-      <div
-        style={{
-          background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
-          padding: isMobile ? "100px 20px 56px" : "130px 40px 72px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Grille décorative */}
-        <div style={blueprintGrid} />
-
-        <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
-
-          {/* Titre */}
-          <h1
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              fontSize: isMobile ? "clamp(36px, 10vw, 52px)" : "clamp(48px, 6vw, 72px)",
-              fontWeight: 700,
-              color: "#fff",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-              margin: "0 0 10px",
-            }}
-          >
-            {project.title}
-          </h1>
-          <p
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              fontSize: isMobile ? 16 : 20,
-              fontWeight: 300,
-              color: "rgba(255,255,255,0.65)",
-              margin: "0 0 18px",
-            }}
-          >
-            {project.subtitle}
-          </p>
-
-          {/* Gélules tâches */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 36 }}>
-            {project.tasks.map((task) => (
-              <span key={task} style={heroTaskPill}>{task}</span>
-            ))}
+  /* ─── Sections réutilisables pour le contenu par onglet ─── */
+  function SectionContext({ d, num = "01" }) {
+    const imgs = Array.isArray(d.images?.context)
+      ? d.images.context.filter(Boolean)
+      : d.images?.context ? [d.images.context] : [];
+    return (
+      <Reveal>
+        <div style={{ paddingTop: isMobile ? 8 : 0 }}>
+          {/* Texte */}
+          <div style={{ position: "relative", marginBottom: isMobile ? 32 : 40 }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.context}</span>
+            </div>
+            <p style={BODY}>{d.context}</p>
           </div>
-
-          {/* Méta — client, rôle, année, outils */}
-          <div
-            style={{
+          {/* Images — en ligne si plusieurs */}
+          {imgs.length === 0 ? (
+            <div style={{ border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.surface, padding: isMobile ? 12 : 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Images srcs={null} fallbackLabel={t.imgContext} />
+            </div>
+          ) : (
+            <div style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-              gap: isMobile ? "20px 16px" : "0 32px",
-              paddingTop: 32,
-              position: "relative",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 1,
-                background: "linear-gradient(to right, transparent, rgba(255,255,255,0.15) 15%, rgba(255,255,255,0.15) 85%, transparent)",
-              }}
-            />
-            {[
-              { label: t.client, value: details.client },
-              { label: t.role, value: details.role },
-              { label: t.duration, value: details.duration },
-              { label: t.tools, value: details.tools.join(", ") },
-            ].map((item) => (
-              <div key={item.label}>
-                <div
-                  style={{
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 10,
-                    fontWeight: 600,
-                    color: "rgba(255,255,255,0.45)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.12em",
-                    marginBottom: 6,
-                  }}
-                >
-                  {item.label}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: "rgba(255,255,255,0.9)",
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {item.value}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Image hero ──────────────────────────────────────── */}
-      <div
-        style={{
-          padding: `0 ${hPad}`,
-          maxWidth: maxW + Number.parseInt(hPad, 10) * 2,
-          margin: "0 auto",
-        }}
-      >
-        <div style={{ transform: "translateY(-32px)", maxWidth: details.images?.coverWidth ?? "72%", margin: "0 auto" }}>
-          <Images srcs={details.images?.cover} fallbackLabel={t.imgCover} fallbackRatio="16/7" />
-        </div>
-      </div>
-
-      {/* ── Contenu principal ───────────────────────────────── */}
-      <div style={{ padding: `0 ${hPad}` }}>
-        <div style={{ maxWidth: maxW, margin: "0 auto" }}>
-
-          {/* Contexte */}
-          <section style={{ paddingTop: isMobile ? "8px" : "16px" }}>
-            <Reveal>
-              <SectionLabel>{t.context}</SectionLabel>
-              <SectionTitle>{t.contextTitle}</SectionTitle>
-              <p
-                style={{
-                  fontFamily: "'Work Sans', sans-serif",
-                  fontSize: isMobile ? 15 : 17,
-                  color: T.textMuted,
-                  lineHeight: 1.8,
-                  marginTop: 20,
-                }}
-              >
-                {details.context}
-              </p>
-            </Reveal>
-
-            {/* Défis */}
-            <Reveal delay={0.15}>
-              <div
-                style={{
-                  marginTop: 32,
-                  padding: isMobile ? "20px" : "28px 32px",
-                  background: T.accentLight,
+              gridTemplateColumns: isMobile ? "1fr" : `repeat(${imgs.length}, 1fr)`,
+              gap: 8,
+            }}>
+              {imgs.map((src, i) => (
+                <div key={i} style={{
+                  border: `1px solid ${T.border}`,
                   borderRadius: T.radius,
-                  border: `1px solid ${T.accentMid}`,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: T.accent,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                    marginBottom: 14,
-                  }}
-                >
-                  {t.challenges}
+                  background: T.surface,
+                  padding: isMobile ? 10 : 14,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  maxHeight: imgs.length > 1 ? (isMobile ? 220 : 300) : undefined,
+                }}>
+                  <img
+                    src={src} alt=""
+                    style={{
+                      maxWidth: "100%", maxHeight: "100%",
+                      objectFit: "contain", display: "block",
+                      borderRadius: 2,
+                    }}
+                  />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {details.challenges.map((c, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                      <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accent, flexShrink: 0, marginTop: 7 }} />
-                      <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 14, color: T.text, lineHeight: 1.55 }}>
-                        {c}
-                      </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </Reveal>
+    );
+  }
+
+  function SectionProblematique({ d, num = "02" }) {
+    if (!d.problematique) return null;
+    return (
+      <section style={{ marginTop: gap }}>
+        <Reveal>
+          <div style={{
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 40 : 56,
+            position: "relative",
+          }}>
+            <HexHoneycombDecor
+              color={T.text}
+              size={isMobile ? 80 : 160}
+              opacity={theme === "dark" ? 0.09 : 0.05}
+              style={{ top: isMobile ? -10 : -40, right: isMobile ? -30 : -60 }}
+            />
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.problematique}</span>
+            </div>
+            <p style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: isMobile ? "clamp(14px, 3.5vw, 16px)" : "clamp(15px, 1.1vw, 17px)",
+              fontWeight: 300, color: T.text,
+              lineHeight: 1.75, margin: 0, fontStyle: "italic",
+              maxWidth: "82%", position: "relative",
+            }}>
+              {d.problematique}
+            </p>
+          </div>
+        </Reveal>
+      </section>
+    );
+  }
+
+  function SectionMethodology({ d, num = "03" }) {
+    if (!d.methodology) return null;
+    return (
+      <section style={{ marginTop: gap }}>
+        <Reveal>
+          <div style={{
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 40 : 56,
+            marginBottom: 28,
+          }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.methodology}</span>
+            </div>
+          </div>
+        </Reveal>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+          gap: 12,
+        }}>
+          {d.methodology.map((m, i) => {
+            const phaseImgs = d.images?.phases?.[i];
+            return (
+              <Reveal key={i} delay={i * 0.05}>
+                <div style={{
+                  border: `1px solid ${T.border}`,
+                  borderRadius: T.radius,
+                  overflow: "hidden",
+                  display: "flex", flexDirection: "column",
+                  background: T.surface,
+                  height: "100%",
+                }}>
+                  {phaseImgs?.length > 0 && (
+                    <div style={{
+                      borderBottom: `1px solid ${T.border}`,
+                      overflow: "hidden", maxHeight: 180,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: T.bg,
+                    }}>
+                      <Images srcs={phaseImgs} fallbackLabel={m.title} />
                     </div>
-                  ))}
+                  )}
+                  <div style={{ padding: isMobile ? "22px 18px" : "26px 22px", flex: 1, position: "relative" }}>
+                    <span style={{
+                      position: "absolute", top: 12, right: 14,
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: 52, fontWeight: 800, letterSpacing: "-0.05em",
+                      color: colors.from, opacity: 0.07, lineHeight: 1,
+                      userSelect: "none", pointerEvents: "none",
+                    }}>{m.phase}</span>
+                    <h3 style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: "clamp(11px, 0.95vw, 13px)", fontWeight: 800,
+                      letterSpacing: "0.04em", textTransform: "uppercase",
+                      color: T.text, margin: "0 0 10px", lineHeight: 1.3,
+                      paddingRight: 36, position: "relative",
+                    }}>{m.title}</h3>
+                    <p style={{ ...BODY, fontSize: 13, position: "relative" }}>{m.description}</p>
+                  </div>
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
 
-            <div style={{ marginTop: 40 }}>
-              <Images srcs={details.images?.context} fallbackLabel={t.imgContext} />
+  function SectionResultat({ d, num = "04" }) {
+    if (!d.resultat) return null;
+    return (
+      <section style={{ marginTop: gap }}>
+        {d.images?.resultat && (
+          <Reveal>
+            <div style={{
+              border: `1px solid ${T.border}`,
+              borderRadius: T.radius,
+              background: T.surface,
+              padding: isMobile ? 12 : 16,
+              marginBottom: 28,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <img
+                src={Array.isArray(d.images.resultat) ? d.images.resultat[0] : d.images.resultat}
+                alt=""
+                style={{ maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: 2 }}
+              />
             </div>
-          </section>
-
-          {/* Objectifs + Démarche côte à côte */}
-          <section style={{ marginTop: sectionGap }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1px 1fr",
-                gap: isMobile ? sectionGap : "0 48px",
-                alignItems: "start",
-              }}
-            >
-              {/* ── Colonne Objectifs ── */}
-              <div>
-                <Reveal>
-                  <SectionLabel>{t.objectives}</SectionLabel>
-                  <SectionTitle style={{ fontSize: "clamp(18px, 2.2vw, 24px)" }}>
-                    {t.objectivesTitle}
-                  </SectionTitle>
-                </Reveal>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                    marginTop: 24,
-                  }}
-                >
-                  {details.objectives.map((obj, i) => (
-                    <Reveal key={i} delay={i * 0.07}>
-                      <div
-                        style={{
-                          position: "relative",
-                          display: "flex",
-                          gap: 14,
-                          padding: "16px 18px",
-                          background: T.surface,
-                          borderRadius: T.radius,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "'Work Sans', sans-serif",
-                            fontSize: 20,
-                            fontWeight: 200,
-                            color: T.accentMid,
-                            lineHeight: 1,
-                            flexShrink: 0,
-                            letterSpacing: "-0.02em",
-                            paddingTop: 1,
-                          }}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, color: T.text, lineHeight: 1.6, margin: 0 }}>
-                          {obj}
-                        </p>
-                        <div style={cardBorder} />
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Séparateur vertical (desktop seulement) ── */}
-              {!isMobile && (
-                <div
-                  style={{
-                    width: 1,
-                    alignSelf: "stretch",
-                    background: `linear-gradient(to bottom, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
-                  }}
-                />
-              )}
-
-              {/* ── Colonne Démarche ── */}
-              <div>
-                <Reveal delay={0.1}>
-                  <SectionLabel>{t.methodology}</SectionLabel>
-                  <SectionTitle style={{ fontSize: "clamp(18px, 2.2vw, 24px)" }}>
-                    {t.methodologyTitle}
-                  </SectionTitle>
-                </Reveal>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                    marginTop: 24,
-                  }}
-                >
-                  {details.methodology.map((m, i) => (
-                    <Reveal key={i} delay={0.1 + i * 0.08}>
-                      <div
-                        style={{
-                          position: "relative",
-                          padding: "14px 16px",
-                          background: T.surface,
-                          borderRadius: T.radius,
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
-                          <span
-                            style={{
-                              fontFamily: "'Work Sans', sans-serif",
-                              fontSize: 18,
-                              fontWeight: 200,
-                              color: T.accentMid,
-                              lineHeight: 1,
-                              flexShrink: 0,
-                              letterSpacing: "-0.02em",
-                            }}
-                          >
-                            {m.phase}
-                          </span>
-                          <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, fontWeight: 600, color: T.text }}>
-                            {m.title}
-                          </span>
-                        </div>
-                        <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 12, color: T.textMuted, lineHeight: 1.6, margin: 0 }}>
-                          {m.description}
-                        </p>
-                        <div style={cardBorder} />
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
+          </Reveal>
+        )}
+        <Reveal>
+          <div style={{
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 32 : 40,
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 2fr",
+            gap: isMobile ? 16 : 64,
+            alignItems: "start",
+          }}>
+            <div>
+              <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                {ghostNum(num)}
+                <HexDot color={colors.from} />
+                <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.resultat}</span>
               </div>
             </div>
+            <p style={{ ...BODY, paddingTop: isMobile ? 0 : 2 }}>{d.resultat}</p>
+          </div>
+        </Reveal>
+      </section>
+    );
+  }
 
-            {details.images?.phases ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 56, marginTop: 56 }}>
-                {details.methodology.map((m, i) => {
-                  const phaseImgs = details.images.phases[i];
-                  if (!phaseImgs?.length) return null;
-                  return (
-                    <Reveal key={i} delay={i * 0.05}>
-                      <div style={{ paddingTop: 32, position: "relative" }}>
-                        <div
-                          style={{
-                            position: "absolute", top: 0, left: 0, right: 0, height: 1,
-                            background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
-                          }}
-                        />
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 16 }}>
-                          <span
-                            style={{
-                              fontFamily: "'Work Sans', sans-serif",
-                              fontSize: 28, fontWeight: 200, color: T.accentMid,
-                              letterSpacing: "-0.02em", lineHeight: 1, flexShrink: 0,
-                            }}
-                          >
-                            {m.phase}
-                          </span>
-                          <div>
-                            <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 16, fontWeight: 700, color: T.text, letterSpacing: "-0.01em" }}>
-                              {m.title}
-                            </div>
-                            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 13, color: T.textMuted, lineHeight: 1.7, margin: "6px 0 0", maxWidth: 560 }}>
-                              {m.description}
-                            </p>
-                          </div>
-                        </div>
-                        <Images srcs={phaseImgs} fallbackLabel={m.title} grid={phaseImgs.length === 2} />
-                      </div>
-                    </Reveal>
-                  );
-                })}
-              </div>
-            ) : (
-              <div style={{ marginTop: 48 }}>
-                <Images
-                  srcs={details.images?.methodology}
-                  fallbackLabel={t.imgMethod}
-                  grid={Array.isArray(details.images?.methodology) && details.images.methodology.length >= 2}
-                />
-              </div>
-            )}
-          </section>
-
-          {/* Modules */}
-          <section style={{ marginTop: sectionGap }}>
+  /* ─── Impact items (réutilisé hub + standard) ─── */
+  function ImpactSection({ items }) {
+    if (!items?.length) return null;
+    return (
+      <section style={{ marginTop: gap }}>
+        <div style={{
+          background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
+          padding: isMobile ? "64px 20px" : "96px 64px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div style={hexMesh} />
+          <MotifSVG
+            size={isMobile ? 200 : 320}
+            color="#ffffff"
+            opacity={0.06}
+            outerOpacity={0.03}
+            style={{ position: "absolute", right: isMobile ? -50 : -70, bottom: -50, pointerEvents: "none" }}
+          />
+          <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
             <Reveal>
-              <SectionLabel>{t.realizations}</SectionLabel>
-              <SectionTitle>{t.realizationsTitle}</SectionTitle>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 28 }}>
+                <HexDot color="rgba(255,255,255,0.5)" />
+                <span style={{ ...LB_WHITE, marginBottom: 0 }}>{t.impact}</span>
+              </div>
             </Reveal>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 48, marginTop: 36 }}>
-              {details.modules.map((mod, i) => (
-                <Reveal key={i} delay={0.05}>
-                  <div>
-                    {/* En-tête du module */}
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: isMobile ? "1fr" : "200px 1fr",
-                        gap: isMobile ? 10 : 32,
-                        paddingBottom: 20,
-                        position: "relative",
-                        marginBottom: 20,
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          height: 1,
-                          background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
-                        }}
-                      />
-                      <div>
-                        <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 16, fontWeight: 700, color: T.text, letterSpacing: "-0.01em" }}>
-                          {mod.title}
-                        </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 8 }}>
-                          {mod.features.map((f) => (
-                            <span
-                              key={f}
-                              style={{
-                                padding: "3px 10px",
-                                borderRadius: 999,
-                                background: T.accentLight,
-                                border: `1px solid ${T.accentMid}`,
-                                fontFamily: "'Work Sans', sans-serif",
-                                fontSize: 11,
-                                fontWeight: 500,
-                                color: T.accent,
-                              }}
-                            >
-                              {f}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 14, color: T.textMuted, lineHeight: 1.7, margin: 0 }}>
-                        {mod.description}
-                      </p>
-                    </div>
-
-                    {/* Image du module */}
-                    <Images
-                      srcs={details.images?.modules?.[i]}
-                      fallbackLabel={t.imgModule(mod.title)}
-                      grid={details.images?.moduleLayouts?.[i] === "grid"}
-                    />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {items.map((item, i) => (
+                <Reveal key={i} delay={i * 0.07}>
+                  <div style={{
+                    display: "flex", gap: isMobile ? 20 : 32, alignItems: "flex-start",
+                    padding: "24px 0",
+                    borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none",
+                  }}>
+                    <span style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: isMobile ? 18 : 22, fontWeight: 800,
+                      letterSpacing: "-0.02em", color: "#fff",
+                      opacity: 0.25, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                    }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <p style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: isMobile ? 14 : 15, fontWeight: 300,
+                      color: "rgba(255,255,255,0.82)", lineHeight: 1.75,
+                      margin: 0, alignSelf: "center",
+                    }}>
+                      {item}
+                    </p>
                   </div>
                 </Reveal>
               ))}
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-          {/* Livrables & Impact */}
-          <section
-            style={{
-              marginTop: sectionGap,
-              paddingBottom: isMobile ? "80px" : "120px",
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-              gap: isMobile ? 40 : 56,
-            }}
-          >
-            {/* Livrables */}
-            <Reveal>
-              <SectionLabel>{t.deliverables}</SectionLabel>
-              <SectionTitle style={{ fontSize: "clamp(20px, 2.5vw, 26px)" }}>
-                {t.deliverablesTitle}
-              </SectionTitle>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
-                {details.deliverables.map((d, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                    <span
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        background: T.accentLight,
-                        border: `1.5px solid ${T.accentMid}`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        marginTop: 1,
-                      }}
-                    >
-                      <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6l3 3 5-5" stroke={T.accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                    <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 14, color: T.text, lineHeight: 1.55 }}>
-                      {d}
-                    </span>
+  /* ─── Compute current impact items ─── */
+  const activeImpact = details.isHub
+    ? (activeTab === 0 ? details.impact : projectDetails[hubTabs?.[activeTab]?.id]?.impact)
+    : details.impact;
+
+  return (
+    <article>
+
+      {/* ── Hero ───────────────────────────────────────────────── */}
+      <div style={{
+        background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
+        padding: isMobile ? "88px 20px 52px" : "120px 64px 72px",
+        position: "relative", overflow: "hidden",
+      }}>
+        <div style={hexMesh} />
+        <MotifSVG
+          size={isMobile ? 200 : 320}
+          color="#ffffff"
+          opacity={0.06}
+          outerOpacity={0.03}
+          style={{ position: "absolute", right: isMobile ? -60 : -80, top: isMobile ? -40 : -60, pointerEvents: "none" }}
+        />
+        <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: isMobile ? 40 : 56,
+            alignItems: "center",
+          }}>
+
+            {/* Colonne gauche */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <span style={{
+                  fontFamily: "'Work Sans', sans-serif",
+                  fontSize: "clamp(10px, 0.75vw, 12px)",
+                  fontWeight: 300, letterSpacing: "0.28em",
+                  textTransform: "uppercase", color: "rgba(255,255,255,0.6)",
+                }}>
+                  {project.tag}
+                </span>
+                <span style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: "'Work Sans', sans-serif",
+                  fontSize: "clamp(10px, 0.75vw, 12px)",
+                  fontWeight: 300, letterSpacing: "0.28em",
+                  textTransform: "uppercase", color: "rgba(255,255,255,0.4)",
+                }}>
+                  {project.year}
+                </span>
+              </div>
+
+              <h1 style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: isMobile ? "clamp(32px, 9vw, 44px)" : "clamp(28px, 3.2vw, 46px)",
+                fontWeight: 800, letterSpacing: "-0.02em", textTransform: "uppercase",
+                color: "#fff", lineHeight: 1, margin: "0 0 22px",
+              }}>
+                {project.title}
+              </h1>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 32 }}>
+                {project.tasks.map((task) => (
+                  <span key={task} style={heroTaskPill}>{task}</span>
+                ))}
+              </div>
+
+              {/* Meta 2×2 */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "20px 24px",
+                paddingTop: 24,
+                position: "relative",
+              }}>
+                <div style={{
+                  position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                  background: "linear-gradient(to right, transparent, rgba(255,255,255,0.15) 15%, rgba(255,255,255,0.15) 85%, transparent)",
+                }} />
+                {[
+                  { label: t.client,   value: details.client },
+                  { label: t.role,     value: details.role },
+                  { label: t.duration, value: details.duration },
+                  { label: t.tools,    value: details.tools.join(", ") },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <div style={{
+                      fontFamily: "'Work Sans', sans-serif", fontSize: 10, fontWeight: 300,
+                      color: "rgba(255,255,255,0.4)", textTransform: "uppercase",
+                      letterSpacing: "0.22em", marginBottom: 6,
+                    }}>
+                      {item.label}
+                    </div>
+                    <div style={{
+                      fontFamily: "'Work Sans', sans-serif", fontSize: 14, fontWeight: 400,
+                      color: "rgba(255,255,255,0.9)", lineHeight: 1.4,
+                    }}>
+                      {item.value}
+                    </div>
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </div>
 
-            {/* Impact */}
-            <Reveal delay={0.1}>
-              <SectionLabel>{t.impact}</SectionLabel>
-              <SectionTitle style={{ fontSize: "clamp(20px, 2.5vw, 26px)" }}>
-                {t.impactTitle}
-              </SectionTitle>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 24 }}>
-                {details.impact.map((item, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: "13px 16px",
-                      background: T.surface,
-                      border: `1px solid ${T.border}`,
-                      borderLeft: `3px solid ${colors.from}`,
-                      borderRadius: `0 ${T.radius}px ${T.radius}px 0`,
+            {/* Colonne droite : image */}
+            {!isMobile && (
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                {details.images?.cover ? (
+                  <img
+                    src={details.images.cover} alt=""
+                    style={{ width: "100%", height: "auto", objectFit: "contain", display: "block", borderRadius: T.radius }}
+                  />
+                ) : (
+                  <div style={{
+                    width: "100%", aspectRatio: "16/9",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{
                       fontFamily: "'Work Sans', sans-serif",
-                      fontSize: 14,
-                      color: T.text,
-                      lineHeight: 1.55,
-                    }}
-                  >
-                    {item}
+                      fontSize: 11, fontWeight: 600, letterSpacing: "0.12em",
+                      textTransform: "uppercase", color: "rgba(255,255,255,0.3)",
+                      padding: "5px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.15)",
+                    }}>
+                      Work in progress
+                    </span>
                   </div>
-                ))}
+                )}
               </div>
-            </Reveal>
-          </section>
-
+            )}
+          </div>
         </div>
       </div>
 
-      {/* ── Navigation entre projets ─────────────────────────── */}
-      <div
-        style={{
-          background: T.surface,
-          padding: isMobile ? "48px 20px 64px" : "64px 40px 80px",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: isMobile ? 20 : 40,
-            right: isMobile ? 20 : 40,
-            height: 1,
-            background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
-          }}
-        />
+      {/* ── Onglets hub (sticky) ────────────────────────────────── */}
+      {hubTabs && (
+        <div style={{
+          position: "sticky", top: 52, zIndex: 99,
+          background: T.bg, borderBottom: `1px solid ${T.border}`,
+        }}>
+          {isMobile ? (
+            /* Mobile : select natif */
+            <div style={{ padding: "12px 20px", position: "relative" }}>
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(Number(e.target.value))}
+                style={{
+                  width: "100%",
+                  fontFamily: "'Work Sans', sans-serif",
+                  fontSize: 12, fontWeight: 600,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: T.text,
+                  background: T.surface,
+                  border: `1px solid ${T.border}`,
+                  borderLeft: `3px solid ${colors.from}`,
+                  borderRadius: T.radius,
+                  padding: "12px 40px 12px 14px",
+                  cursor: "pointer",
+                  appearance: "none", WebkitAppearance: "none",
+                  outline: "none",
+                }}
+              >
+                {hubTabs.map((tab, i) => (
+                  <option key={tab.id} value={i}>{tab.label}</option>
+                ))}
+              </select>
+              {/* Flèche custom */}
+              <div style={{
+                position: "absolute", right: 34, top: "50%",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+                borderLeft: "5px solid transparent",
+                borderRight: "5px solid transparent",
+                borderTop: `5px solid ${colors.from}`,
+              }} />
+            </div>
+          ) : (
+            /* Desktop/tablette : onglets texte centrés */
+            <div style={{
+              padding: `12px ${hPad}`,
+              display: "flex", justifyContent: "center",
+              gap: 4, flexWrap: "wrap",
+            }}>
+              {hubTabs.map((tab, i) => {
+                const isActive = activeTab === i;
+                const activeColor = theme === "dark" ? colors.to : colors.from;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(i)}
+                    style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: "clamp(9px, 0.68vw, 11px)",
+                      fontWeight: isActive ? 700 : 300,
+                      letterSpacing: "0.18em", textTransform: "uppercase",
+                      color: isActive ? activeColor : T.textMuted,
+                      background: "none", border: "none",
+                      cursor: "pointer",
+                      padding: "8px 16px",
+                      display: "flex", alignItems: "center", gap: 8,
+                      transition: "color .2s ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <svg width="8" height="9" viewBox="0 0 8 9" fill="none" style={{ flexShrink: 0 }}>
+                      <polygon
+                        points="4,0.5 7.5,2.5 7.5,6.5 4,8.5 0.5,6.5 0.5,2.5"
+                        fill={isActive ? activeColor : "none"}
+                        stroke={isActive ? activeColor : T.border}
+                        strokeWidth="1"
+                      />
+                    </svg>
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Body ───────────────────────────────────────────────── */}
+      {details.isHub ? (
+
+        /* ── Hub : contenu par onglet ── */
+        <div style={{ padding: `${gap} ${hPad} 0` }}>
+          <div style={{ maxWidth: maxW, margin: "0 auto" }}>
+
+            {activeTab === 0 ? (
+
+              /* Onglet Design System */
+              <>
+                <SectionContext d={details} num="01" />
+
+                {details.designSystem && (
+                  <section style={{ marginTop: gap }}>
+                    <Reveal>
+                      <div style={{
+                        borderTop: `1px solid ${T.border}`,
+                        paddingTop: isMobile ? 40 : 56,
+                        marginBottom: 28,
+                      }}>
+                        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                          {ghostNum("02")}
+                          <HexDot color={colors.from} />
+                          <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.hubDesignSystem}</span>
+                        </div>
+                      </div>
+                    </Reveal>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      {details.designSystem.items.map((item, i) => (
+                        <Reveal key={i} delay={i * 0.07}>
+                          <div style={{
+                            display: "flex", gap: isMobile ? 16 : 28, alignItems: "flex-start",
+                            padding: "22px 0",
+                            borderBottom: i < details.designSystem.items.length - 1 ? `1px solid ${T.border}` : "none",
+                          }}>
+                            <span style={{
+                              fontFamily: "'Work Sans', sans-serif",
+                              fontSize: isMobile ? 20 : 26, fontWeight: 800,
+                              letterSpacing: "-0.03em", color: colors.from,
+                              opacity: 0.13, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                              minWidth: isMobile ? 36 : 44,
+                            }}>
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <p style={{ ...BODY, color: T.text, fontSize: isMobile ? 14 : 15, alignSelf: "center" }}>
+                              {item}
+                            </p>
+                          </div>
+                        </Reveal>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </>
+
+            ) : (() => {
+              const ad = projectDetails[hubTabs[activeTab]?.id];
+              if (!ad) return null;
+              let hn = 0;
+              const hsn = () => String(++hn).padStart(2, "0");
+              const ctxN = hsn();
+              const probN = ad.problematique ? hsn() : null;
+              const methN = ad.methodology ? hsn() : null;
+              const resN = ad.resultat ? hsn() : null;
+              return (
+                <>
+                  <SectionContext d={ad} num={ctxN} />
+                  {probN && <SectionProblematique d={ad} num={probN} />}
+                  {methN && <SectionMethodology d={ad} num={methN} />}
+                  {resN && <SectionResultat d={ad} num={resN} />}
+                </>
+              );
+            })()}
+
+          </div>
+        </div>
+
+      ) : (
+
+        /* ── Projets standard ── */
+        <div style={{ padding: `0 ${hPad}` }}>
+          <div style={{ maxWidth: maxW, margin: "0 auto" }}>
+            {/* Calcul des numéros de section */}
+            {(() => {
+              let sn = 0;
+              const ns = () => String(++sn).padStart(2, "0");
+              const ctxN  = ns();
+              const probN = details.problematique ? ns() : null;
+              const chalN = details.challenges    ? ns() : null;
+              const methN = details.methodology   ? ns() : null;
+              const decN  = details.decisions     ? ns() : null;
+              const resN  = details.resultat      ? ns() : null;
+              const modN  = details.modules       ? ns() : null;
+
+              return (
+                <>
+
+            {/* INTRO */}
+            {details.intro && (
+              <Reveal>
+                <section style={{ paddingTop: isMobile ? 8 : 0, paddingBottom: gap }}>
+                  <div style={{
+                    borderLeft: `3px solid ${T.accent}`,
+                    paddingLeft: isMobile ? 20 : 32,
+                  }}>
+                    <p style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: isMobile ? "clamp(15px, 4vw, 18px)" : "clamp(16px, 1.5vw, 21px)",
+                      fontWeight: 300, color: T.text, lineHeight: 1.7, margin: 0,
+                    }}>
+                      {details.intro}
+                    </p>
+                  </div>
+                </section>
+              </Reveal>
+            )}
+
+            {/* CONTEXTE */}
+            <section style={{ marginTop: details.intro ? 0 : gap }}>
+              <SectionContext d={details} num={ctxN} />
+            </section>
+
+            {/* PROBLÉMATIQUE */}
+            {probN && <SectionProblematique d={details} num={probN} />}
+
+            {/* DÉFIS */}
+            {chalN && details.challenges && (
+              <section style={{ marginTop: gap }}>
+                <Reveal>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 28,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(chalN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.challenges}</span>
+                    </div>
+                  </div>
+                </Reveal>
+                <div>
+                  {details.challenges.map((c, i) => (
+                    <Reveal key={i} delay={i * 0.07}>
+                      <div style={{
+                        display: "flex", gap: isMobile ? 20 : 32, alignItems: "flex-start",
+                        padding: "24px 0",
+                        borderBottom: i < details.challenges.length - 1 ? `1px solid ${T.border}` : "none",
+                      }}>
+                        <span style={{
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: isMobile ? 22 : 28, fontWeight: 800,
+                          letterSpacing: "-0.03em", color: colors.from,
+                          opacity: 0.14, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                          minWidth: isMobile ? 38 : 46,
+                        }}>
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <p style={{ ...BODY, color: T.text, fontSize: isMobile ? 14 : 15, alignSelf: "center" }}>
+                          {c}
+                        </p>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* DÉMARCHE */}
+            {methN && <SectionMethodology d={details} num={methN} />}
+
+            {/* DÉCISIONS CLÉS */}
+            {decN && details.decisions && (
+              <section style={{ marginTop: gap }}>
+                <Reveal>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 28,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(decN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.decisionsLabel}</span>
+                    </div>
+                  </div>
+                </Reveal>
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                  gap: 16,
+                }}>
+                  {details.decisions.map((d, i) => (
+                    <Reveal key={i} delay={i * 0.08}>
+                      <div style={{
+                        position: "relative", padding: isMobile ? 24 : 32,
+                        background: T.surface, borderRadius: T.radius,
+                        overflow: "hidden",
+                      }}>
+                        <div style={{ ...blueprintGrid, opacity: 0.28 }} />
+                        <span style={{
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: 40, fontWeight: 800, letterSpacing: "-0.03em",
+                          color: colors.from, opacity: 0.09,
+                          lineHeight: 1, display: "block", marginBottom: 8,
+                          userSelect: "none",
+                        }}>
+                          {d.number}
+                        </span>
+                        <h3 style={{
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: "clamp(12px, 1vw, 15px)", fontWeight: 800,
+                          letterSpacing: "-0.01em", color: T.text,
+                          margin: "0 0 10px", position: "relative", zIndex: 1,
+                        }}>
+                          {d.title}
+                        </h3>
+                        <p style={{ ...BODY, fontSize: 14, position: "relative", zIndex: 1 }}>
+                          {d.text}
+                        </p>
+                        <div style={cardBorder} />
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* RÉSULTAT */}
+            {resN && <SectionResultat d={details} num={resN} />}
+
+            {/* MODULES */}
+            {modN && details.modules && (
+              <section style={{ marginTop: gap }}>
+                <Reveal>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 40,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(modN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.realizations}</span>
+                    </div>
+                  </div>
+                </Reveal>
+                <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 64 : 80 }}>
+                  {details.modules.map((mod, i) => {
+                    const isEven = i % 2 === 0;
+                    return (
+                      <Reveal key={i} delay={0.05}>
+                        <div style={{
+                          display: "grid",
+                          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                          gap: isMobile ? 32 : 64,
+                          alignItems: "center",
+                          ...(isMobile ? {} : isEven ? {} : { direction: "rtl" }),
+                        }}>
+                          <div style={{ direction: "ltr" }}>
+                            <span style={{
+                              fontFamily: "'Work Sans', sans-serif",
+                              fontSize: "clamp(10px, 0.75vw, 12px)", fontWeight: 300,
+                              letterSpacing: "0.28em", textTransform: "uppercase",
+                              color: T.accent, display: "block", marginBottom: 14,
+                            }}>
+                              {String(i + 1).padStart(2, "0")} / {t.realizations}
+                            </span>
+                            <h3 style={{
+                              fontFamily: "'Work Sans', sans-serif",
+                              fontSize: "clamp(13px, 1.1vw, 17px)", fontWeight: 800,
+                              letterSpacing: "-0.01em", textTransform: "uppercase",
+                              color: T.text, margin: "0 0 14px", lineHeight: 1.1,
+                            }}>
+                              {mod.title}
+                            </h3>
+                            <p style={{ ...BODY, marginBottom: 20 }}>{mod.description}</p>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                              {mod.features.map((f) => (
+                                <span key={f} style={{
+                                  fontFamily: "'Work Sans', sans-serif",
+                                  fontSize: "clamp(9px, 0.7vw, 11px)", fontWeight: 300,
+                                  letterSpacing: "0.18em", textTransform: "uppercase",
+                                  padding: "4px 12px", borderRadius: 999,
+                                  border: `1px solid ${T.border}`, color: T.textMuted,
+                                }}>
+                                  {f}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div style={{ direction: "ltr" }}>
+                            <Images
+                              srcs={details.images?.modules?.[i]}
+                              fallbackLabel={t.imgModule(mod.title)}
+                              grid={details.images?.moduleLayouts?.[i] === "grid"}
+                            />
+                          </div>
+                        </div>
+                      </Reveal>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+              </>
+              );
+            })()}
+
+          </div>
+        </div>
+      )}
+
+      {/* ── Impact ─────────────────────────────────────────────── */}
+      <ImpactSection items={activeImpact} />
+
+      {/* ── Navigation ─────────────────────────────────────────── */}
+      <div style={{
+        background: T.surface,
+        padding: isMobile ? "56px 20px 72px" : "72px 64px 96px",
+        position: "relative",
+      }}>
+        <div style={{
+          position: "absolute", top: 0, left: isMobile ? 20 : 64, right: isMobile ? 20 : 64,
+          height: 1,
+          background: `linear-gradient(to right, transparent, ${T.border} 15%, ${T.border} 85%, transparent)`,
+        }} />
         <div style={{ maxWidth: maxW, margin: "0 auto" }}>
-          <div
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              fontSize: 11,
-              fontWeight: 600,
-              color: T.textLight,
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              marginBottom: 24,
-            }}
-          >
-            {t.otherProjects}
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : `repeat(${projects.filter((p) => p.id !== projectId).length}, 1fr)`,
-              gap: 12,
-            }}
-          >
-            {projects.filter((p) => p.id !== projectId).map((p) => (
-              <ProjectNavCard key={p.id} project={p} onNavigate={onNavigate} />
-            ))}
-          </div>
+          {details.parentId ? (
+            <>
+              <span style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: "clamp(10px, 0.75vw, 12px)", fontWeight: 300,
+                letterSpacing: "0.28em", textTransform: "uppercase",
+                color: T.textLight, display: "block", marginBottom: 32,
+              }}>
+                {t.hubModules}
+              </span>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(auto-fill, minmax(76px, 88px))" : `repeat(${projects.filter((p) => p.parentId === details.parentId && p.id !== projectId).length + 1}, 1fr)`,
+                gap: 12,
+                justifyContent: isMobile ? "start" : undefined,
+              }}>
+                <ProjectNavCard project={projects.find((p) => p.id === details.parentId)} onNavigate={onNavigate} isHub />
+                {projects
+                  .filter((p) => p.parentId === details.parentId && p.id !== projectId)
+                  .map((p) => (
+                    <ProjectNavCard key={p.id} project={p} onNavigate={onNavigate} />
+                  ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <span style={{
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: "clamp(10px, 0.75vw, 12px)", fontWeight: 300,
+                letterSpacing: "0.28em", textTransform: "uppercase",
+                color: T.textLight, display: "block", marginBottom: 32,
+              }}>
+                {t.otherProjects}
+              </span>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(auto-fill, minmax(76px, 88px))" : `repeat(${projects.filter((p) => p.id !== projectId && !p.parentId).length}, 1fr)`,
+                gap: 12,
+                justifyContent: isMobile ? "start" : undefined,
+              }}>
+                {projects.filter((p) => p.id !== projectId && !p.parentId).map((p) => (
+                  <ProjectNavCard key={p.id} project={p} onNavigate={onNavigate} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -756,93 +1138,55 @@ export default function ProjectPage({ projectId, onNavigate }) {
   );
 }
 
+/* ─── Card nav hexagonale ─────────────────────────────────────── */
 function ProjectNavCard({ project, onNavigate }) {
   const [hovered, setHovered] = useState(false);
-  const { tokens: T, theme } = useTheme();
+  const { tokens: T } = useTheme();
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
-  const navCardBorder = {
-    position: "absolute",
-    inset: 0,
-    borderRadius: T.radius,
-    pointerEvents: "none",
-    background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
-    zIndex: 3,
+
+  const R = 16;
+  const W = +(R * Math.sqrt(3)).toFixed(2);
+  const H = 3 * R;
+  const hexPt = (cx, cy) => {
+    const pts = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i - Math.PI / 6;
+      pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
+    }
+    return `M${pts.join("L")}Z`;
   };
+  const meshD = [hexPt(W/2, R), hexPt(0, 2.5*R), hexPt(W, 2.5*R)].join(" ");
+  const meshSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${meshD}' stroke='rgba(255,255,255,0.09)' stroke-width='0.6' fill='none'/></svg>`;
+  const meshUrl = `url("data:image/svg+xml,${encodeURIComponent(meshSvg)}")`;
 
   return (
     <div
-      role="button"
-      tabIndex={0}
+      role="button" tabIndex={0}
       onClick={() => onNavigate(`/projects/${project.id}`)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onNavigate(`/projects/${project.id}`);
-        }
-      }}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onNavigate(`/projects/${project.id}`); } }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        position: "relative",
-        borderRadius: T.radius,
-        overflow: "hidden",
+        clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+        aspectRatio: "1 / 1.15",
+        backgroundImage: `${meshUrl}, linear-gradient(135deg, ${colors.from}, ${colors.to})`,
+        backgroundRepeat: "repeat, no-repeat",
+        backgroundSize: "auto, 100% 100%",
         cursor: "pointer",
-        transition: "box-shadow .35s ease, transform .4s cubic-bezier(.22,1,.36,1)",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        boxShadow: hovered ? "0 16px 40px rgba(0,0,0,0.10)" : "0 2px 6px rgba(0,0,0,0.04)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        filter: hovered ? "brightness(1.2)" : "brightness(1)",
+        transition: "filter .25s ease",
       }}
     >
-      {/* Bande couleur */}
-      <div
-        style={{
-          height: 72,
-          background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "opacity .35s ease",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'Work Sans', sans-serif",
-            fontSize: 22,
-            fontWeight: 200,
-            color: "rgba(255,255,255,0.55)",
-            letterSpacing: "0.1em",
-          }}
-        >
-          {project.title.substring(0, 2).toUpperCase()}
-        </span>
-      </div>
-
-      {/* Texte */}
-      <div style={{ padding: "14px 16px 16px", background: hovered ? colors.from : T.surface, transition: "background .4s ease" }}>
-        <div
-          style={{
-            fontFamily: "'Work Sans', sans-serif",
-            fontSize: 13,
-            fontWeight: 700,
-            color: hovered ? "#fff" : T.text,
-            letterSpacing: "-0.01em",
-            transition: "color .35s ease",
-            marginBottom: 2,
-          }}
-        >
-          {project.title}
-        </div>
-        <div
-          style={{
-            fontFamily: "'Work Sans', sans-serif",
-            fontSize: 12,
-            color: hovered ? "rgba(255,255,255,0.55)" : T.textMuted,
-            transition: "color .35s ease",
-          }}
-        >
-          {project.subtitle}
-        </div>
-      </div>
-      <div style={navCardBorder} />
+      <span style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: "clamp(8px, 10%, 12px)", fontWeight: 800,
+        letterSpacing: "-0.01em", textTransform: "uppercase",
+        color: "#fff", textAlign: "center", lineHeight: 1.2,
+        padding: "0 18%",
+      }}>
+        {project.title}
+      </span>
     </div>
   );
 }

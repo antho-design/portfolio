@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
 import { TOOLS } from "../data/constants";
 
-function ToolLogo({ slug, size = 24, color }) {
+export function ToolLogo({ slug, size = 24, color }) {
   switch (slug) {
     case "figma":
       return (

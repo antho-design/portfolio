@@ -96,25 +96,40 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
     gap: 2,
   };
 
+  const switchBaseStyle = {
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: 11,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    padding: isMobile ? "6px 10px" : isTablet ? "4px 6px" : "7px 12px",
+    borderRadius: 999,
+    border: "none",
+    cursor: "pointer",
+    transition: "background .25s ease, color .25s ease, box-shadow .25s ease",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 5,
+  };
+
   const langOptionStyle = (optionLang) => {
     const isActive = lang === optionLang;
-
     return {
-      fontFamily: "'Work Sans', sans-serif",
-      fontSize: 11,
+      ...switchBaseStyle,
       fontWeight: isActive ? 700 : 600,
-      textTransform: "uppercase",
-      letterSpacing: "0.06em",
-      padding: isMobile ? "6px 10px" : isTablet ? "4px 6px" : "7px 12px",
-      borderRadius: 999,
-      border: "none",
       background: isActive ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
       color: isActive ? switchText : switchMuted,
-      cursor: "pointer",
-      transition: "background .25s ease, color .25s ease, box-shadow .25s ease",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: 5,
+      boxShadow: isActive && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+    };
+  };
+
+  const themeOptionStyle = (value) => {
+    const isActive = theme === value;
+    return {
+      ...switchBaseStyle,
+      padding: isMobile ? "6px 9px" : "7px 10px",
+      background: isActive ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
+      color: isActive ? switchText : switchMuted,
       boxShadow: isActive && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
     };
   };
@@ -215,14 +230,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                 aria-pressed={theme === value}
                 aria-label={label}
                 onClick={() => { if (theme !== value) toggleTheme(); }}
-                style={{
-                  ...langOptionStyle(value === "light" ? "fr" : "en"),
-                  padding: isMobile ? "6px 9px" : "7px 10px",
-                  background: theme === value
-                    ? (isDark ? "rgba(255,255,255,0.12)" : T.surface)
-                    : "transparent",
-                  boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
-                }}
+                style={themeOptionStyle(value)}
               >
                 <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
               </button>
@@ -416,12 +424,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   aria-pressed={theme === value}
                   aria-label={label}
                   onClick={() => { if (theme !== value) toggleTheme(); }}
-                  style={{
-                    ...langOptionStyle(value === "light" ? "fr" : "en"),
-                    padding: "4px 6px",
-                    background: theme === value ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
-                    boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
-                  }}
+                  style={{ ...themeOptionStyle(value), padding: "4px 6px" }}
                 >
                   <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
                 </button>
@@ -547,12 +550,7 @@ export default function Navbar({ activeSection, currentPath, onNavigate }) {
                   aria-pressed={theme === value}
                   aria-label={label}
                   onClick={() => { if (theme !== value) toggleTheme(); }}
-                  style={{
-                    ...langOptionStyle(value === "light" ? "fr" : "en"),
-                    padding: "6px 9px",
-                    background: theme === value ? (isDark ? "rgba(255,255,255,0.12)" : T.surface) : "transparent",
-                    boxShadow: theme === value && !isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
-                  }}
+                  style={{ ...themeOptionStyle(value), padding: "6px 9px" }}
                 >
                   <span style={{ fontSize: 13, lineHeight: 1 }}>{icon}</span>
                 </button>

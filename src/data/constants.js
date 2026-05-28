@@ -1,6 +1,7 @@
 /* ─── Constantes partagées ─── */
 
 export const CV_URL = "/cv-anthonin-sautet.pdf";
+export const LINKEDIN_URL = "https://www.linkedin.com/in/anthonin-sautet/";
 
 export const PROJECT_COLORS = {
   cetelem:       { from: "#052E2B", to: "#1F6660" },
