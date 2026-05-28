@@ -6,7 +6,8 @@ import MotifSVG from "./MotifSVG";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { UI } from "../data/translations";
-import { BLUEPRINT_AURA_BG } from "../data/constants";
+import { BLUEPRINT_AURA_BG, TOOLS } from "../data/constants";
+import { ToolLogo } from "./Skills";
 
 const GALLERY_PHOTOS = [
   "20211024_155426.jpg","20220103_133041.jpg","20220104_165247.jpg","20220110_122444.jpg",
@@ -106,11 +107,62 @@ function Gallery({ isMobile, isTablet }) {
   );
 }
 
+export function GallerySection() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const { lang } = useLanguage();
+  const { tokens: T, theme } = useTheme();
+  const t = UI[lang].about;
+
+  return (
+    <section
+      style={{
+        padding: isMobile ? "0 20px 80px" : "0 40px 100px",
+        maxWidth: 1200,
+        margin: "0 auto",
+        position: "relative",
+        zIndex: 1,
+      }}
+    >
+      <Reveal>
+        <div style={{ marginBottom: 36 }}>
+          <div style={{ position: "relative" }}>
+            <span style={{
+              position: "absolute", top: -20, left: -4,
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: isMobile ? 72 : 88, fontWeight: 800,
+              letterSpacing: "-0.05em", color: T.text,
+              opacity: theme === "dark" ? 0.09 : 0.05,
+              lineHeight: 1, userSelect: "none", pointerEvents: "none",
+            }}>03</span>
+            <SectionLabel>{t.galleryLabel}</SectionLabel>
+          </div>
+          <p
+            style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: 15,
+              color: T.textMuted,
+              lineHeight: 1.7,
+              margin: "12px 0 0",
+              maxWidth: 480,
+            }}
+          >
+            {t.galleryIntro}
+          </p>
+        </div>
+      </Reveal>
+      <Gallery isMobile={isMobile} isTablet={isTablet} />
+    </section>
+  );
+}
+
 export default function About() {
   const { isMobile, isTablet } = useBreakpoint();
   const { lang } = useLanguage();
-  const { tokens: T } = useTheme();
+  const { tokens: T, theme } = useTheme();
   const t = UI[lang].about;
+  const tSkills = UI[lang].skills;
+  const iconColor = theme === "dark" ? T.text : "#333333";
+
   const blueprintAura = {
     position: "absolute",
     inset: "-14% -16% -12% -8%",
@@ -150,12 +202,13 @@ export default function About() {
         }}
       />
 
+      {/* Photo + Skills */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: 56,
-          alignItems: "center",
+          gridTemplateColumns: isMobile ? "1fr" : "300px 1fr",
+          gap: isMobile ? 40 : 64,
+          alignItems: "flex-start",
           position: "relative",
           zIndex: 1,
         }}
@@ -166,7 +219,7 @@ export default function About() {
             alt="Anthonin Sautet"
             style={{
               width: "100%",
-              maxWidth: 420,
+              maxWidth: 300,
               display: "block",
               margin: "0 auto",
               objectFit: "contain",
@@ -174,97 +227,159 @@ export default function About() {
           />
         </Reveal>
 
+        {/* Skills inline */}
         <div>
           <Reveal delay={0.1}>
-            <SectionLabel>{t.label}</SectionLabel>
+            <div style={{ position: "relative" }}>
+              <span style={{
+                position: "absolute", top: -20, left: -4,
+                fontFamily: "'Work Sans', sans-serif",
+                fontSize: isMobile ? 72 : 88, fontWeight: 800,
+                letterSpacing: "-0.05em", color: T.text,
+                opacity: theme === "dark" ? 0.09 : 0.05,
+                lineHeight: 1, userSelect: "none", pointerEvents: "none",
+              }}>01</span>
+              <SectionLabel>{tSkills.label}</SectionLabel>
+            </div>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <SectionTitle>
-              {t.titleParts[0]}{" "}
-              <span style={{ color: T.accent }}>{t.titleParts[1]}</span>{" "}
-              {t.titleParts[2]}
-            </SectionTitle>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+                gap: isMobile ? "24px 0" : "28px 40px",
+                marginTop: 28,
+              }}
+            >
+              {tSkills.categories.map((cat, i) => (
+                <div
+                  key={i}
+                  style={{
+                    paddingTop: 16,
+                    position: "relative",
+                    ...(i === tSkills.categories.length - 1 && tSkills.categories.length % 2 !== 0 && !isMobile
+                      ? { gridColumn: "1 / -1" }
+                      : {}),
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0, left: 0, right: 0,
+                      height: 1,
+                      background: `linear-gradient(to right, ${T.accent}60, transparent)`,
+                    }}
+                  />
+                  <h3
+                    style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: 15,
+                      fontWeight: 700,
+                      color: T.text,
+                      margin: "0 0 5px",
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {cat.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: 12,
+                      color: T.textMuted,
+                      lineHeight: 1.6,
+                      margin: "0 0 10px",
+                    }}
+                  >
+                    {cat.description}
+                  </p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                    {cat.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        style={{
+                          padding: "4px 9px",
+                          borderRadius: 999,
+                          background: T.accentLight,
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: 10,
+                          fontWeight: 600,
+                          color: T.accent,
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </Reveal>
 
           <Reveal delay={0.3}>
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 16,
-                color: T.textMuted,
-                lineHeight: 1.8,
-                margin: "20px 0 0",
-              }}
-            >
-              {t.p1}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.35}>
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 16,
-                color: T.textMuted,
-                lineHeight: 1.8,
-                margin: "12px 0 0",
-              }}
-            >
-              {t.p2}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.4}>
             <div
               style={{
-                marginTop: 36,
+                marginTop: 28,
+                padding: "14px 20px",
+                borderRadius: T.radius,
+                border: `1px solid ${T.border}`,
                 display: "flex",
-                alignItems: "center",
-                gap: 16,
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 28,
-                fontWeight: 200,
-                color: T.accent,
-                letterSpacing: "0.07em",
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: isMobile ? 12 : 20,
                 flexWrap: "wrap",
               }}
             >
-              <span style={{ width: 40, height: 1, background: T.accentMid }} />
-              {t.quote}
+              <span
+                style={{
+                  fontFamily: "'Work Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: T.textLight,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
+              >
+                {tSkills.toolsLabel}
+              </span>
+              <div style={{ width: isMobile ? "100%" : 1, height: isMobile ? 1 : 22, background: T.border, flexShrink: 0 }} />
+              <div style={{ display: "flex", flexWrap: "wrap", gap: isMobile ? 12 : 20, alignItems: "center" }}>
+                {TOOLS.map((tool) => (
+                  <div key={tool.name} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <ToolLogo slug={tool.slug} size={18} color={iconColor} />
+                    <span
+                      style={{
+                        fontFamily: "'Work Sans', sans-serif",
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: T.textMuted,
+                      }}
+                    >
+                      {tool.name}
+                    </span>
+                  </div>
+                ))}
+                <span
+                  style={{
+                    fontFamily: "'Work Sans', sans-serif",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    color: T.textLight,
+                    fontStyle: "italic",
+                  }}
+                >
+                  {tSkills.toolsMore}
+                </span>
+              </div>
             </div>
           </Reveal>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: isMobile ? 60 : 120,
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <Reveal>
-          <div style={{ marginBottom: 36 }}>
-            <SectionLabel>{t.galleryLabel}</SectionLabel>
-            <SectionTitle>{t.galleryTitle}</SectionTitle>
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: 15,
-                color: T.textMuted,
-                lineHeight: 1.7,
-                margin: "12px 0 0",
-                maxWidth: 480,
-              }}
-            >
-              {t.galleryIntro}
-            </p>
-          </div>
-        </Reveal>
-
-        <Gallery isMobile={isMobile} isTablet={isTablet} />
-      </div>
     </section>
   );
 }

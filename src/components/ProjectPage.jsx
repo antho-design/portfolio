@@ -7,6 +7,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
 import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
+import MotifSVG from "./MotifSVG";
 
 /* ─── Image with lightbox ────────────────────────────────────── */
 function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
@@ -102,6 +103,45 @@ function ImageSlot({ label, ratio = "16/9" }) {
   );
 }
 
+/* ─── Hex decorations ─────────────────────────────────────── */
+function HexDot({ color = "currentColor", size = 7 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 10 10" aria-hidden="true"
+      style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}>
+      <polygon points="5,0 10,2.5 10,7.5 5,10 0,7.5 0,2.5" fill={color} />
+    </svg>
+  );
+}
+
+function HexHoneycombDecor({ color = "currentColor", size = 160, opacity = 0.05, style = {} }) {
+  const r = size / 2;
+  // Proper honeycomb geometry for pointy-top hexagons
+  const rowH = size * 0.81;                   // vertical spacing — slightly detached
+  const hOff = size * 0.50;                   // horizontal offset between columns
+  const W = hOff + size;
+  const H = 3 * rowH + size;
+
+  const pts = (cx, cy) => {
+    const a = [];
+    for (let i = 0; i < 6; i++) {
+      const rad = (Math.PI / 180) * (60 * i - 30);
+      a.push(`${(cx + r * Math.cos(rad)).toFixed(1)},${(cy + r * Math.sin(rad)).toFixed(1)}`);
+    }
+    return a.join(" ");
+  };
+
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
+      aria-hidden="true" overflow="visible"
+      style={{ position: "absolute", pointerEvents: "none", opacity, ...style }}>
+      <polygon points={pts(hOff + r,  r)}              fill={color} />  {/* col A, row 1 */}
+      <polygon points={pts(r,         rowH + r)}        fill={color} />  {/* col B, row 1 */}
+      <polygon points={pts(hOff + r,  2 * rowH + r)}   fill={color} />  {/* col A, row 2 */}
+      <polygon points={pts(r,         3 * rowH + r)}   fill={color} />  {/* col B, row 2 */}
+    </svg>
+  );
+}
+
 /* ─── Page projet ───────────────────────────────────────────── */
 export default function ProjectPage({ projectId, onNavigate }) {
   const { isMobile, isTablet } = useBreakpoint();
@@ -178,6 +218,31 @@ export default function ProjectPage({ projectId, onNavigate }) {
     WebkitMaskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
   };
 
+  // Hex mesh SVG background — replaces blueprint grid on gradient sections
+  const hexMesh = (() => {
+    const R = 22;
+    const W = +(R * Math.sqrt(3)).toFixed(2);
+    const H = 3 * R;
+    const hex = (cx, cy) => {
+      const pts = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
+      }
+      return `M${pts.join("L")}Z`;
+    };
+    const d = [hex(W/2, R), hex(0, 2.5*R), hex(W, 2.5*R)].join(" ");
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${d}' stroke='rgba(255,255,255,0.07)' stroke-width='0.6' fill='none'/></svg>`;
+    return {
+      position: "absolute", inset: 0, pointerEvents: "none",
+      backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
+      backgroundRepeat: "repeat",
+      maskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+      WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+      opacity: 0.9,
+    };
+  })();
+
   const cardBorder = {
     position: "absolute", inset: 0, borderRadius: T.radius, pointerEvents: "none",
     background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG, zIndex: 1,
@@ -192,179 +257,217 @@ export default function ProjectPage({ projectId, onNavigate }) {
     backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
   };
 
+  /* ─── Ghost number helper ─────────────────────────────────── */
+  const ghostNum = (num) => (
+    <span style={{
+      position: "absolute", top: -20, left: -4,
+      fontFamily: "'Work Sans', sans-serif",
+      fontSize: isMobile ? 72 : 88, fontWeight: 800,
+      letterSpacing: "-0.05em", color: T.text,
+      opacity: theme === "dark" ? 0.09 : 0.05, lineHeight: 1,
+      userSelect: "none", pointerEvents: "none",
+    }}>{num}</span>
+  );
+
   /* ─── Sections réutilisables pour le contenu par onglet ─── */
-  function SectionContext({ d }) {
+  function SectionContext({ d, num = "01" }) {
+    const imgs = Array.isArray(d.images?.context)
+      ? d.images.context.filter(Boolean)
+      : d.images?.context ? [d.images.context] : [];
     return (
       <Reveal>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: isMobile ? 40 : 64,
-          alignItems: "center",
-        }}>
-          <div>
-            <span style={LB}>{t.context}</span>
-            <h2 style={{ ...H2,marginBottom: 20 }}>{t.contextTitle}</h2>
+        <div style={{ paddingTop: isMobile ? 8 : 0 }}>
+          {/* Texte */}
+          <div style={{ position: "relative", marginBottom: isMobile ? 32 : 40 }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.context}</span>
+            </div>
             <p style={BODY}>{d.context}</p>
           </div>
-          <div>
-            <Images srcs={d.images?.context} fallbackLabel={t.imgContext} />
-          </div>
+          {/* Images — en ligne si plusieurs */}
+          {imgs.length === 0 ? (
+            <div style={{ border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.surface, padding: isMobile ? 12 : 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Images srcs={null} fallbackLabel={t.imgContext} />
+            </div>
+          ) : (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : `repeat(${imgs.length}, 1fr)`,
+              gap: 8,
+            }}>
+              {imgs.map((src, i) => (
+                <div key={i} style={{
+                  border: `1px solid ${T.border}`,
+                  borderRadius: T.radius,
+                  background: T.surface,
+                  padding: isMobile ? 10 : 14,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  maxHeight: imgs.length > 1 ? (isMobile ? 220 : 300) : undefined,
+                }}>
+                  <img
+                    src={src} alt=""
+                    style={{
+                      maxWidth: "100%", maxHeight: "100%",
+                      objectFit: "contain", display: "block",
+                      borderRadius: 2,
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Reveal>
     );
   }
 
-  function SectionProblematique({ d }) {
+  function SectionProblematique({ d, num = "02" }) {
     if (!d.problematique) return null;
     return (
       <section style={{ marginTop: gap }}>
         <Reveal>
           <div style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-            gap: isMobile ? 40 : 64,
-            alignItems: "center",
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 40 : 56,
+            position: "relative",
           }}>
-            <div>
-              <span style={LB}>{t.problematique}</span>
-              <h2 style={{ ...H2,marginBottom: 20 }}>{t.problematiqueTitle}</h2>
-              <p style={BODY}>{d.problematique}</p>
+            <HexHoneycombDecor
+              color={T.text}
+              size={isMobile ? 80 : 160}
+              opacity={theme === "dark" ? 0.09 : 0.05}
+              style={{ top: isMobile ? -10 : -40, right: isMobile ? -30 : -60 }}
+            />
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.problematique}</span>
             </div>
-            <div style={{
-              borderLeft: isMobile ? "none" : `3px solid ${colors.from}`,
-              paddingLeft: isMobile ? 0 : 32,
-              opacity: 0.18,
+            <p style={{
+              fontFamily: "'Work Sans', sans-serif",
+              fontSize: isMobile ? "clamp(14px, 3.5vw, 16px)" : "clamp(15px, 1.1vw, 17px)",
+              fontWeight: 300, color: T.text,
+              lineHeight: 1.75, margin: 0, fontStyle: "italic",
+              maxWidth: "82%", position: "relative",
             }}>
-              <p style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: isMobile ? 40 : 56, fontWeight: 800,
-                letterSpacing: "-0.04em", color: colors.from,
-                lineHeight: 1, margin: 0,
-              }}>?</p>
-            </div>
+              {d.problematique}
+            </p>
           </div>
         </Reveal>
       </section>
     );
   }
 
-  function SectionMethodology({ d }) {
+  function SectionMethodology({ d, num = "03" }) {
     if (!d.methodology) return null;
     return (
       <section style={{ marginTop: gap }}>
         <Reveal>
-          <span style={LB}>{t.methodology}</span>
-          <h2 style={{ ...H2,marginBottom: 36 }}>{t.methodologyTitle}</h2>
-        </Reveal>
-        {d.images?.phases ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: 64 }}>
-            {d.methodology.map((m, i) => {
-              const phaseImgs = d.images.phases[i];
-              const isEven = i % 2 === 0;
-              return (
-                <Reveal key={i} delay={i * 0.06}>
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-                    gap: isMobile ? 32 : 56,
-                    alignItems: "center",
-                    ...(isMobile ? {} : isEven ? {} : { direction: "rtl" }),
-                  }}>
-                    <div style={{ direction: "ltr" }}>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 16 }}>
-                        <span style={{
-                          fontFamily: "'Work Sans', sans-serif",
-                          fontSize: isMobile ? 32 : 44, fontWeight: 800,
-                          letterSpacing: "-0.03em", color: colors.from,
-                          opacity: 0.14, lineHeight: 1, flexShrink: 0,
-                        }}>
-                          {m.phase}
-                        </span>
-                        <h3 style={{
-                          fontFamily: "'Work Sans', sans-serif",
-                          fontSize: "clamp(13px, 1.1vw, 16px)", fontWeight: 800,
-                          letterSpacing: "-0.01em", color: T.text, margin: 0,
-                        }}>
-                          {m.title}
-                        </h3>
-                      </div>
-                      <p style={BODY}>{m.description}</p>
-                    </div>
-                    <div style={{ direction: "ltr" }}>
-                      {phaseImgs?.length ? (
-                        <Images srcs={phaseImgs} fallbackLabel={m.title} grid={phaseImgs.length >= 2} />
-                      ) : (
-                        <ImageSlot label={m.title} />
-                      )}
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
+          <div style={{
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 40 : 56,
+            marginBottom: 28,
+          }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+              {ghostNum(num)}
+              <HexDot color={colors.from} />
+              <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.methodology}</span>
+            </div>
           </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {d.methodology.map((m, i) => (
-              <Reveal key={i} delay={i * 0.06}>
+        </Reveal>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+          gap: 12,
+        }}>
+          {d.methodology.map((m, i) => {
+            const phaseImgs = d.images?.phases?.[i];
+            return (
+              <Reveal key={i} delay={i * 0.05}>
                 <div style={{
-                  display: "flex", gap: isMobile ? 20 : 32, padding: "32px 0",
-                  borderBottom: `1px solid ${T.border}`,
+                  border: `1px solid ${T.border}`,
+                  borderRadius: T.radius,
+                  overflow: "hidden",
+                  display: "flex", flexDirection: "column",
+                  background: T.surface,
+                  height: "100%",
                 }}>
-                  <span style={{
-                    fontFamily: "'Work Sans', sans-serif",
-                    fontSize: isMobile ? 28 : 40, fontWeight: 800,
-                    letterSpacing: "-0.03em", color: colors.from,
-                    opacity: 0.12, lineHeight: 1, flexShrink: 0, userSelect: "none",
-                  }}>
-                    {m.phase}
-                  </span>
-                  <div style={{ paddingTop: 4 }}>
+                  {phaseImgs?.length > 0 && (
+                    <div style={{
+                      borderBottom: `1px solid ${T.border}`,
+                      overflow: "hidden", maxHeight: 180,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: T.bg,
+                    }}>
+                      <Images srcs={phaseImgs} fallbackLabel={m.title} />
+                    </div>
+                  )}
+                  <div style={{ padding: isMobile ? "22px 18px" : "26px 22px", flex: 1, position: "relative" }}>
+                    <span style={{
+                      position: "absolute", top: 12, right: 14,
+                      fontFamily: "'Work Sans', sans-serif",
+                      fontSize: 52, fontWeight: 800, letterSpacing: "-0.05em",
+                      color: colors.from, opacity: 0.07, lineHeight: 1,
+                      userSelect: "none", pointerEvents: "none",
+                    }}>{m.phase}</span>
                     <h3 style={{
                       fontFamily: "'Work Sans', sans-serif",
-                      fontSize: "clamp(15px, 1.5vw, 20px)", fontWeight: 800,
-                      letterSpacing: "-0.01em", color: T.text, margin: "0 0 10px",
-                    }}>
-                      {m.title}
-                    </h3>
-                    <p style={BODY}>{m.description}</p>
+                      fontSize: "clamp(11px, 0.95vw, 13px)", fontWeight: 800,
+                      letterSpacing: "0.04em", textTransform: "uppercase",
+                      color: T.text, margin: "0 0 10px", lineHeight: 1.3,
+                      paddingRight: 36, position: "relative",
+                    }}>{m.title}</h3>
+                    <p style={{ ...BODY, fontSize: 13, position: "relative" }}>{m.description}</p>
                   </div>
                 </div>
               </Reveal>
-            ))}
-          </div>
-        )}
-        {!d.images?.phases && d.images?.methodology && (
-          <div style={{ marginTop: 48 }}>
-            <Images
-              srcs={d.images.methodology} fallbackLabel={t.imgMethod}
-              grid={Array.isArray(d.images.methodology) && d.images.methodology.length >= 2}
-            />
-          </div>
-        )}
+            );
+          })}
+        </div>
       </section>
     );
   }
 
-  function SectionResultat({ d }) {
+  function SectionResultat({ d, num = "04" }) {
     if (!d.resultat) return null;
     return (
       <section style={{ marginTop: gap }}>
+        {d.images?.resultat && (
+          <Reveal>
+            <div style={{
+              border: `1px solid ${T.border}`,
+              borderRadius: T.radius,
+              background: T.surface,
+              padding: isMobile ? 12 : 16,
+              marginBottom: 28,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <img
+                src={Array.isArray(d.images.resultat) ? d.images.resultat[0] : d.images.resultat}
+                alt=""
+                style={{ maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: 2 }}
+              />
+            </div>
+          </Reveal>
+        )}
         <Reveal>
           <div style={{
+            borderTop: `1px solid ${T.border}`,
+            paddingTop: isMobile ? 32 : 40,
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-            gap: isMobile ? 40 : 64,
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 2fr",
+            gap: isMobile ? 16 : 64,
             alignItems: "start",
           }}>
             <div>
-              <span style={LB}>{t.resultat}</span>
-              <h2 style={{ ...H2,marginBottom: 20 }}>{t.resultatTitle}</h2>
-              <p style={BODY}>{d.resultat}</p>
+              <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                {ghostNum(num)}
+                <HexDot color={colors.from} />
+                <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.resultat}</span>
+              </div>
             </div>
-            <div>
-              <Images srcs={d.images?.resultat} fallbackLabel={t.resultatTitle} />
-            </div>
+            <p style={{ ...BODY, paddingTop: isMobile ? 0 : 2 }}>{d.resultat}</p>
           </div>
         </Reveal>
       </section>
@@ -381,26 +484,28 @@ export default function ProjectPage({ projectId, onNavigate }) {
           padding: isMobile ? "64px 20px" : "96px 64px",
           position: "relative", overflow: "hidden",
         }}>
-          <div style={blueprintGrid} />
+          <div style={hexMesh} />
+          <MotifSVG
+            size={isMobile ? 200 : 320}
+            color="#ffffff"
+            opacity={0.06}
+            outerOpacity={0.03}
+            style={{ position: "absolute", right: isMobile ? -50 : -70, bottom: -50, pointerEvents: "none" }}
+          />
           <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
             <Reveal>
-              <span style={LB_WHITE}>{t.impact}</span>
-              <h2 style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: isMobile ? "clamp(16px, 4.5vw, 22px)" : "clamp(14px, 1.3vw, 20px)",
-                fontWeight: 800, letterSpacing: "-0.01em", textTransform: "uppercase",
-                color: "#fff", lineHeight: 1.1, margin: "0 0 32px",
-              }}>
-                {t.impactTitle}
-              </h2>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 28 }}>
+                <HexDot color="rgba(255,255,255,0.5)" />
+                <span style={{ ...LB_WHITE, marginBottom: 0 }}>{t.impact}</span>
+              </div>
             </Reveal>
-            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
               {items.map((item, i) => (
                 <Reveal key={i} delay={i * 0.07}>
                   <div style={{
                     display: "flex", gap: isMobile ? 20 : 32, alignItems: "flex-start",
                     padding: "24px 0",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
+                    borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none",
                   }}>
                     <span style={{
                       fontFamily: "'Work Sans', sans-serif",
@@ -442,7 +547,14 @@ export default function ProjectPage({ projectId, onNavigate }) {
         padding: isMobile ? "88px 20px 52px" : "120px 64px 72px",
         position: "relative", overflow: "hidden",
       }}>
-        <div style={blueprintGrid} />
+        <div style={hexMesh} />
+        <MotifSVG
+          size={isMobile ? 200 : 320}
+          color="#ffffff"
+          opacity={0.06}
+          outerOpacity={0.03}
+          style={{ position: "absolute", right: isMobile ? -60 : -80, top: isMobile ? -40 : -60, pointerEvents: "none" }}
+        />
         <div style={{ maxWidth: maxW, margin: "0 auto", position: "relative" }}>
           <div style={{
             display: "grid",
@@ -528,17 +640,12 @@ export default function ProjectPage({ projectId, onNavigate }) {
             {/* Colonne droite : image */}
             {!isMobile && (
               <div style={{
-                borderRadius: T.radius,
-                overflow: "hidden",
-                boxShadow: "0 24px 64px rgba(0,0,0,0.25)",
-                maxHeight: "340px",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: "rgba(0,0,0,0.1)",
               }}>
                 {details.images?.cover ? (
                   <img
                     src={details.images.cover} alt=""
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    style={{ width: "100%", height: "auto", objectFit: "contain", display: "block", borderRadius: T.radius }}
                   />
                 ) : (
                   <div style={{
@@ -659,26 +766,37 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
               /* Onglet Design System */
               <>
-                <SectionContext d={details} />
+                <SectionContext d={details} num="01" />
 
                 {details.designSystem && (
                   <section style={{ marginTop: gap }}>
                     <Reveal>
-                      <span style={LB}>{t.hubDesignSystem}</span>
-                      <h2 style={{ ...H2,marginBottom: 20 }}>{details.designSystem.description}</h2>
+                      <div style={{
+                        borderTop: `1px solid ${T.border}`,
+                        paddingTop: isMobile ? 40 : 56,
+                        marginBottom: 28,
+                      }}>
+                        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                          {ghostNum("02")}
+                          <HexDot color={colors.from} />
+                          <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.hubDesignSystem}</span>
+                        </div>
+                      </div>
                     </Reveal>
-                    <div style={{ marginTop: 28, display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
                       {details.designSystem.items.map((item, i) => (
                         <Reveal key={i} delay={i * 0.07}>
                           <div style={{
-                            display: "flex", gap: isMobile ? 16 : 24, alignItems: "flex-start",
-                            padding: "20px 0", borderBottom: `1px solid ${T.border}`,
+                            display: "flex", gap: isMobile ? 16 : 28, alignItems: "flex-start",
+                            padding: "22px 0",
+                            borderBottom: i < details.designSystem.items.length - 1 ? `1px solid ${T.border}` : "none",
                           }}>
                             <span style={{
                               fontFamily: "'Work Sans', sans-serif",
-                              fontSize: isMobile ? 20 : 28, fontWeight: 800,
+                              fontSize: isMobile ? 20 : 26, fontWeight: 800,
                               letterSpacing: "-0.03em", color: colors.from,
-                              opacity: 0.14, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                              opacity: 0.13, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                              minWidth: isMobile ? 36 : 44,
                             }}>
                               {String(i + 1).padStart(2, "0")}
                             </span>
@@ -696,12 +814,18 @@ export default function ProjectPage({ projectId, onNavigate }) {
             ) : (() => {
               const ad = projectDetails[hubTabs[activeTab]?.id];
               if (!ad) return null;
+              let hn = 0;
+              const hsn = () => String(++hn).padStart(2, "0");
+              const ctxN = hsn();
+              const probN = ad.problematique ? hsn() : null;
+              const methN = ad.methodology ? hsn() : null;
+              const resN = ad.resultat ? hsn() : null;
               return (
                 <>
-                  <SectionContext d={ad} />
-                  <SectionProblematique d={ad} />
-                  <SectionMethodology d={ad} />
-                  <SectionResultat d={ad} />
+                  <SectionContext d={ad} num={ctxN} />
+                  {probN && <SectionProblematique d={ad} num={probN} />}
+                  {methN && <SectionMethodology d={ad} num={methN} />}
+                  {resN && <SectionResultat d={ad} num={resN} />}
                 </>
               );
             })()}
@@ -714,6 +838,20 @@ export default function ProjectPage({ projectId, onNavigate }) {
         /* ── Projets standard ── */
         <div style={{ padding: `0 ${hPad}` }}>
           <div style={{ maxWidth: maxW, margin: "0 auto" }}>
+            {/* Calcul des numéros de section */}
+            {(() => {
+              let sn = 0;
+              const ns = () => String(++sn).padStart(2, "0");
+              const ctxN  = ns();
+              const probN = details.problematique ? ns() : null;
+              const chalN = details.challenges    ? ns() : null;
+              const methN = details.methodology   ? ns() : null;
+              const decN  = details.decisions     ? ns() : null;
+              const resN  = details.resultat      ? ns() : null;
+              const modN  = details.modules       ? ns() : null;
+
+              return (
+                <>
 
             {/* INTRO */}
             {details.intro && (
@@ -737,35 +875,46 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
             {/* CONTEXTE */}
             <section style={{ marginTop: details.intro ? 0 : gap }}>
-              <SectionContext d={details} />
+              <SectionContext d={details} num={ctxN} />
             </section>
 
             {/* PROBLÉMATIQUE */}
-            <SectionProblematique d={details} />
+            {probN && <SectionProblematique d={details} num={probN} />}
 
             {/* DÉFIS */}
-            {details.challenges && (
+            {chalN && details.challenges && (
               <section style={{ marginTop: gap }}>
                 <Reveal>
-                  <span style={LB}>{t.challenges}</span>
-                  <h2 style={{ ...H2,marginBottom: 0 }}>{t.challenges}</h2>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 28,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(chalN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.challenges}</span>
+                    </div>
+                  </div>
                 </Reveal>
-                <div style={{ marginTop: 32 }}>
+                <div>
                   {details.challenges.map((c, i) => (
                     <Reveal key={i} delay={i * 0.07}>
                       <div style={{
                         display: "flex", gap: isMobile ? 20 : 32, alignItems: "flex-start",
-                        padding: "28px 0", borderBottom: `1px solid ${T.border}`,
+                        padding: "24px 0",
+                        borderBottom: i < details.challenges.length - 1 ? `1px solid ${T.border}` : "none",
                       }}>
                         <span style={{
                           fontFamily: "'Work Sans', sans-serif",
-                          fontSize: isMobile ? 24 : 32, fontWeight: 800,
-                          letterSpacing: "-0.03em", color: T.accentMid,
-                          opacity: 0.18, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                          fontSize: isMobile ? 22 : 28, fontWeight: 800,
+                          letterSpacing: "-0.03em", color: colors.from,
+                          opacity: 0.14, lineHeight: 1, flexShrink: 0, userSelect: "none",
+                          minWidth: isMobile ? 38 : 46,
                         }}>
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <p style={{ ...BODY, color: T.text, fontSize: isMobile ? 15 : 16, alignSelf: "center" }}>
+                        <p style={{ ...BODY, color: T.text, fontSize: isMobile ? 14 : 15, alignSelf: "center" }}>
                           {c}
                         </p>
                       </div>
@@ -776,14 +925,23 @@ export default function ProjectPage({ projectId, onNavigate }) {
             )}
 
             {/* DÉMARCHE */}
-            <SectionMethodology d={details} />
+            {methN && <SectionMethodology d={details} num={methN} />}
 
             {/* DÉCISIONS CLÉS */}
-            {details.decisions && (
+            {decN && details.decisions && (
               <section style={{ marginTop: gap }}>
                 <Reveal>
-                  <span style={LB}>{t.decisionsLabel}</span>
-                  <h2 style={{ ...H2,marginBottom: 32 }}>{t.decisionsTitle}</h2>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 28,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(decN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.decisionsLabel}</span>
+                    </div>
+                  </div>
                 </Reveal>
                 <div style={{
                   display: "grid",
@@ -827,14 +985,23 @@ export default function ProjectPage({ projectId, onNavigate }) {
             )}
 
             {/* RÉSULTAT */}
-            <SectionResultat d={details} />
+            {resN && <SectionResultat d={details} num={resN} />}
 
             {/* MODULES */}
-            {details.modules && (
+            {modN && details.modules && (
               <section style={{ marginTop: gap }}>
                 <Reveal>
-                  <span style={LB}>{t.realizations}</span>
-                  <h2 style={{ ...H2,marginBottom: 40 }}>{t.realizationsTitle}</h2>
+                  <div style={{
+                    borderTop: `1px solid ${T.border}`,
+                    paddingTop: isMobile ? 40 : 56,
+                    marginBottom: 40,
+                  }}>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+                      {ghostNum(modN)}
+                      <HexDot color={colors.from} />
+                      <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.realizations}</span>
+                    </div>
+                  </div>
                 </Reveal>
                 <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 64 : 80 }}>
                   {details.modules.map((mod, i) => {
@@ -895,6 +1062,10 @@ export default function ProjectPage({ projectId, onNavigate }) {
               </section>
             )}
 
+              </>
+              );
+            })()}
+
           </div>
         </div>
       )}
@@ -926,8 +1097,9 @@ export default function ProjectPage({ projectId, onNavigate }) {
               </span>
               <div style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : `repeat(${projects.filter((p) => p.parentId === details.parentId && p.id !== projectId).length + 1}, 1fr)`,
+                gridTemplateColumns: isMobile ? "repeat(auto-fill, minmax(76px, 88px))" : `repeat(${projects.filter((p) => p.parentId === details.parentId && p.id !== projectId).length + 1}, 1fr)`,
                 gap: 12,
+                justifyContent: isMobile ? "start" : undefined,
               }}>
                 <ProjectNavCard project={projects.find((p) => p.id === details.parentId)} onNavigate={onNavigate} isHub />
                 {projects
@@ -949,8 +1121,9 @@ export default function ProjectPage({ projectId, onNavigate }) {
               </span>
               <div style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : `repeat(${projects.filter((p) => p.id !== projectId && !p.parentId).length}, 1fr)`,
+                gridTemplateColumns: isMobile ? "repeat(auto-fill, minmax(76px, 88px))" : `repeat(${projects.filter((p) => p.id !== projectId && !p.parentId).length}, 1fr)`,
                 gap: 12,
+                justifyContent: isMobile ? "start" : undefined,
               }}>
                 {projects.filter((p) => p.id !== projectId && !p.parentId).map((p) => (
                   <ProjectNavCard key={p.id} project={p} onNavigate={onNavigate} />
@@ -965,11 +1138,26 @@ export default function ProjectPage({ projectId, onNavigate }) {
   );
 }
 
-/* ─── Card nav ───────────────────────────────────────────────── */
+/* ─── Card nav hexagonale ─────────────────────────────────────── */
 function ProjectNavCard({ project, onNavigate }) {
   const [hovered, setHovered] = useState(false);
-  const { tokens: T, theme } = useTheme();
+  const { tokens: T } = useTheme();
   const colors = PROJECT_COLORS[project.id] || { from: T.accent, to: T.accentMid };
+
+  const R = 16;
+  const W = +(R * Math.sqrt(3)).toFixed(2);
+  const H = 3 * R;
+  const hexPt = (cx, cy) => {
+    const pts = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i - Math.PI / 6;
+      pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
+    }
+    return `M${pts.join("L")}Z`;
+  };
+  const meshD = [hexPt(W/2, R), hexPt(0, 2.5*R), hexPt(W, 2.5*R)].join(" ");
+  const meshSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${meshD}' stroke='rgba(255,255,255,0.09)' stroke-width='0.6' fill='none'/></svg>`;
+  const meshUrl = `url("data:image/svg+xml,${encodeURIComponent(meshSvg)}")`;
 
   return (
     <div
@@ -979,41 +1167,26 @@ function ProjectNavCard({ project, onNavigate }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        position: "relative", borderRadius: T.radius, overflow: "hidden",
-        background: T.bg, cursor: "pointer",
-        boxShadow: hovered ? "0 16px 40px rgba(0,0,0,0.1)" : "none",
-        transition: "box-shadow .35s ease",
+        clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+        aspectRatio: "1 / 1.15",
+        backgroundImage: `${meshUrl}, linear-gradient(135deg, ${colors.from}, ${colors.to})`,
+        backgroundRepeat: "repeat, no-repeat",
+        backgroundSize: "auto, 100% 100%",
+        cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        filter: hovered ? "brightness(1.2)" : "brightness(1)",
+        transition: "filter .25s ease",
       }}
     >
-      <div style={{
-        height: 3,
-        background: `linear-gradient(90deg, ${colors.from}, ${colors.to})`,
-        opacity: hovered ? 1 : 0.4,
-        transition: "opacity .3s ease",
-      }} />
-      <div style={{ padding: "16px 18px" }}>
-        <div style={{
-          fontFamily: "'Work Sans', sans-serif",
-          fontSize: 10, fontWeight: 300,
-          letterSpacing: "0.22em", textTransform: "uppercase",
-          color: T.textLight, marginBottom: 6,
-        }}>
-          {project.tag}
-        </div>
-        <div style={{
-          fontFamily: "'Work Sans', sans-serif",
-          fontSize: "clamp(14px, 1.2vw, 18px)", fontWeight: 800,
-          letterSpacing: "-0.01em", textTransform: "uppercase",
-          color: hovered ? colors.from : T.text,
-          transition: "color .3s ease",
-        }}>
-          {project.title}
-        </div>
-      </div>
-      <div style={{
-        position: "absolute", inset: 0, borderRadius: T.radius, pointerEvents: "none",
-        background: theme === "dark" ? CARD_BORDER_BG_DARK : CARD_BORDER_BG,
-      }} />
+      <span style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: "clamp(8px, 10%, 12px)", fontWeight: 800,
+        letterSpacing: "-0.01em", textTransform: "uppercase",
+        color: "#fff", textAlign: "center", lineHeight: 1.2,
+        padding: "0 18%",
+      }}>
+        {project.title}
+      </span>
     </div>
   );
 }

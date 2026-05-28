@@ -13,10 +13,8 @@ import {
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ProjectCard from "./components/ProjectCard";
-import HexPattern from "./components/HexPattern";
 import HoneycombGrid from "./components/HoneycombGrid";
-import About from "./components/About";
-import Skills from "./components/Skills";
+import About, { GallerySection } from "./components/About";
 import Experience from "./components/Experience";
 import Footer from "./components/Footer";
 import ProjectPage from "./components/ProjectPage";
@@ -1243,8 +1241,8 @@ export default function App() {
       {currentPath === "/about" ? (
         <>
           <About />
-          <Skills />
           <Experience />
+          <GallerySection />
         </>
       ) : currentPath === "/legal" ? (
         <LegalPage />
