@@ -184,107 +184,48 @@ export const PROJECT_DETAILS = {
     role: "Product Designer",
     duration: "2 semaines",
     tools: ["Figma", "Prototypage", "UI Design"],
-    intro: "Une banque de crédit peut-elle devenir un compagnon de vie ? C'est le défi posé par cet appel d'offre : imaginer Cetelem en 2030, non plus comme un outil de financement, mais comme l'assistant de tous vos projets. Deux semaines pour rendre cette vision désirable, crédible et prototypable.",
-    context:
-      "Dans le cadre d'une réponse à appel d'offre, l'enjeu était de projeter une vision produit à l'horizon 2030 — repenser Cetelem non plus comme un simple outil de crédit, mais comme un assistant du quotidien capable d'accompagner l'utilisateur dans tous ses projets de vie. Budgétiser rapidement une idée, suivre l'avancement de ses projets, être guidé dans ses choix financiers : autant d'usages à rendre désirables dans un concept à la fois légèrement premium et accessible au plus grand nombre, avec des éléments de gamification pour rendre l'expérience plus engageante. L'ensemble du concept a été conçu et prototypé en 2 semaines.",
-    decisions: [
-      {
-        number: "01",
-        title: "Des intentions, pas des features",
-        text: "Partir des moments de vie — projeter, budgétiser, suivre — plutôt que de construire autour des produits existants. L'interface se plie aux usages, pas l'inverse.",
-      },
-      {
-        number: "02",
-        title: "Gamification sans infantiliser",
-        text: "Progress bars, milestones, visualisations de progression — mais pas de points ni de badges. L'engagement vient de la progression réelle vers un objectif concret.",
-      },
-      {
-        number: "03",
-        title: "L'IA comme facilitateur discret",
-        text: "L'assistant intervient au bon moment — pour affiner une estimation, suggérer un ajustement — sans s'imposer comme la feature principale de l'expérience.",
-      },
-    ],
-    challenges: [
-      "Projeter une vision produit crédible à l'horizon 2030 dans un temps contraint",
-      "Repositionner la marque : premium sans exclure, accessible sans être générique",
-      "Intégrer des éléments de gamification dans un contexte financier sérieux",
-      "Faire coexister assistant IA, budgétisation rapide et suivi de projets dans une interface cohérente",
-    ],
-    objectives: [
-      "Positionner Cetelem comme l'assistant de tous les projets de vie à l'horizon 2030",
-      "Concevoir une expérience premium et accessible, loin des codes austères du secteur bancaire",
-      "Intégrer des mécaniques ludiques pour engager l'utilisateur dans la gestion de ses projets",
-      "Raconter la vision à travers un prototype suffisamment abouti pour convaincre en soutenance",
-    ],
+    intro: "Vision produit 2030 pour Cetelem : repenser une application de crédit en assistant de vie, en réponse à appel d'offre, avec prototype fonctionnel en 2 semaines",
+    context: "Dans le cadre d'une réponse à appel d'offre pilotée par mon ESN, Cetelem cherchait à se projeter à l'horizon 2030 : comment une marque de crédit à la consommation peut-elle rester pertinente dans un paysage financier en pleine mutation ? L'enjeu dépassait largement la refonte graphique. Il s'agissait de repenser fondamentalement le rôle de Cetelem dans la vie de ses utilisateurs, non plus comme un outil de financement ponctuel, mais comme un compagnon capable d'accompagner leurs projets de vie dans la durée. Deux semaines pour construire cette vision, la rendre désirable et la prototyper. Nous étions deux designers au départ, j'ai terminé le projet seul.",
+    problematique: "Comment transformer l'image d'une banque de crédit en celle d'un assistant de vie personnel, crédible à l'horizon 2030, différenciant sur le plan visuel, et suffisamment concret pour convaincre en soutenance face à des concurrents établis ?",
     methodology: [
       {
         phase: "01",
         title: "Cadrage du concept",
-        description:
-          "Reformulation de la vision à l'horizon 2030, définition du positionnement 'assistant de vie' et identification des parcours structurants.",
+        description: "Avant tout écran, nous avons conduit une étude de marché rapide pour identifier les tendances d'usage dans les apps financières et les attentes des utilisateurs vis-à-vis des assistants IA. De ce travail est née une conviction forte : la différenciation ne viendrait pas d'une amélioration incrémentale de l'existant, mais d'un changement de paradigme. Plutôt que de partir des catégories financières (épargne, crédit, remboursement), nous avons fait le choix de partir des intentions des utilisateurs : leurs projets de vie, leurs envies, leurs étapes. Trois partis-pris structurants ont émergé de ce cadrage : une interface orientée projets plutôt que chiffres, une gamification sobre axée sur la progression perçue plutôt que les récompenses, et un assistant IA intervenant au bon moment sans se substituer à la décision de l'utilisateur.",
       },
       {
         phase: "02",
         title: "Direction UI",
-        description:
-          "Exploration d'une direction premium accessible — ni luxe élitiste, ni interface bancaire classique. Travail sur les codes visuels, la gamification et le ton général.",
+        description: "Nous avons fait le choix d'une direction visuelle premium et assumée, tout en restant ancrés dans la charte graphique existante de Cetelem pour préserver la continuité de marque. Une interface sombre, des typographies affirmées, des touches de vert signature : l'objectif était de repositionner Cetelem vers le haut du spectre perçu, sans le rendre inaccessible pour le grand public.",
       },
       {
         phase: "03",
         title: "Prototypage",
-        description:
-          "Mise en forme des parcours clés dans Figma : création d'un projet, budgétisation assistée par IA, suivi et consultation des projets en cours.",
+        description: "Plutôt que de livrer des maquettes statiques, nous avons produit un prototype Figma interactif couvrant deux flux complets : la création de projet via un message texte adressé à l'IA, et la création guidée pas à pas pour les utilisateurs qui ne souhaitent pas décrire librement leur projet. Deux modalités d'entrée dans la même expérience, pour couvrir des profils d'utilisateurs très différents. Ce prototype a été conçu pour être présenté en live lors de la soutenance.",
       },
       {
         phase: "04",
         title: "Support de soutenance",
-        description:
-          "Assemblage des écrans et transitions pour construire un récit fluide autour de la vision 2030 lors de la présentation de l'offre.",
+        description: "Des slides claires et structurées ont été produites pour construire le récit autour de la vision : de l'étude de marché aux partis-pris, jusqu'au prototype. L'ensemble formait un discours cohérent, pensé pour convaincre des décideurs qui n'étaient pas designers.",
       },
     ],
-    modules: [
-      {
-        title: "Vision produit 2030",
-        description:
-          "Un repositionnement fort : Cetelem devient l'assistant de tous vos projets de vie. Chaque idée peut être budgétisée, suivie et concrétisée depuis une seule interface.",
-        features: ["Assistant de vie", "Horizon 2030", "Vision de service"],
-      },
-      {
-        title: "Parcours clés",
-        description:
-          "Les parcours structurants du concept — création et budgétisation d'un projet, assistance IA pour affiner les estimations, suivi de l'avancement avec des éléments de gamification.",
-        features: ["Création de projet", "Budgétisation assistée", "Suivi & gamification"],
-      },
-      {
-        title: "Prototype de démonstration",
-        description:
-          "Prototype Figma interactif construit pour rendre la vision tangible en soutenance — de l'écran d'accueil au parcours IA en passant par le flow de création de projet.",
-        features: ["Prototype interactif", "Flow complet", "Soutien à la démo"],
-      },
-    ],
-    deliverables: [
-      "Concept UI formalisé dans Figma — vision produit à l'horizon 2030",
-      "Direction visuelle premium et accessible avec éléments de gamification",
-      "Parcours clés maquettés : création de projet, budgétisation IA, suivi",
-      "Prototype de démonstration pour la soutenance de l'appel d'offre",
-    ],
+    resultat: "Une vision produit 2030 complète, avec un prototype Figma interactif fonctionnel couvrant les deux parcours de création de projet, une direction UI premium alignée sur la marque, et un support de soutenance structuré. Nous étions la seule équipe à présenter un prototype fonctionnel lors de la soutenance des solutions, ce qui a distingué notre proposition des autres réponses.",
     impact: [
-      "Vision 2030 rendue tangible et convaincante dès la phase d'avant-vente",
-      "Repositionnement de Cetelem comme assistant du quotidien, au-delà du crédit",
-      "Différenciation par la gamification et un ton premium accessible",
-      "Base réutilisable pour approfondir le concept en phase projet",
+      "Ce projet illustre ce que deux semaines de sprint intensif peuvent produire quand la contrainte de temps devient un moteur plutôt qu'un frein.",
+      "Concevoir simultanément une nouvelle direction UI, repenser des flux utilisateurs complets et produire un prototype fonctionnel dans ce délai exige de faire des choix rapidement, de ne pas attendre la perfection pour avancer, et de garder une vision d'ensemble cohérente malgré la pression.",
+      "La vision 2030 produite reste une base réutilisable pour approfondir le concept — chaque écran, chaque flux et chaque parti-pris ont été pensés pour pouvoir s'étendre bien au-delà des deux semaines initiales.",
     ],
     images: {
       cover: "/cetelem/card.png",
       coverWidth: "46%",
       context: ["/cetelem/parcours-compresse.png"],
-      methodology: ["/cetelem/ecrans-test.png"],
-      modules: [
-        ["/cetelem/parcours-compresse.png"],
-        ["/cetelem/parcours-assiste.png", "/cetelem/ecrans-projet.png"],
-        ["/cetelem/prototype.png", "/cetelem/conv-ia-screens.png"],
+      phases: [
+        ["/cetelem/ecrans-test.png"],
+        ["/cetelem/accueil-1.png", "/cetelem/versions-alternatives.png"],
+        ["/cetelem/conv-ia-screens.png", "/cetelem/parcours-assiste.png"],
+        null,
       ],
-      moduleLayouts: ["single", "grid", "grid"],
+      resultat: "/cetelem/prototype.png",
     },
   },
 
@@ -1215,89 +1156,48 @@ export const PROJECT_DETAILS_EN = {
     role: "Product Designer",
     duration: "2 weeks",
     tools: ["Figma", "Prototyping", "UI Design"],
-    context:
-      "As part of a tender response, the challenge was to project a product vision for the 2030 horizon — reimagining Cetelem not as a simple credit tool, but as an everyday assistant supporting users across all their life projects. Quickly budgeting an idea, tracking project progress, being guided through financial choices: all use cases to be made desirable within a concept that is both slightly premium and accessible to the widest possible audience, with gamification elements to make the experience more engaging. The entire concept was designed and prototyped in 2 weeks.",
-    challenges: [
-      "Project a credible product vision for the 2030 horizon within tight timeframes",
-      "Reposition the brand: premium without excluding, accessible without being generic",
-      "Integrate gamification elements into a serious financial context",
-      "Make AI assistance, quick budgeting and project tracking coexist in a coherent interface",
-    ],
-    objectives: [
-      "Position Cetelem as the assistant for all life projects at the 2030 horizon",
-      "Design a premium yet accessible experience, far from the austere codes of banking",
-      "Integrate playful mechanics to engage users in managing their projects",
-      "Tell the vision through a prototype refined enough to convince at pitch stage",
-    ],
+    intro: "2030 product vision for Cetelem: reimagining a credit app as a life assistant, as a tender response, with a functional prototype delivered in 2 weeks",
+    context: "As part of a tender response led by my consultancy, Cetelem was looking to project itself to the 2030 horizon: how can a consumer credit brand stay relevant in a rapidly shifting financial landscape? The challenge went far beyond a visual overhaul. It was about fundamentally rethinking Cetelem's role in its users' lives — no longer as a one-off financing tool, but as a companion capable of supporting their life projects over time. Two weeks to build this vision, make it desirable, and prototype it. We started as two designers; I finished the project alone.",
+    problematique: "How do you transform the image of a credit bank into that of a personal life assistant — credible at the 2030 horizon, visually distinctive, and concrete enough to win a competitive pitch against established rivals?",
     methodology: [
       {
         phase: "01",
         title: "Concept framing",
-        description:
-          "Reframing the vision for the 2030 horizon, defining the 'life assistant' positioning and identifying the core flows.",
+        description: "Before any screen, we ran a rapid market study to identify usage trends in financial apps and user expectations around AI assistants. A strong conviction emerged: differentiation would not come from incremental improvement, but from a paradigm shift. Rather than starting from financial categories (savings, credit, repayment), we chose to start from user intentions — their life projects, desires and milestones. Three structuring principles emerged: an interface oriented around projects rather than numbers, understated gamification focused on perceived progress rather than rewards, and an AI assistant stepping in at the right moment without replacing the user's own decision.",
       },
       {
         phase: "02",
         title: "UI direction",
-        description:
-          "Exploring an accessible premium direction — neither elitist luxury nor classic banking interface. Working on visual codes, gamification and overall tone.",
+        description: "We chose a bold, premium visual direction while staying anchored in Cetelem's existing brand guidelines to preserve continuity. A dark interface, assertive typography, signature green accents: the goal was to reposition Cetelem toward the higher end of the perceived spectrum, without making it inaccessible to a mainstream audience.",
       },
       {
         phase: "03",
         title: "Prototyping",
-        description:
-          "Structuring the key flows in Figma: project creation, AI-assisted budgeting, project tracking and follow-up.",
+        description: "Rather than delivering static mockups, we produced an interactive Figma prototype covering two complete flows: project creation via a text message to the AI, and guided step-by-step creation for users who prefer not to describe their project freely. Two entry points into the same experience, covering very different user profiles. The prototype was designed to be presented live during the pitch.",
       },
       {
         phase: "04",
         title: "Pitch support",
-        description:
-          "Assembling screens and transitions into a smooth narrative around the 2030 vision for the tender presentation.",
+        description: "Clear, structured slides were produced to build the narrative around the vision — from the market study and design principles through to the prototype. The whole formed a coherent story, designed to convince decision-makers who were not designers.",
       },
     ],
-    modules: [
-      {
-        title: "Product vision 2030",
-        description:
-          "A strong repositioning: Cetelem becomes the assistant for all your life projects. Every idea can be budgeted, tracked and brought to life from a single interface.",
-        features: ["Life assistant", "2030 horizon", "Service vision"],
-      },
-      {
-        title: "Key flows",
-        description:
-          "The core flows of the concept — project creation and budgeting, AI assistance to refine estimates, progress tracking with gamification elements.",
-        features: ["Project creation", "Assisted budgeting", "Tracking & gamification"],
-      },
-      {
-        title: "Demo prototype",
-        description:
-          "Interactive Figma prototype built to make the vision tangible at pitch — from the home screen to the AI flow and the project creation journey.",
-        features: ["Interactive prototype", "Full flow", "Demo support"],
-      },
-    ],
-    deliverables: [
-      "UI concept formalised in Figma — product vision for the 2030 horizon",
-      "Premium and accessible visual direction with gamification elements",
-      "Key flows designed: project creation, AI budgeting, tracking",
-      "Demo prototype for the tender pitch presentation",
-    ],
+    resultat: "A complete 2030 product vision, with a functional interactive Figma prototype covering both project creation flows, a premium UI direction aligned with the brand, and a structured pitch deck. We were the only team to present a functional prototype at the pitch, which set our proposal apart from the competition.",
     impact: [
-      "2030 vision made tangible and convincing at the pre-sales stage",
-      "Cetelem repositioned as an everyday assistant, beyond credit",
-      "Differentiation through gamification and a premium accessible tone",
-      "Reusable base for deepening the concept in the project phase",
+      "This project shows what two weeks of intensive sprint can produce when time pressure becomes a driver rather than a constraint.",
+      "Simultaneously designing a new UI direction, rethinking complete user flows and delivering a functional prototype within that window demands making fast decisions, not waiting for perfection, and maintaining a coherent overall vision under pressure.",
+      "The 2030 vision produced remains a reusable foundation — every screen, flow and design principle was built to extend well beyond the initial two weeks.",
     ],
     images: {
       cover: "/cetelem/card.png",
       coverWidth: "46%",
       context: ["/cetelem/parcours-compresse.png"],
-      methodology: ["/cetelem/ecrans-test.png"],
-      modules: [
-        ["/cetelem/parcours-compresse.png"],
-        ["/cetelem/parcours-assiste.png", "/cetelem/ecrans-projet.png"],
-        ["/cetelem/prototype.png", "/cetelem/conv-ia-screens.png"],
+      phases: [
+        ["/cetelem/ecrans-test.png"],
+        ["/cetelem/accueil-1.png", "/cetelem/versions-alternatives.png"],
+        ["/cetelem/conv-ia-screens.png", "/cetelem/parcours-assiste.png"],
+        null,
       ],
-      moduleLayouts: ["single", "grid", "grid"],
+      resultat: "/cetelem/prototype.png",
     },
   },
 
