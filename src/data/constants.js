@@ -4,7 +4,8 @@ export const CV_URL = "/cv-anthonin-sautet.pdf";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/anthonin-sautet/";
 
 export const PROJECT_COLORS = {
-  cetelem:       { from: "#052E2B", to: "#1F6660" },
+  "le-design-lab": { from: "#052E2B", to: "#1F6660" },
+  cetelem:         { from: "#052E2B", to: "#1F6660" },
   apec:          { from: "#1A4B5C", to: "#2D7D9A" },
   autossimo:     { from: "#7A3B1E", to: "#C4714A" },
   npc:           { from: "#1E5C3B", to: "#4A9B6F" },

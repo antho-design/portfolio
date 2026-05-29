@@ -1,10 +1,21 @@
 export const PROJECTS = [
   {
+    id: "le-design-lab",
+    title: "Le design lab",
+    subtitle: "Concepts & réponses à appels d'offre",
+    year: "2025 – 2026",
+    tag: "Concept product design",
+    tasks: ["UI", "Figma", "Prototypage", "Concept"],
+    isHub: true,
+  },
+  {
     id: "cetelem",
     title: "Cetelem",
     subtitle: "Réponse à appel d'offre",
     year: "2026",
     tag: "Concept product design",
+    parentId: "le-design-lab",
+    parentTitle: "Le design lab",
     tasks: ["UI", "Figma", "Prototypage", "Concept"],
   },
   {
@@ -146,7 +157,29 @@ export const EXPERIENCES = [
 ];
 
 export const PROJECT_DETAILS = {
+  "le-design-lab": {
+    isHub: true,
+    client: "Divers clients",
+    role: "Product Designer — Appels d'offre & concepts",
+    duration: "2025 – 2026",
+    tools: ["Figma", "Prototypage", "UI Design"],
+    subProjects: ["cetelem"],
+    context: "Un espace dédié aux projets de conception exploratoire : réponses à appels d'offre, concepts produit et prototypes de vision. Chaque projet est conçu dans un temps contraint avec un objectif clair — projeter une vision crédible et désirable, et la rendre tangible avant même qu'un développement ne commence.",
+    problematique: "Comment concevoir des expériences convaincantes dans des délais courts, sans infrastructure de projet, en maximisant l'impact visuel et narratif pour convaincre des décideurs ?",
+    impact: [
+      "Concepts produit aboutis livrés dans des fenêtres de 2 à 4 semaines",
+      "Prototypes interactifs capables de porter une vision complète en soutenance",
+      "Approche reproductible : du brief à la démonstration, un processus de conception rapide et structuré",
+    ],
+    images: {
+      cover: "/cetelem/card.png",
+      coverWidth: "46%",
+    },
+  },
+
   cetelem: {
+    parentId: "le-design-lab",
+    parentTitle: "Le design lab",
     client: "Cetelem",
     role: "Product Designer",
     duration: "2 semaines",
@@ -1003,11 +1036,22 @@ export const SKILLS_EN = [
 
 export const PROJECTS_EN = [
   {
+    id: "le-design-lab",
+    title: "The design lab",
+    subtitle: "Concepts & tender responses",
+    year: "2025 – 2026",
+    tag: "Concept product design",
+    tasks: ["UI", "Figma", "Prototyping", "Concept"],
+    isHub: true,
+  },
+  {
     id: "cetelem",
     title: "Cetelem",
     subtitle: "Tender response concept",
     year: "2026",
     tag: "Concept product design",
+    parentId: "le-design-lab",
+    parentTitle: "The design lab",
     tasks: ["UI", "Figma", "Prototyping", "Concept"],
   },
   {
@@ -1144,7 +1188,29 @@ export const EXPERIENCES_EN = [
 ];
 
 export const PROJECT_DETAILS_EN = {
+  "le-design-lab": {
+    isHub: true,
+    client: "Various clients",
+    role: "Product Designer — Tenders & concepts",
+    duration: "2025 – 2026",
+    tools: ["Figma", "Prototyping", "UI Design"],
+    subProjects: ["cetelem"],
+    context: "A space dedicated to exploratory design projects: tender responses, product concepts and vision prototypes. Each project is designed under tight constraints with a clear goal — projecting a credible and desirable vision, making it tangible before any development begins.",
+    problematique: "How to design convincing experiences within tight timelines, without project infrastructure, maximising visual and narrative impact to persuade decision-makers?",
+    impact: [
+      "Polished product concepts delivered within 2 to 4-week windows",
+      "Interactive prototypes capable of carrying a complete vision at pitch stage",
+      "Repeatable approach: from brief to demo, a fast and structured design process",
+    ],
+    images: {
+      cover: "/cetelem/card.png",
+      coverWidth: "46%",
+    },
+  },
+
   cetelem: {
+    parentId: "le-design-lab",
+    parentTitle: "The design lab",
     client: "Cetelem",
     role: "Product Designer",
     duration: "2 weeks",
