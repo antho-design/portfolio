@@ -1180,7 +1180,7 @@ function ProjectNavCard({ project, onNavigate }) {
     >
       <span style={{
         fontFamily: "'Work Sans', sans-serif",
-        fontSize: "clamp(8px, 10%, 12px)", fontWeight: 800,
+        fontSize: "clamp(10px, 0.7vw, 13px)", fontWeight: 800,
         letterSpacing: "-0.01em", textTransform: "uppercase",
         color: "#fff", textAlign: "center", lineHeight: 1.2,
         padding: "0 18%",

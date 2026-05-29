@@ -180,7 +180,7 @@ export default function About() {
         padding: isMobile ? "100px 20px 80px" : isTablet ? "120px 32px 80px" : "140px 40px 100px",
         maxWidth: 1200,
         margin: "0 auto",
-        minHeight: "100vh",
+        minHeight: "unset",
         position: "relative",
         overflow: "visible",
       }}
