@@ -14,15 +14,24 @@ export const PROJECT_COLORS = {
   globedreamers: { from: "#6B2B2B", to: "#C4655A" },
 };
 
-/* Grille décorative sur fond coloré (pages projet + cards) */
-export const BLUEPRINT_GRID_BG = `
-  repeating-linear-gradient(to right, rgba(255,255,255,0.045) 0 1px, transparent 1px 18px),
-  repeating-linear-gradient(to bottom, rgba(255,255,255,0.045) 0 1px, transparent 1px 18px),
-  repeating-linear-gradient(to right, rgba(255,255,255,0.1) 0 1px, transparent 1px 72px),
-  repeating-linear-gradient(to bottom, rgba(255,255,255,0.1) 0 1px, transparent 1px 72px),
-  linear-gradient(115deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.006) 46%, transparent 47%, transparent 53%, rgba(255,255,255,0.006) 54%, rgba(255,255,255,0.03) 100%),
-  linear-gradient(12deg, rgba(255,255,255,0.025) 0%, transparent 38%, rgba(255,255,255,0.018) 50%, transparent 62%, rgba(255,255,255,0.025) 100%)
-`;
+/* Motif hexagonal répété — remplace blueprint sur fonds colorés */
+export const HEX_MESH_BG = (() => {
+  const R = 22;
+  const W = +(R * Math.sqrt(3)).toFixed(2);
+  const H = 3 * R;
+  const hex = (cx, cy) => {
+    const pts = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i - Math.PI / 6;
+      pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
+    }
+    return `M${pts.join("L")}Z`;
+  };
+  const d = [hex(W / 2, R), hex(0, 2.5 * R), hex(W, 2.5 * R)].join(" ");
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${d}' stroke='rgba(255,255,255,0.07)' stroke-width='0.6' fill='none'/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+})();
+
 
 /* Bordure dégradée (s'estompe aux coins) — fond blanc/clair */
 export const CARD_BORDER_BG = `

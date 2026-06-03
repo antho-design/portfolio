@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { Reveal } from "./UI";
-import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
+import { PROJECT_COLORS, HEX_MESH_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
 
 const PROJECT_CARD_IMAGES = {
   apec:           { src: "/apec-card.png", width: "90%", paddingLeft: "4%" },
@@ -115,9 +115,8 @@ export default function ProjectCard({ project, index, onNavigate, compact = fals
   const blueprintGrid = {
     position: "absolute",
     inset: 0,
-    backgroundImage: BLUEPRINT_GRID_BG,
-    backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
-    backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+    backgroundImage: HEX_MESH_BG,
+    backgroundRepeat: "repeat",
     opacity: hovered ? 0.78 : 0.42,
     mixBlendMode: "screen",
     transition: "opacity .5s ease",

@@ -6,7 +6,7 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { UI } from "../data/translations";
-import { PROJECT_COLORS, BLUEPRINT_GRID_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
+import { PROJECT_COLORS, HEX_MESH_BG, CARD_BORDER_BG, CARD_BORDER_BG_DARK } from "../data/constants";
 import MotifSVG from "./MotifSVG";
 
 /* ─── Image with lightbox ────────────────────────────────────── */
@@ -193,6 +193,8 @@ export default function ProjectPage({ projectId, onNavigate }) {
   const hPad = isMobile ? "20px" : isTablet ? "40px" : "64px";
   const maxW = 860;
   const gap = isMobile ? "56px" : "88px";
+  const sectionGap = isMobile ? "48px" : "72px";
+  const sectionPad = isMobile ? 48 : 72;
 
   const LB = {
     fontFamily: "'Work Sans', sans-serif",
@@ -228,38 +230,21 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
   const blueprintGrid = {
     position: "absolute", inset: 0,
-    backgroundImage: BLUEPRINT_GRID_BG,
-    backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
-    backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+    backgroundImage: HEX_MESH_BG,
+    backgroundRepeat: "repeat",
     opacity: 0.5, mixBlendMode: "screen", pointerEvents: "none",
     maskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
     WebkitMaskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
   };
 
-  // Hex mesh SVG background — replaces blueprint grid on gradient sections
-  const hexMesh = (() => {
-    const R = 22;
-    const W = +(R * Math.sqrt(3)).toFixed(2);
-    const H = 3 * R;
-    const hex = (cx, cy) => {
-      const pts = [];
-      for (let i = 0; i < 6; i++) {
-        const a = (Math.PI / 3) * i - Math.PI / 6;
-        pts.push(`${(cx + R * Math.sin(a)).toFixed(2)},${(cy - R * Math.cos(a)).toFixed(2)}`);
-      }
-      return `M${pts.join("L")}Z`;
-    };
-    const d = [hex(W/2, R), hex(0, 2.5*R), hex(W, 2.5*R)].join(" ");
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path d='${d}' stroke='rgba(255,255,255,0.07)' stroke-width='0.6' fill='none'/></svg>`;
-    return {
-      position: "absolute", inset: 0, pointerEvents: "none",
-      backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
-      backgroundRepeat: "repeat",
-      maskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
-      WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
-      opacity: 0.9,
-    };
-  })();
+  const hexMesh = {
+    position: "absolute", inset: 0, pointerEvents: "none",
+    backgroundImage: HEX_MESH_BG,
+    backgroundRepeat: "repeat",
+    maskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+    WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+    opacity: 0.9,
+  };
 
   const cardBorder = {
     position: "absolute", inset: 0, borderRadius: T.radius, pointerEvents: "none",
@@ -344,11 +329,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
   function SectionProblematique({ d, num = "02" }) {
     if (!d.problematique) return null;
     return (
-      <section style={{ marginTop: gap }}>
+      <section style={{ marginTop: sectionGap }}>
         <Reveal>
           <div style={{
             borderTop: `1px solid ${T.border}`,
-            paddingTop: isMobile ? 40 : 56,
+            paddingTop: sectionPad,
             position: "relative",
           }}>
             <HexHoneycombDecor
@@ -390,7 +375,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
         fontFamily: "'Work Sans', sans-serif",
         fontSize: 11, fontWeight: 700,
         letterSpacing: "0.22em", textTransform: "uppercase",
-        color: colors.from, display: "block",
+        color: theme === "dark" ? colors.to : colors.from, display: "block",
         textAlign: alignRight ? "right" : "left",
         paddingTop: 3,
       }}>{phase}</span>
@@ -428,11 +413,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
     return (
       <>
-      <section style={{ marginTop: gap }}>
+      <section style={{ marginTop: sectionGap }}>
         <Reveal>
           <div style={{
             borderTop: `1px solid ${T.border}`,
-            paddingTop: isMobile ? 40 : 56,
+            paddingTop: sectionPad,
             marginBottom: isMobile ? 44 : 64,
           }}>
             <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
@@ -486,10 +471,10 @@ export default function ProjectPage({ projectId, onNavigate }) {
               ? <div style={{ display: "grid", gridTemplateColumns: `${NUM_COL} 1fr 1fr`, gap: 40, alignItems: "stretch" }}>
                   <div>{numEl(m.phase)}</div>
                   {textBlock(m)}
-                  {imgFrame(phaseImgs?.[0], { height: "100%" })}
+                  {imgFrame(phaseImgs?.[0], { height: "100%", maxHeight: "70vh" })}
                 </div>
               : <div style={{ display: "grid", gridTemplateColumns: `1fr 1fr ${NUM_COL}`, gap: 40, alignItems: "stretch" }}>
-                  {imgFrame(phaseImgs?.[0], { height: "100%" })}
+                  {imgFrame(phaseImgs?.[0], { height: "100%", maxHeight: "70vh" })}
                   {textBlock(m)}
                   <div>{numEl(m.phase, true)}</div>
                 </div>;
@@ -590,7 +575,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
   function SectionResultat({ d, num = "04" }) {
     if (!d.resultat) return null;
     return (
-      <section style={{ marginTop: gap }}>
+      <section style={{ marginTop: sectionGap }}>
         {d.images?.resultat && (
           <Reveal>
             <div style={{
@@ -612,10 +597,10 @@ export default function ProjectPage({ projectId, onNavigate }) {
         <Reveal>
           <div style={{
             borderTop: `1px solid ${T.border}`,
-            paddingTop: isMobile ? 32 : 40,
+            paddingTop: sectionPad,
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1fr 2fr",
-            gap: isMobile ? 16 : 64,
+            gap: isMobile ? 12 : 24,
             alignItems: "start",
           }}>
             <div>
@@ -625,7 +610,15 @@ export default function ProjectPage({ projectId, onNavigate }) {
                 <span style={{ ...LB, marginBottom: 0, position: "relative" }}>{t.resultat}</span>
               </div>
             </div>
-            <p style={{ ...BODY, paddingTop: isMobile ? 0 : 2 }}>{d.resultat}</p>
+            <p style={{
+              ...BODY,
+              paddingTop: isMobile ? 0 : 2,
+              fontFamily: "'Lora', serif",
+              fontStyle: "italic",
+              fontSize: isMobile ? 18 : 20,
+              fontWeight: 400,
+              lineHeight: 1.85,
+            }}>{d.resultat}</p>
           </div>
         </Reveal>
       </section>
@@ -636,7 +629,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
   function ImpactSection({ items }) {
     if (!items?.length) return null;
     return (
-      <section style={{ marginTop: gap }}>
+      <section style={{ marginTop: sectionGap }}>
         <div style={{
           background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`,
           padding: isMobile ? "64px 20px" : "96px 64px",
@@ -927,11 +920,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
                 <SectionContext d={details} num="01" />
 
                 {details.designSystem && (
-                  <section style={{ marginTop: gap }}>
+                  <section style={{ marginTop: sectionGap }}>
                     <Reveal>
                       <div style={{
                         borderTop: `1px solid ${T.border}`,
-                        paddingTop: isMobile ? 40 : 56,
+                        paddingTop: sectionPad,
                         marginBottom: 28,
                       }}>
                         <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
@@ -1041,11 +1034,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
             {/* DÉFIS */}
             {chalN && details.challenges && (
-              <section style={{ marginTop: gap }}>
+              <section style={{ marginTop: sectionGap }}>
                 <Reveal>
                   <div style={{
                     borderTop: `1px solid ${T.border}`,
-                    paddingTop: isMobile ? 40 : 56,
+                    paddingTop: sectionPad,
                     marginBottom: 28,
                   }}>
                     <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
@@ -1087,11 +1080,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
             {/* DÉCISIONS CLÉS */}
             {decN && details.decisions && (
-              <section style={{ marginTop: gap }}>
+              <section style={{ marginTop: sectionGap }}>
                 <Reveal>
                   <div style={{
                     borderTop: `1px solid ${T.border}`,
-                    paddingTop: isMobile ? 40 : 56,
+                    paddingTop: sectionPad,
                     marginBottom: 28,
                   }}>
                     <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
@@ -1147,11 +1140,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
             {/* MODULES */}
             {modN && details.modules && (
-              <section style={{ marginTop: gap }}>
+              <section style={{ marginTop: sectionGap }}>
                 <Reveal>
                   <div style={{
                     borderTop: `1px solid ${T.border}`,
-                    paddingTop: isMobile ? 40 : 56,
+                    paddingTop: sectionPad,
                     marginBottom: 40,
                   }}>
                     <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>

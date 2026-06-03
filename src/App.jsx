@@ -4,7 +4,7 @@ import { UI } from "./data/translations";
 import { useBreakpoint } from "./hooks/useBreakpoint";
 import { useContent } from "./hooks/useContent";
 import { useLanguage } from "./context/LanguageContext";
-import { BLUEPRINT_AURA_BG, BLUEPRINT_GRID_BG, PROJECT_COLORS, CV_URL, LINKEDIN_URL } from "./data/constants";
+import { BLUEPRINT_AURA_BG, HEX_MESH_BG, PROJECT_COLORS, CV_URL, LINKEDIN_URL } from "./data/constants";
 import {
   ProgressBar,
   Reveal,
@@ -746,9 +746,8 @@ function RouteTransition({ transition }) {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: BLUEPRINT_GRID_BG,
-            backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
-            backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+            backgroundImage: HEX_MESH_BG,
+            backgroundRepeat: "repeat",
             opacity: closing ? 0.2 : 0.58,
             mixBlendMode: "screen",
             maskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
@@ -805,9 +804,8 @@ function RouteTransition({ transition }) {
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: BLUEPRINT_GRID_BG,
-          backgroundSize: "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
-          backgroundPosition: "0 0, 0 0, 0 0, 0 0, 0 0, 0 0",
+          backgroundImage: HEX_MESH_BG,
+          backgroundRepeat: "repeat",
           opacity: expanded ? 0.58 : 0.32,
           mixBlendMode: "screen",
           maskImage: "radial-gradient(circle at center, black 74%, transparent 100%)",
