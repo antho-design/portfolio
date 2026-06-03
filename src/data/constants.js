@@ -6,6 +6,7 @@ export const LINKEDIN_URL = "https://www.linkedin.com/in/anthonin-sautet/";
 export const PROJECT_COLORS = {
   "le-design-lab": { from: "#052E2B", to: "#1F6660" },
   cetelem:         { from: "#052E2B", to: "#1F6660" },
+  ypo:             { from: "#0A0B1E", to: "#3B2D8A" },
   apec:          { from: "#1A4B5C", to: "#2D7D9A" },
   autossimo:     { from: "#7A3B1E", to: "#C4714A" },
   npc:           { from: "#1E5C3B", to: "#4A9B6F" },

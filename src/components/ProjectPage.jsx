@@ -12,15 +12,18 @@ import MotifSVG from "./MotifSVG";
 /* ─── Image with lightbox ────────────────────────────────────── */
 function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
   const [lightbox, setLightbox] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(0);
   const { tokens: T } = useTheme();
   const list = Array.isArray(srcs) ? srcs.filter(Boolean) : srcs ? [srcs] : [];
 
   if (list.length === 0) return <ImageSlot label={fallbackLabel} ratio={fallbackRatio} />;
 
+  const openLightbox = (src) => { setLightbox(src); setZoomLevel(0); };
+
   const img = (src, key, full) => (
     <img
       key={key} src={src} alt=""
-      onClick={() => setLightbox(src)}
+      onClick={() => openLightbox(src)}
       style={{
         width: "auto", maxWidth: "100%",
         maxHeight: full ? "90vh" : "50vh",
@@ -63,16 +66,30 @@ function Images({ srcs, fallbackLabel, fallbackRatio = "16/9", grid = false }) {
           onClick={() => setLightbox(null)}
           style={{
             position: "fixed", inset: 0, zIndex: 9999,
-            background: "rgba(0,0,0,0.6)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            padding: 24, cursor: "zoom-out",
+            background: "rgba(0,0,0,0.85)",
+            overflow: "auto",
+            cursor: "zoom-out",
           }}
         >
-          <img
-            src={lightbox} alt=""
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: T.radius, objectFit: "contain" }}
-          />
+          <div style={{
+            minHeight: "100%", minWidth: "100%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 32, boxSizing: "border-box",
+          }}>
+            <img
+              src={lightbox} alt=""
+              onClick={(e) => { e.stopPropagation(); setZoomLevel(z => z === 0 ? 1 : 0); }}
+              style={{
+                display: "block",
+                borderRadius: T.radius,
+                cursor: zoomLevel === 0 ? "zoom-in" : "zoom-out",
+                ...(zoomLevel === 0
+                  ? { maxWidth: "calc(100vw - 64px)", maxHeight: "calc(100vh - 64px)", width: "auto", height: "auto", objectFit: "contain" }
+                  : { width: "auto", height: "auto" }
+                ),
+              }}
+            />
+          </div>
         </div>,
         document.body
       )}
@@ -153,10 +170,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
   const details = projectDetails[projectId];
   const colors = PROJECT_COLORS[projectId] || PROJECT_COLORS[details?.parentId] || { from: T.accent, to: T.accentMid };
 
+  const hasHubTab = !!(details?.isHub && details?.designSystem);
   const [activeTab, setActiveTab] = useState(0);
   const hubTabs = details?.isHub && details.subProjects
     ? [
-        { id: "hub", label: "Librairie UI Figma" },
+        ...(hasHubTab ? [{ id: "hub", label: "Librairie UI Figma" }] : []),
         ...details.subProjects.map(spId => ({
           id: spId,
           label: projects.find(p => p.id === spId)?.title || spId,
@@ -263,8 +281,8 @@ export default function ProjectPage({ projectId, onNavigate }) {
       position: "absolute", top: -20, left: -4,
       fontFamily: "'Work Sans', sans-serif",
       fontSize: isMobile ? 72 : 88, fontWeight: 800,
-      letterSpacing: "-0.05em", color: T.text,
-      opacity: theme === "dark" ? 0.09 : 0.05, lineHeight: 1,
+      letterSpacing: "-0.05em", color: colors.to,
+      opacity: theme === "dark" ? 0.18 : 0.10, lineHeight: 1,
       userSelect: "none", pointerEvents: "none",
     }}>{num}</span>
   );
@@ -334,9 +352,9 @@ export default function ProjectPage({ projectId, onNavigate }) {
             position: "relative",
           }}>
             <HexHoneycombDecor
-              color={T.text}
+              color={colors.to}
               size={isMobile ? 80 : 160}
-              opacity={theme === "dark" ? 0.09 : 0.05}
+              opacity={theme === "dark" ? 0.18 : 0.10}
               style={{ top: isMobile ? -10 : -40, right: isMobile ? -30 : -60 }}
             />
             <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
@@ -361,13 +379,61 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
   function SectionMethodology({ d, num = "03" }) {
     if (!d.methodology) return null;
+    const [lightbox, setLightbox] = useState(null);
+    const [zoomLevel, setZoomLevel] = useState(0);
+    const openLightbox = (src) => { setLightbox(src); setZoomLevel(0); };
+
+    const NUM_COL = "56px";
+
+    const numEl = (phase, alignRight = false) => (
+      <span style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: 11, fontWeight: 700,
+        letterSpacing: "0.22em", textTransform: "uppercase",
+        color: colors.from, display: "block",
+        textAlign: alignRight ? "right" : "left",
+        paddingTop: 3,
+      }}>{phase}</span>
+    );
+
+    const titleEl = (title) => (
+      <h3 style={{
+        fontFamily: "'Work Sans', sans-serif",
+        fontSize: "clamp(13px, 1.05vw, 16px)", fontWeight: 800,
+        letterSpacing: "-0.01em", textTransform: "uppercase",
+        color: T.text, margin: "0 0 14px", lineHeight: 1.25,
+      }}>{title}</h3>
+    );
+
+    const bodyEl = (desc) => (
+      <p style={{ ...BODY, fontSize: isMobile ? 14 : 15, margin: 0, lineHeight: 1.8 }}>{desc}</p>
+    );
+
+    const textBlock = (m) => <div>{titleEl(m.title)}{bodyEl(m.description)}</div>;
+
+    const imgFrame = (src, style = {}) => (
+      <div style={{
+        borderRadius: T.radius, overflow: "hidden",
+        background: T.surface, border: `1px solid ${T.border}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 10, ...style,
+      }}>
+        <img
+          src={src} alt=""
+          onClick={() => openLightbox(src)}
+          style={{ maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto", display: "block", objectFit: "contain", cursor: "zoom-in" }}
+        />
+      </div>
+    );
+
     return (
+      <>
       <section style={{ marginTop: gap }}>
         <Reveal>
           <div style={{
             borderTop: `1px solid ${T.border}`,
             paddingTop: isMobile ? 40 : 56,
-            marginBottom: 28,
+            marginBottom: isMobile ? 44 : 64,
           }}>
             <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
               {ghostNum(num)}
@@ -376,56 +442,148 @@ export default function ProjectPage({ projectId, onNavigate }) {
             </div>
           </div>
         </Reveal>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-          gap: 12,
-        }}>
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {d.methodology.map((m, i) => {
             const phaseImgs = d.images?.phases?.[i];
+            const imgCount = phaseImgs?.length ?? 0;
+            const isLast = i === d.methodology.length - 1;
+            const isVariantA = i % 2 === 0;
+
+            /* ── Rendu mobile commun ── */
+            const mobileLayout = (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div>
+                  {numEl(m.phase)}
+                  {titleEl(m.title)}
+                  {bodyEl(m.description)}
+                </div>
+                {imgCount > 0 && (
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: imgCount === 1 ? "1fr" : "repeat(2, 1fr)",
+                    gap: 8,
+                  }}>
+                    {phaseImgs.map((src, si) => imgFrame(src, { maxHeight: "50vh" }, si))}
+                  </div>
+                )}
+              </div>
+            );
+
+            /* ── Layout desktop Type 1 ── */
+            const type1Desktop = isVariantA
+              ? <div style={{ display: "grid", gridTemplateColumns: `${NUM_COL} 1fr`, gap: 28, alignItems: "start" }}>
+                  <div>{numEl(m.phase)}</div>
+                  {textBlock(m)}
+                </div>
+              : <div style={{ display: "grid", gridTemplateColumns: `1fr ${NUM_COL}`, gap: 28, alignItems: "start" }}>
+                  {textBlock(m)}
+                  <div>{numEl(m.phase, true)}</div>
+                </div>;
+
+            /* ── Layout desktop Type 2 — image s'étire à la hauteur du texte ── */
+            const type2Desktop = isVariantA
+              ? <div style={{ display: "grid", gridTemplateColumns: `${NUM_COL} 1fr 1fr`, gap: 40, alignItems: "stretch" }}>
+                  <div>{numEl(m.phase)}</div>
+                  {textBlock(m)}
+                  {imgFrame(phaseImgs?.[0], { height: "100%" })}
+                </div>
+              : <div style={{ display: "grid", gridTemplateColumns: `1fr 1fr ${NUM_COL}`, gap: 40, alignItems: "stretch" }}>
+                  {imgFrame(phaseImgs?.[0], { height: "100%" })}
+                  {textBlock(m)}
+                  <div>{numEl(m.phase, true)}</div>
+                </div>;
+
+            /* ── Layout desktop Type 3 — gap fixe, image s'adapte, total max 60vh ── */
+            const imgsGrid = (
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${imgCount}, 1fr)`,
+                gap: 12,
+              }}>
+                {phaseImgs?.map((src, si) => (
+                  <div key={si} style={{
+                    borderRadius: T.radius, overflow: "hidden",
+                    background: T.surface, border: `1px solid ${T.border}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    padding: 10,
+                  }}>
+                    <img
+                      src={src} alt=""
+                      onClick={() => openLightbox(src)}
+                      style={{ display: "block", maxWidth: "100%", maxHeight: "42vh", width: "auto", height: "auto", cursor: "zoom-in" }}
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+
+            const type3Desktop = isVariantA
+              ? <div style={{ display: "grid", gridTemplateColumns: `${NUM_COL} 1fr`, gap: 28, alignItems: "start" }}>
+                  <div>{numEl(m.phase)}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                    {textBlock(m)}
+                    {imgsGrid}
+                  </div>
+                </div>
+              : <div style={{ display: "grid", gridTemplateColumns: `1fr ${NUM_COL}`, gap: 28, alignItems: "start" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                    {textBlock(m)}
+                    {imgsGrid}
+                  </div>
+                  <div>{numEl(m.phase, true)}</div>
+                </div>;
+
             return (
               <Reveal key={i} delay={i * 0.05}>
                 <div style={{
-                  border: `1px solid ${T.border}`,
-                  borderRadius: T.radius,
-                  overflow: "hidden",
-                  display: "flex", flexDirection: "column",
-                  background: T.surface,
-                  height: "100%",
+                  paddingTop: isMobile ? 36 : 52,
+                  paddingBottom: isLast ? 0 : (isMobile ? 36 : 52),
+                  borderBottom: isLast ? "none" : `1px solid ${T.border}`,
                 }}>
-                  {phaseImgs?.length > 0 && (
-                    <div style={{
-                      borderBottom: `1px solid ${T.border}`,
-                      overflow: "hidden", maxHeight: 180,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      background: T.bg,
-                    }}>
-                      <Images srcs={phaseImgs} fallbackLabel={m.title} />
-                    </div>
-                  )}
-                  <div style={{ padding: isMobile ? "22px 18px" : "26px 22px", flex: 1, position: "relative" }}>
-                    <span style={{
-                      position: "absolute", top: 12, right: 14,
-                      fontFamily: "'Work Sans', sans-serif",
-                      fontSize: 52, fontWeight: 800, letterSpacing: "-0.05em",
-                      color: colors.from, opacity: 0.07, lineHeight: 1,
-                      userSelect: "none", pointerEvents: "none",
-                    }}>{m.phase}</span>
-                    <h3 style={{
-                      fontFamily: "'Work Sans', sans-serif",
-                      fontSize: "clamp(11px, 0.95vw, 13px)", fontWeight: 800,
-                      letterSpacing: "0.04em", textTransform: "uppercase",
-                      color: T.text, margin: "0 0 10px", lineHeight: 1.3,
-                      paddingRight: 36, position: "relative",
-                    }}>{m.title}</h3>
-                    <p style={{ ...BODY, fontSize: 13, position: "relative" }}>{m.description}</p>
-                  </div>
+                  {isMobile ? mobileLayout
+                    : imgCount === 0 ? type1Desktop
+                    : imgCount === 1 ? type2Desktop
+                    : type3Desktop}
                 </div>
               </Reveal>
             );
           })}
         </div>
       </section>
+      {lightbox && createPortal(
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.85)",
+            overflow: "auto",
+            cursor: "zoom-out",
+          }}
+        >
+          <div style={{
+            minHeight: "100%", minWidth: "100%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 32, boxSizing: "border-box",
+          }}>
+            <img
+              src={lightbox} alt=""
+              onClick={(e) => { e.stopPropagation(); setZoomLevel(z => z === 0 ? 1 : 0); }}
+              style={{
+                display: "block",
+                borderRadius: T.radius,
+                cursor: zoomLevel === 0 ? "zoom-in" : "zoom-out",
+                ...(zoomLevel === 0
+                  ? { maxWidth: "calc(100vw - 64px)", maxHeight: "calc(100vh - 64px)", width: "auto", height: "auto", objectFit: "contain" }
+                  : { width: "auto", height: "auto" }
+                ),
+              }}
+            />
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
     );
   }
 
@@ -535,7 +693,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
   /* ─── Compute current impact items ─── */
   const activeImpact = details.isHub
-    ? (activeTab === 0 ? details.impact : projectDetails[hubTabs?.[activeTab]?.id]?.impact)
+    ? (hasHubTab && activeTab === 0 ? details.impact : projectDetails[hubTabs?.[activeTab]?.id]?.impact)
     : details.impact;
 
   return (
@@ -762,7 +920,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
         <div style={{ padding: `${gap} ${hPad} 0` }}>
           <div style={{ maxWidth: maxW, margin: "0 auto" }}>
 
-            {activeTab === 0 ? (
+            {hasHubTab && activeTab === 0 ? (
 
               /* Onglet Design System */
               <>

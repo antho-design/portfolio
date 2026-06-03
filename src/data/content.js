@@ -19,6 +19,16 @@ export const PROJECTS = [
     tasks: ["UI", "Figma", "Prototypage", "Concept"],
   },
   {
+    id: "ypo",
+    title: "YPO Paris",
+    subtitle: "Réponse à appel d'offre",
+    year: "2025",
+    tag: "Concept product design",
+    parentId: "le-design-lab",
+    parentTitle: "Le design lab",
+    tasks: ["UI", "Figma", "Mobile Design", "Prototypage", "Sprint"],
+  },
+  {
     id: "apec",
     title: "Apec",
     subtitle: "Progiciel Product Design",
@@ -163,7 +173,7 @@ export const PROJECT_DETAILS = {
     role: "Product Designer — Appels d'offre & concepts",
     duration: "2025 – 2026",
     tools: ["Figma", "Prototypage", "UI Design"],
-    subProjects: ["cetelem"],
+    subProjects: ["cetelem", "ypo"],
     context: "Un espace dédié aux projets de conception exploratoire : réponses à appels d'offre, concepts produit et prototypes de vision. Chaque projet est conçu dans un temps contraint avec un objectif clair — projeter une vision crédible et désirable, et la rendre tangible avant même qu'un développement ne commence.",
     problematique: "Comment concevoir des expériences convaincantes dans des délais courts, sans infrastructure de projet, en maximisant l'impact visuel et narratif pour convaincre des décideurs ?",
     impact: [
@@ -226,6 +236,58 @@ export const PROJECT_DETAILS = {
         null,
       ],
       resultat: "/cetelem/prototype.png",
+    },
+  },
+
+  ypo: {
+    parentId: "le-design-lab",
+    parentTitle: "Le design lab",
+    client: "YPO Paris",
+    role: "Product Designer",
+    duration: "3 jours",
+    tools: ["Figma", "Mobile Design", "Prototypage"],
+    intro: "Refonte de l'application mobile YPO Paris : transformer un outil utilitaire en réseau social premium pour dirigeants, en sprint de 3 jours dans le cadre du Laboratoire CX",
+    context: "YPO (Young Presidents' Organization) est l'un des réseaux de dirigeants les plus influents au monde. Le chapitre parisien disposait d'une application mobile fonctionnelle, développée par un prestataire technique, couvrant les événements, l'annuaire des membres, les forums et les actualités. Fonctionnelle, mais figée dans une logique utilitaire qui ne reflétait ni le standing de l'organisation, ni les attentes d'une communauté de dirigeants habitués aux expériences digitales premium. Dans le cadre du Laboratoire CX de notre ESN, dont l'objectif est de conceptualiser des produits ambitieux pour initier des conversations avec de futurs clients, nous avons décidé d'imaginer ce que cette application pourrait devenir si on lui donnait une vraie ambition produit. Quatre designers, trois jours, une initiative entièrement portée par l'équipe.",
+    problematique: "Comment faire passer une application de gestion de chapitre au statut de réseau social premium, à la hauteur d'une organisation de dirigeants mondiaux, en proposant une expérience qui justifie à elle seule d'envisager une refonte complète ?",
+    methodology: [
+      {
+        phase: "01",
+        title: "Définition de la vision produit",
+        description: "Notre point de départ : l'application existante n'était pas pensée comme un réseau social, mais comme un tableau de bord administratif. Nous avons fait le choix d'aller bien au-delà de la refonte graphique pour repenser la nature même de l'expérience : messagerie entre membres, gestion des relations, profil enrichi, découverte des participants à un événement. L'ambition était de créer un outil que les membres auraient envie d'ouvrir, pas seulement de consulter. Le premier jour a été entièrement consacré à la conceptualisation et à la définition des parcours à couvrir.",
+      },
+      {
+        phase: "02",
+        title: "Direction visuelle",
+        description: "Une de mes collègues a pris en charge les recherches graphiques et développé la direction dark navy/violet qui donne au projet son identité visuelle forte. Profondeur, typographie affirmée, touches lumineuses sur fond sombre : une direction assumée, premium sans être froide, qui tranche radicalement avec l'UI existante. C'est à partir de ces recherches que l'équipe a aligné l'ensemble des écrans sur une cohérence visuelle commune. Le deuxième jour a été consacré à la production simultanée des wireframes et des pistes graphiques.",
+      },
+      {
+        phase: "03",
+        title: "Conception des parcours Profil & Événements",
+        description: "Je me suis chargé de la conception et de la production des sections Profil & Features et Détails événements, participants et relations — les deux zones les plus riches en interactions sociales de l'application. Profil complet avec groupes d'appartenance, événements passés et à venir, contacts directs. Fiche événement immersive avec liste de participants enrichie, suggestions de mise en relation, et navigation vers les profils. J'ai également structuré la navigation iOS sur l'ensemble des écrans pour garantir une cohérence avec les standards de la plateforme.",
+      },
+      {
+        phase: "04",
+        title: "Onboarding et parcours de connexion",
+        description: "Un autre designer a conçu l'onboarding complet — du premier lancement à la configuration du profil, en passant par la validation par code et la création de mot de passe — pour poser une première impression à la hauteur de la promesse visuelle de l'application. Le troisième jour a été consacré à l'intégration de l'UI finale et au lissage des maquettes sur l'ensemble des parcours.",
+      },
+    ],
+    resultat: "Une refonte complète de l'expérience mobile YPO Paris produite en trois jours, couvrant l'onboarding, le dashboard, le profil membre, la messagerie, la vue « Mes événements », « Mes relations », les détails d'événement et la liste des participants. Une application repensée comme un vrai réseau social de dirigeants, avec une direction visuelle dark premium cohérente sur l'ensemble des parcours — du premier wireframe au rendu haute fidélité.",
+    impact: [
+      "La présentation des maquettes a déclenché une réaction concrète chez YPO Paris : l'organisation a lancé un audit de son application existante et déployé des questionnaires auprès de ses membres pour identifier les axes d'amélioration.",
+      "Les maquettes ont servi de catalyseur pour une réflexion produit qui n'avait pas encore eu lieu — transformer une démo concept en déclencheur d'audit interne, c'est exactement ce que le Laboratoire CX cherchait à produire.",
+      "La suite est en cours.",
+    ],
+    images: {
+      cover: "/ypo/card.png",
+      coverWidth: "35%",
+      context: ["/ypo/dashboard.png"],
+      phases: [
+        ["/ypo/dashboard.png"],
+        ["/ypo/onboarding.png"],
+        ["/ypo/profil-features.png", "/ypo/evenements-participants.png"],
+        ["/ypo/modif-mdp.png"],
+      ],
+      resultat: "/ypo/mes-evenements.png",
     },
   },
 
@@ -640,8 +702,8 @@ export const PROJECT_DETAILS = {
       ],
       moduleLayouts: ["grid", "grid", "grid", "grid"],
       phases: [
-        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
         ["/autossimo/phase-audit-1.png", "/autossimo/phase-audit-2.png"],
+        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
         ["/autossimo/phase-shadowing-journey.png", "/autossimo/phase-shadowing-persona.png"],
         [],
       ],
@@ -996,6 +1058,16 @@ export const PROJECTS_EN = [
     tasks: ["UI", "Figma", "Prototyping", "Concept"],
   },
   {
+    id: "ypo",
+    title: "YPO Paris",
+    subtitle: "Tender response concept",
+    year: "2025",
+    tag: "Concept product design",
+    parentId: "le-design-lab",
+    parentTitle: "The design lab",
+    tasks: ["UI", "Figma", "Mobile Design", "Prototyping", "Sprint"],
+  },
+  {
     id: "apec",
     title: "Apec",
     subtitle: "Enterprise Software Design",
@@ -1135,7 +1207,7 @@ export const PROJECT_DETAILS_EN = {
     role: "Product Designer — Tenders & concepts",
     duration: "2025 – 2026",
     tools: ["Figma", "Prototyping", "UI Design"],
-    subProjects: ["cetelem"],
+    subProjects: ["cetelem", "ypo"],
     context: "A space dedicated to exploratory design projects: tender responses, product concepts and vision prototypes. Each project is designed under tight constraints with a clear goal — projecting a credible and desirable vision, making it tangible before any development begins.",
     problematique: "How to design convincing experiences within tight timelines, without project infrastructure, maximising visual and narrative impact to persuade decision-makers?",
     impact: [
@@ -1198,6 +1270,58 @@ export const PROJECT_DETAILS_EN = {
         null,
       ],
       resultat: "/cetelem/prototype.png",
+    },
+  },
+
+  ypo: {
+    parentId: "le-design-lab",
+    parentTitle: "The design lab",
+    client: "YPO Paris",
+    role: "Product Designer",
+    duration: "3 days",
+    tools: ["Figma", "Mobile Design", "Prototyping"],
+    intro: "Redesign of the YPO Paris mobile app: turning a utility tool into a premium social network for executives, in a 3-day sprint within the CX Lab",
+    context: "YPO (Young Presidents' Organization) is one of the most influential executive networks in the world. The Paris chapter had a functional mobile app — built by a technical vendor — covering events, the member directory, forums and news. Functional, but locked in a utilitarian logic that reflected neither the standing of the organisation nor the expectations of a community of executives accustomed to premium digital experiences. As part of our consultancy's CX Lab, whose purpose is to conceptualise ambitious products to open conversations with prospective clients, we decided to imagine what this app could become if given real product ambition. Four designers, three days, an initiative carried entirely by the team.",
+    problematique: "How do you take a chapter management app to the level of a premium social network — worthy of a global executive organisation — and create an experience compelling enough on its own to justify a full redesign?",
+    methodology: [
+      {
+        phase: "01",
+        title: "Product vision",
+        description: "Our starting point: the existing app was not designed as a social network, but as an administrative dashboard. We chose to go far beyond a visual overhaul and rethink the very nature of the experience: member messaging, relationship management, enriched profiles, and discovering participants at an event. The ambition was to create a tool that members would want to open — not just check. The first day was entirely dedicated to conceptualisation and defining the flows to cover.",
+      },
+      {
+        phase: "02",
+        title: "Visual direction",
+        description: "One of my colleagues led the visual research and developed the dark navy/violet direction that gives the project its strong identity. Depth, assertive typography, bright accents on a dark background: a bold, premium direction that is never cold, and cuts radically from the existing UI. The whole team then aligned every screen against this shared visual language. The second day was dedicated to producing wireframes and visual directions simultaneously.",
+      },
+      {
+        phase: "03",
+        title: "Profile & Event flow design",
+        description: "I handled the design and production of the Profile & Features and Event details, participants and relations sections — the two most interaction-rich areas of the app. A full profile with group memberships, past and upcoming events, and direct contacts. An immersive event page with an enriched participant list, connection suggestions, and profile navigation. I also structured the iOS navigation across all screens to ensure consistency with platform standards.",
+      },
+      {
+        phase: "04",
+        title: "Onboarding & sign-in flow",
+        description: "Another designer designed the full onboarding — from first launch to profile setup, through code validation and password creation — to set a first impression matching the app's visual promise. The third day was dedicated to integrating the final UI and polishing the mockups across all flows.",
+      },
+    ],
+    resultat: "A complete redesign of the YPO Paris mobile experience delivered in three days — covering onboarding, the dashboard, the member profile, messaging, My Events, My Relations, event details and the participant list. An app reimagined as a true executive social network, with a coherent dark premium visual direction across every flow — from first wireframe to high-fidelity render.",
+    impact: [
+      "The presentation of the mockups triggered a concrete reaction from YPO Paris: the organisation launched an audit of its existing app and deployed questionnaires to its members to identify areas for improvement.",
+      "The mockups acted as a catalyst for a product conversation that had not yet happened — turning a concept demo into an internal audit trigger is exactly what the CX Lab set out to produce.",
+      "The follow-up is ongoing.",
+    ],
+    images: {
+      cover: "/ypo/card.png",
+      coverWidth: "35%",
+      context: ["/ypo/dashboard.png"],
+      phases: [
+        ["/ypo/dashboard.png"],
+        ["/ypo/onboarding.png"],
+        ["/ypo/profil-features.png", "/ypo/evenements-participants.png"],
+        ["/ypo/modif-mdp.png"],
+      ],
+      resultat: "/ypo/mes-evenements.png",
     },
   },
 
@@ -1612,8 +1736,8 @@ export const PROJECT_DETAILS_EN = {
       ],
       moduleLayouts: ["grid", "grid", "grid", "grid"],
       phases: [
-        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
         ["/autossimo/phase-audit-1.png", "/autossimo/phase-audit-2.png"],
+        ["/autossimo/phase-benchmark-1.png", "/autossimo/phase-benchmark-2.png"],
         ["/autossimo/phase-shadowing-journey.png", "/autossimo/phase-shadowing-persona.png"],
         [],
       ],
