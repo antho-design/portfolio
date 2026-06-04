@@ -172,6 +172,7 @@ export default function ProjectPage({ projectId, onNavigate }) {
 
   const hasHubTab = !!(details?.isHub && details?.designSystem);
   const [activeTab, setActiveTab] = useState(0);
+  const [pageLb, setPageLb] = useState(null);
   const hubTabs = details?.isHub && details.subProjects
     ? [
         ...(hasHubTab ? [{ id: "hub", label: "Librairie UI Figma" }] : []),
@@ -311,10 +312,11 @@ export default function ProjectPage({ projectId, onNavigate }) {
                 }}>
                   <img
                     src={src} alt=""
+                    onClick={() => setPageLb(src)}
                     style={{
                       maxWidth: "100%", maxHeight: "100%",
                       objectFit: "contain", display: "block",
-                      borderRadius: 2,
+                      borderRadius: 2, cursor: "zoom-in",
                     }}
                   />
                 </div>
@@ -589,7 +591,8 @@ export default function ProjectPage({ projectId, onNavigate }) {
               <img
                 src={Array.isArray(d.images.resultat) ? d.images.resultat[0] : d.images.resultat}
                 alt=""
-                style={{ maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: 2 }}
+                onClick={() => setPageLb(Array.isArray(d.images.resultat) ? d.images.resultat[0] : d.images.resultat)}
+                style={{ maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: 2, cursor: "zoom-in" }}
               />
             </div>
           </Reveal>
@@ -796,7 +799,8 @@ export default function ProjectPage({ projectId, onNavigate }) {
                 {details.images?.cover ? (
                   <img
                     src={details.images.cover} alt=""
-                    style={{ width: "100%", height: "auto", objectFit: "contain", display: "block", borderRadius: T.radius }}
+                    onClick={() => setPageLb(details.images.cover)}
+                    style={{ width: "100%", height: "auto", objectFit: "contain", display: "block", borderRadius: T.radius, cursor: "zoom-in" }}
                   />
                 ) : (
                   <div style={{
@@ -1285,6 +1289,29 @@ export default function ProjectPage({ projectId, onNavigate }) {
         </div>
       </div>
 
+      {pageLb && createPortal(
+        <div
+          onClick={() => setPageLb(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.85)",
+            overflow: "auto", cursor: "zoom-out",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 32, boxSizing: "border-box",
+          }}
+        >
+          <img
+            src={pageLb} alt=""
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              display: "block", borderRadius: 4,
+              maxWidth: "calc(100vw - 64px)", maxHeight: "calc(100vh - 64px)",
+              width: "auto", height: "auto", objectFit: "contain",
+            }}
+          />
+        </div>,
+        document.body
+      )}
     </article>
   );
 }
